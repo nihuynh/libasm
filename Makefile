@@ -5,6 +5,9 @@ OBJDIR	:=	objs
 OBJ		:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))
 VPATH	:=	./src
 
+OKLOGO	:=	\033[78G\033[32m[Done]\033[0m\n
+RM		:=	/bin/rm -f
+
 # Rules :
 .DEFAULT_GOAL := all
 all: $(NAME)
@@ -25,10 +28,14 @@ usage: ## Print out on how to use this Makefile.
 
 clean: ## Clean of the project directory (.o & .a).
 	$(RM) $(OBJ)
-	$(RM) $(NAME)
 	$(RM) -r $(OBJDIR)
 	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning objs $(OKLOGO)"
 .PHONY: clean
+
+fclean: clean ## Delete the library, object files.
+	$(RM) $(NAME)
+	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning $(NAME) $(OKLOGO)"
+.PHONY: fclean
 
 re: ## Rebuild the project.
 	make clean
