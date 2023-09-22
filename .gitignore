@@ -1,1 +1,5 @@
 /objs
+.vscode
+*.o
+*.out
+.DS_Store
