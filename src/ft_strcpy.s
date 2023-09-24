@@ -1,4 +1,7 @@
-strcpy:
+section .text
+global   ft_strcpy
+
+ft_strcpy:
     push ebp            ; Save base pointer
     mov ebp, esp        ; Set base pointer
     mov edx, [ebp + 12] ; Load address of dest buffer

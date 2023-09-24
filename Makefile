@@ -1,5 +1,7 @@
 NAME	:=	libasm.a
-SRC		:=	ft_strlen.s ft_strcpy.s
+SRC		:=	say_hi.s
+# ft_strlen.s
+# ft_strcpy.s
 
 OBJDIR	:=	objs
 OBJ		:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))
@@ -41,6 +43,10 @@ re: ## Rebuild the project.
 	make clean
 	make $(NAME)
 .PHONY: re
+
+test: $(NAME)
+	gcc tests/exemple.c -o exemple.out -L libasm.a
+	./exemple.out
 
 # Specify the target file and the object files it depends on
 $(NAME): $(OBJ)
