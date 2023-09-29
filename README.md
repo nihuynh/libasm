@@ -17,7 +17,6 @@ ssize_t read(int fildes, void *buf, size_t nbyte);
 - [ ] ft_strdup (man 3 strdup, you can call to malloc)
 char * strdup(const char *s1);
 
-
 ### How to run it on Linux
 
 ### How to run it on M1
@@ -49,6 +48,14 @@ $> docker run --platform linux/amd64 -it -v $(pwd):/workdir nihuynh/nasm-gcc
 http://www.software-architects.com/devblog/2019/04/tiny-docker-image
 https://cs.lmu.edu/~ray/notes/nasmtutorial/
 https://www.nasm.us/doc/
+https://www.tortall.net/projects/yasm/manual/html/nasm.html
+
+**Questions**
+https://github.com/kchikech/corrections_42_curriculum/blob/master/libasm.markingsheet.pdf
+
+**Testers**
+https://github.com/cacharle/libasm_test
+https://github.com/Tripouille/libasmTester
 
 grafana
 https://loganmarchione.com/2020/05/always-on-grafana-dashboard-using-raspberry-pi-touchscreen/

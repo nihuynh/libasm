@@ -8,6 +8,7 @@ WORKDIR /workdir
 
 RUN apt-get update && apt-get install -y \
   nasm \
+  gdb \
   build-essential \
   && rm -rf /var/lib/apt/lists/*
 
