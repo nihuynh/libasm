@@ -1,9 +1,9 @@
-SECTION .DATA
+section .data
     hello:     db 'Hello world!',10
     helloLen:  equ $-hello
 
-SECTION .TEXT
-    GLOBAL say_hi
+section	.text
+global	say_hi
 
 say_hi:
     mov eax,4            ; write()
