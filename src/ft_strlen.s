@@ -1,7 +1,7 @@
 .section .text
-.globl ft_strlen
+.globl _ft_strlen
 
-ft_strlen:
+_ft_strlen:
     push %ebp             # Save base pointer
     mov %esp, %ebp        # Set base pointer
     mov 8(%ebp), %edx     # Get string argument

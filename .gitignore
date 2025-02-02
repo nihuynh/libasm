@@ -1,1 +1,17 @@
 /objs
+test.o
+# Object files
+intra-*/obj/*
+libasm.a
+
+# Test object files
+intra-*/test/test_*.o
+intra-*/test/test_*
+a.out
+
+# Testers
+libasmTester
+42libasm_tester
+
+# ENV
+.secret
