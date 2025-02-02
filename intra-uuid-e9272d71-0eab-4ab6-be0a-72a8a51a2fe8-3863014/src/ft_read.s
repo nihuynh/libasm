@@ -1,10 +1,10 @@
 global _ft_read
 extern ___error
 
-%ifidn __OUTPUT_FORMAT__, macho64 
+%ifidn __OUTPUT_FORMAT__, macho64
     %define READ_SYSCALL 0x2000003
-%elifidn __OUTPUT_FORMAT__, elf32 
-    %define READ_SYSCALL 0 
+%elifidn __OUTPUT_FORMAT__, elf32
+    %define READ_SYSCALL 0
 %endif
 
 _ft_read:       ; rdi = fd, rsi = buf, rdx = count
