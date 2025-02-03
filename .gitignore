@@ -6,7 +6,6 @@ libasm.a
 
 # Test object files
 intra-*/test/test_*.o
-intra-*/test/test_*
 a.out
 
 # Testers
