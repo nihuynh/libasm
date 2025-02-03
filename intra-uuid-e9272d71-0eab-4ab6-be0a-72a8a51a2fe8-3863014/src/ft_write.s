@@ -1,16 +1,17 @@
-global _ft_write
-
 %ifidn __OUTPUT_FORMAT__, macho64
     extern ___error
     %define ERRNO_FN        ___error
+    %define FN_LABEL        _ft_write
     %define WRITE_SYSCALL   0x2000004
-%elifidn __OUTPUT_FORMAT__, elf32
+%elifidn __OUTPUT_FORMAT__, elf64
     extern __errno_location
     %define ERRNO_FN        __errno_location
+    %define FN_LABEL        ft_write
     %define WRITE_SYSCALL   4
 %endif
 
-_ft_write:       ; rdi = fd, rsi = buf, rdx = count
+global FN_LABEL
+FN_LABEL:       ; rdi = fd, rsi = buf, rdx = count
     mov     eax, WRITE_SYSCALL  ; System call number for sys_write
     syscall
     cmp     rax, 0
