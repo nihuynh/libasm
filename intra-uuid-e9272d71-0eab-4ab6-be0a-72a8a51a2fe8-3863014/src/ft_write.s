@@ -21,7 +21,6 @@ error_code:
     neg     rax         ; get absolute value of syscall return
     mov     rdi, rax    ; back-up rax before calling ernno
     call    ERRNO_FN
-    ; call    __errno_locati`on
     mov     [rax], rdi  ; set the value of errno
     mov     rax, -1
     ret
