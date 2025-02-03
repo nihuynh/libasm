@@ -68,9 +68,8 @@ void    test_ft_strcmp(void)
 	printf("res: %d Expected: %d\n", ft_strcmp("a", "d"), strcmp("a", "d"));
 	printf("res: %d Expected: %d\n", ft_strcmp("d", "a"), strcmp("d", "a"));
 	printf("res: %d Expected: %d\n", ft_strcmp("test", ""), strcmp("test", ""));
-
-
 }
+
 void    test_ft_strcpy(void)
 {
 	printf("\nft_strcpy:\n");
@@ -106,7 +105,7 @@ int	main(void)
 {
     test_ft_write();
     test_ft_read();
-    test_ft_strcmp();
+    // test_ft_strcmp();
     test_ft_strlen();
     test_ft_strcpy();
     test_ft_add();

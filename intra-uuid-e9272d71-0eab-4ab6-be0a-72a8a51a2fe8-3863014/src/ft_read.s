@@ -1,10 +1,13 @@
 global _ft_read
-extern ___error
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define READ_SYSCALL 0x2000003
+    extern ___error
+    %define ERRNO_FN        ___error
+    %define READ_SYSCALL    0x2000003
 %elifidn __OUTPUT_FORMAT__, elf32
-    %define READ_SYSCALL 0
+    extern __errno_location
+    %define ERRNO_FN        __errno_location
+    %define READ_SYSCALL    0
 %endif
 
 _ft_read:       ; rdi = fd, rsi = buf, rdx = count
@@ -17,7 +20,7 @@ _ft_read:       ; rdi = fd, rsi = buf, rdx = count
 error_code:
     neg     rax         ; get absolute value of syscall return
     mov     rdi, rax    ; back-up rax before calling ernno
-    call    ___error
+    call    ERRNO_FN
     mov     [rax], rdi  ; set the value of errno
     mov     rax, -1
     ret

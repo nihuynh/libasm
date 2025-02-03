@@ -5,7 +5,12 @@
 - [x] Export at the end of the work
 - [x] Call functions from a main.c
 - [x] Makefile rules to run asm tests
-- [ ] errno for ft_write
+- [x] errno for ft_write
+- [] fixes for ft_strcmp
+- [] do ft_strdup
+- [] Prepare correction
+- [] Bonus
+
 
 ## Ressources
 Lessons:

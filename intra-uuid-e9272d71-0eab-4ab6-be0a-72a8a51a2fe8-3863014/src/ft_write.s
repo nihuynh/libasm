@@ -1,10 +1,13 @@
 global _ft_write
-extern ___error
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define WRITE_SYSCALL 0x2000004
+    extern ___error
+    %define ERRNO_FN        ___error
+    %define WRITE_SYSCALL   0x2000004
 %elifidn __OUTPUT_FORMAT__, elf32
-    %define WRITE_SYSCALL 4
+    extern __errno_location
+    %define ERRNO_FN        __errno_location
+    %define WRITE_SYSCALL   4
 %endif
 
 _ft_write:       ; rdi = fd, rsi = buf, rdx = count
@@ -17,7 +20,8 @@ _ft_write:       ; rdi = fd, rsi = buf, rdx = count
 error_code:
     neg     rax         ; get absolute value of syscall return
     mov     rdi, rax    ; back-up rax before calling ernno
-    call    ___error
+    call    ERRNO_FN
+    ; call    __errno_locati`on
     mov     [rax], rdi  ; set the value of errno
     mov     rax, -1
     ret
