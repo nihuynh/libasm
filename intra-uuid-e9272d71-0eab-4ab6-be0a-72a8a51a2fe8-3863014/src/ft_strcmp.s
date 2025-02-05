@@ -1,11 +1,11 @@
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define FN_LABEL        _ft_strcmp
+    %define STRCMP_LABEL    _ft_strcmp
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define FN_LABEL        ft_strcmp
+    %define STRCMP_LABEL    ft_strcmp
 %endif
 
-global FN_LABEL
-FN_LABEL:      ; rdi = s1, rsi = s2
+global STRCMP_LABEL
+STRCMP_LABEL:      ; rdi = s1, rsi = s2
     xor     rcx, rcx    ; reset the counter
 
 runloop:

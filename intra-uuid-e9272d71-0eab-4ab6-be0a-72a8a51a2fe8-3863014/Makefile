@@ -10,7 +10,6 @@ SRC 	:=	ft_strlen.s \
 		ft_strcmp.s \
 		ft_write.s \
 		ft_read.s \
-		ft_add.s \
 		ft_strdup.s
 
 B_SRC	:=	ft_atoi_base.s \
@@ -24,7 +23,7 @@ TESTS   :=	test_len_write.s
 VPATH	:=	./src
 # ---
 NA		:=	nasm
-CC      :=  gcc
+CC      :=  clang
 CFLAGS  :=  -Wall -Wextra -Werror
 # Compiling on mac ARM
 ifeq ($(shell uname -m), arm64)

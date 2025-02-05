@@ -1,11 +1,11 @@
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define FN_LABEL        _ft_strlen
+    %define STRLEN_LABEL    _ft_strlen
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define FN_LABEL        ft_strlen
+    %define STRLEN_LABEL    ft_strlen
 %endif
 
-global FN_LABEL
-FN_LABEL:      ; rdi = str to check
+global STRLEN_LABEL
+STRLEN_LABEL:      ; rdi = *str to check
     mov     rax, rdi
 
 runloop:

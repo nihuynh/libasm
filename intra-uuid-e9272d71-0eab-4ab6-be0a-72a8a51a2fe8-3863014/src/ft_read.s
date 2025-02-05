@@ -2,16 +2,16 @@
     extern ___error
     %define ERRNO_FN        ___error
     %define READ_SYSCALL    0x2000003
-    %define FN_LABEL        _ft_read
+    %define READ_LABEL      _ft_read
 %elifidn __OUTPUT_FORMAT__, elf64
     extern __errno_location
     %define ERRNO_FN        __errno_location
     %define READ_SYSCALL    0
-    %define FN_LABEL        ft_read
+    %define READ_LABEL      ft_read
 %endif
 
-global FN_LABEL
-FN_LABEL:       ; rdi = fd, rsi = buf, rdx = count
+global READ_LABEL
+READ_LABEL:       ; rdi = fd, rsi = buf, rdx = count
     mov     eax, READ_SYSCALL   ; System call number for sys_read
     syscall
     cmp     rax, 0
