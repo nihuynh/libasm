@@ -9,16 +9,15 @@ STRCMP_LABEL:      ; rdi = s1, rsi = s2
     xor     rcx, rcx    ; reset the counter
 
 runloop:
-    mov     bl, byte [rdi + rcx]
-    cmp     bl, byte [rsi + rcx]
+    mov     al, byte [rdi + rcx]
+    cmp     al, byte [rsi + rcx]
     jne     retdiff     ; not equal so break
-    cmp     byte [rdi + rcx], 0
-    jz      retdiff
+    cmp     al, 0
+    je      retdiff
     inc     rcx
     jmp     runloop
 
 retdiff:
-    mov     al, byte [rdi + rcx]
-    sub     al, byte [rsi + rcx]
-    movsx   rax, al
+    sub     al, byte [rsi + rcx]    ; sub the char ascii value in s1 & s2
+    movsx   rax, al                 ; mov but keep the sign - or +
     ret

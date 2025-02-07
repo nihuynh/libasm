@@ -25,17 +25,11 @@ STRDUP_LABEL:       ; rdi = *str duplicate
     inc     rax
     mov     rdi, rax
     call    malloc
-    cmp     rax, 0      ; Check malloc has failed
-    jl      error_code
+    pop     rsi         ; restore the stack and the *str to rsi
+    cmp     rax, 0      ; check if malloc has failed
+    je      error_code
     mov     rdi, rax
-    pop     rsi
     call    STRCPY_LABEL
-    ret
 
 error_code:
-    neg     rax         ; get absolute value of syscall return
-    mov     rdi, rax    ; back-up rax before calling ernno
-    call    ERRNO_FN
-    mov     [rax], rdi  ; set the value of errno
-    mov     rax, 0
     ret

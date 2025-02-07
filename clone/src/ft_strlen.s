@@ -10,7 +10,7 @@ STRLEN_LABEL:      ; rdi = *str to check
 
 runloop:
     cmp     byte [rax], 0
-    jz      end
+    je      end
     inc     rax
     jmp     runloop
 

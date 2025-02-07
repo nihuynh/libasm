@@ -12,10 +12,10 @@
 
 global READ_LABEL
 READ_LABEL:       ; rdi = fd, rsi = buf, rdx = count
-    mov     eax, READ_SYSCALL   ; System call number for sys_read
+    mov     rax, READ_SYSCALL   ; system call number for sys_read
     syscall
     cmp     rax, 0
-    jl      error_code
+    jl      error_code          ; jump if negative value in rax
     ret
 
 error_code:

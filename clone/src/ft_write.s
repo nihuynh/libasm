@@ -12,10 +12,10 @@
 
 global WRITE_LABEL
 WRITE_LABEL:       ; rdi = fd, rsi = buf, rdx = count
-    mov     eax, WRITE_SYSCALL  ; System call number for sys_write
+    mov     rax, WRITE_SYSCALL  ; system call number for sys_write
     syscall
     cmp     rax, 0
-    jl      error_code
+    jl      error_code          ; jump if negative value in rax
     ret
 
 error_code:
