@@ -1,11 +1,10 @@
-/objs
 # Object files
 obj/*
-*.o
-*.out
 libasm.a
 
 # Test object files
+test/test_*.o
+test/test_*
 a.out
 
 # Testers
