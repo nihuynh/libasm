@@ -9,7 +9,12 @@
 - [x] fixes for ft_strcmp
 - [x] do ft_strdup
 - [x] Prepare correction
-- [] Bonus
+- [ ] Validate mandatory
+- [ ] Add 42 Headers
+- [ ] Bonus: atoi base
+- [ ] Bonus: list size
+- [ ] Bonus: list others
+- [ ] ...
 
 
 ## Ressources

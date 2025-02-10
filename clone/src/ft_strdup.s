@@ -1,15 +1,11 @@
 extern malloc
 %ifidn __OUTPUT_FORMAT__, macho64
-    extern ___error
-    %define ERRNO_FN        ___error
     %define STRDUP_LABEL    _ft_strdup
     extern _ft_strlen
     %define STRLEN_LABEL    _ft_strlen
     extern _ft_strcpy
     %define STRCPY_LABEL    _ft_strcpy
 %elifidn __OUTPUT_FORMAT__, elf64
-    extern __errno_location
-    %define ERRNO_FN        __errno_location
     %define STRDUP_LABEL    ft_strdup
     extern ft_strlen
     %define STRLEN_LABEL    ft_strlen
