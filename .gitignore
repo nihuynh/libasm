@@ -13,3 +13,4 @@ libasmTester
 
 # ENV
 .secret
+.vscode/settings.json

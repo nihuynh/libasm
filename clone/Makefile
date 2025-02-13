@@ -25,15 +25,16 @@ VPATH		:=	./src ./test
 # ---
 NA			:=	nasm
 CC			:=  clang
-CFLAGS		:=  -Wall -Wextra -Werror
+CFLAGS		:=  -Wall -Wextra -Werror -Iinclude
+CLIB_FLAGS	:=	-L . -l asm
 # Compiling on mac ARM
 ifeq ($(shell uname -m), arm64)
 	CFLAGS	+=	-ld_classic --target=x86_64-apple-darwin
-	NFLAGS	:=	-f macho64 -i $(VPATH)
+	NFLAGS	:=	-f macho64
 endif
 # Compiling on Linux x86
 ifeq ($(shell uname -m), x86_64)
-	NFLAGS	:=	-f elf64 -i $(VPATH)
+	NFLAGS	:=	-f elf64
 endif
 OBJDIR		:=	obj
 OBJ			:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))
@@ -64,12 +65,13 @@ $(OBJDIR)/%.o: %.s | $(OBJDIR)
 	$(NA) $(NFLAGS) -o $@ $<
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile $< $(OKLOGO)"
 
-$(OBJDIR)/%.o: %.c | $(OBJDIR)
-	$(CC) $(CFLAGS) -Iinclude $< -o $@ -L . -l asm
+$(OBJDIR)/%.out: %.c | $(OBJDIR)
+	$(CC) $(CFLAGS) $< -o $@ $(CLIB_FLAGS)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile test_SRC $< $(OKLOGO)"
 
 test: $(NAME) $(TEST)
-	$(CC) $(CFLAGS) -Iinclude test/main.c -L . -l asm
+	find $(OBJDIR) -name "*.out" -type f
+	@printf "\033[1;34m$(NAME)\033[25G\033[33mTest are ready $(OKLOGO)"
 .PHONY: test
 
 usage: ## Print out on how to use this Makefile.
