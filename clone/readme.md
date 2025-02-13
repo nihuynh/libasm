@@ -2,18 +2,14 @@
 
 ## Overview
 ## TODO
-- [x] Export at the end of the work
-- [x] Call functions from a main.c
-- [x] Makefile rules to run asm tests
-- [x] errno for ft_write
-- [x] fixes for ft_strcmp
-- [x] do ft_strdup
-- [x] Prepare correction
-- [ ] Validate mandatory
-- [ ] Add 42 Headers
+- [ ] Setup gdb debug
+- [ ] Setup vsc debug
+- [ ] Rework tests
 - [ ] Bonus: atoi base
 - [ ] Bonus: list size
 - [ ] Bonus: list others
+- [ ] Add 42 Headers
+- [ ] Retry project (before 01/09/25)
 - [ ] ...
 
 

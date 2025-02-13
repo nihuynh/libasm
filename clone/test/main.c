@@ -8,7 +8,9 @@
 
 #include "libasm.h"
 
-// Test fn
+/*
+** Part I
+*/
 void    test_ft_read(void)
 {
     printf("\nLearner ft_read:\n");
@@ -90,7 +92,31 @@ void    test_ft_write(void)
     ft_write(1, "Test Test\n", strlen("Test Test\n"));
 }
 
-// Main program
+/*
+** Part II
+*/
+
+int test_ft_atoi_base() {
+    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+}
+int test_ft_list_push_front() {
+    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+}
+int test_ft_list_size() {
+    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+}
+int test_ft_list_sort() {
+    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+}
+int test_ft_list_remove_if() {
+    return EXIT_FAILURE;
+    return EXIT_SUCCESS;
+}
+
 int	main(void)
 {
     test_ft_write();
@@ -99,5 +125,14 @@ int	main(void)
     test_ft_strlen();
     test_ft_strcpy();
     test_ft_strdup();
+    test_ft_atoi_base();
+    test_ft_list_push_front();
+    test_ft_list_size();
+    test_ft_list_sort();
+    test_ft_list_remove_if();
     return EXIT_SUCCESS;
 }
+
+
+
+
