@@ -1,3 +1,10 @@
+; File: ft_strcpy.s
+; File Created: 05/02/2025 23:12
+; Author: Nicolas Huynh at (nico.huynh@gmail.com)
+; -----
+; Description: <Desc of the file goal(s)>
+; Copyright 2025 NH
+
 %ifidn __OUTPUT_FORMAT__, macho64
     %define STRCPY_LABEL    _ft_strcpy
 %elifidn __OUTPUT_FORMAT__, elf64
