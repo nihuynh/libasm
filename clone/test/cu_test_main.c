@@ -1,4 +1,4 @@
-#include "cu_dev.h"
+#include "cu_test.h"
 
 int		ft_isodd(int value)
 {
@@ -18,12 +18,12 @@ int		ft_add(int a, int b)
 void	test_isodd()
 {
     CU_RUN_START;
-    CU_RUN_SECTION("Basic tests");
+    CU_RUN_SECTION("basic");
     CU_TEST(0 == ft_isodd(10));
     CU_TEST(1 == ft_isodd(11));
     CU_TEST(0 == ft_isodd(0));
 
-    CU_RUN_SECTION("Negative value");
+    CU_RUN_SECTION("negative value");
     CU_TEST(0 == ft_isodd(-10));
     CU_TEST(1 == ft_isodd(-1));
     CU_TEST(0 == ft_isodd(-0));
@@ -31,33 +31,46 @@ void	test_isodd()
     return ;
 }
 
-// t_cu	test_reset_int(void)
-// {
-// 	// t_cu counter;
+void	test_add(void)
+{
+    CU_RUN_START;
+    CU_RUN_SECTION("basic");
+    CU_TEST(69 == ft_add(55, 14));
+    CU_TEST(42 == ft_add(20, 22));
+    CU_RUN_SECTION("negatif");
 
-// 	// counter = cu_init();
-// 	// cu_run(&counter, test_isodd("Basic test", 10, 0));
-// 	// cu_run(&counter, test_isodd("Basic test 2", 11, 1));
-// 	// ENDSUITE(counter);
+    CU_TEST(-1 == ft_add(-21, 20));
+    CU_RUN_SECTION("errorous tests");
+    CU_TEST(42 == ft_add(2, 22));
+    CU_TEST(42 == ft_add(20, 2));
+    CU_RUN_END;
+    return ;
+}
+void	test_reset_int(void)
+{
+    int a;
+    ft_reset_int(&a);
+    CU_RUN_START;
+    CU_RUN_SECTION("basic");
+    CU_TEST(0 == a);
+    CU_RUN_SECTION("reset after a set");
+    a = 10;
+    CU_TEST(10 == a);
+    ft_reset_int(&a);
+    CU_TEST(0 == a);
+    CU_RUN_SECTION("errorous tests");
+    CU_TEST(10 == a);
+    CU_RUN_END;
+    return ;
+}
 
-//     return
-// }
-
-// t_cu	test_isodd(void)
-// {
-// 	// t_cu counter;
-
-// 	// counter = cu_init();
-// 	// cu_run(&counter, test_isodd("Basic test", 10, 0));
-// 	// cu_run(&counter, test_isodd("Basic test 2", 11, 1));
-// 	// ENDSUITE(counter);
-// }
 
 int     main(void)
 {
     CU_BEGIN("Test project for cu_test developpement");
     CU_RUN(test_isodd);
-    // CU_RUN(test_reset_int);
+    CU_RUN(test_add);
+    CU_RUN(test_reset_int);
     CU_END;
 	return (0);
 }
