@@ -25,7 +25,6 @@
 
 global STRDUP_LABEL
 STRDUP_LABEL:       ; rdi = *str duplicate
-
     call    STRLEN_LABEL
     push    rdi
     inc     rax
