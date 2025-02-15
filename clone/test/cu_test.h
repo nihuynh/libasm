@@ -38,7 +38,10 @@ static t_cu_result cu_run_reg;  // str: section title
 // Runner:
 # define CU_RUN_START do { _cu_run_start(); } while (0)
 # define CU_TEST(cond) do { _cu_result_test(&cu_runner, !(!(cond))); } while (0)
-# define CU_EXPECT(val, expected) do { _cu_result_expect(!(!(val == expected)), #val, #expected); } while (0)
+# define CU_EXPECT(expected_type, val, expected) do {\
+    expected_type _cu_a = val ; \
+    expected_type _cu_b = expected; \
+    (_cu_result_expect(!(!(_cu_a == _cu_b)), #val, #expected)) ? (void)0 : _cu_dump_int(_cu_a, _cu_b); } while (0)
 # define CU_RUN_SECTION(section_title) do { _cu_run_section(section_title); } while (0)
 # define CU_RUN_END do { _cu_run_end(); return ;} while (0)
 
@@ -53,12 +56,13 @@ static t_cu_result cu_run_reg;  // str: section title
 */
 // Misc fonctions:
 void	_cu_result_test(t_cu_result *result, bool cond) {(cond) ? result->pass++ : result->fail++;}
-void	_cu_result_expect(bool cond, const char *val, const char *expected)
+bool	_cu_result_expect(bool cond, const char *val, const char *expected)
 {
     int fail = cu_runner.fail;
     _cu_result_test(&cu_runner, cond);
     if (fail != cu_runner.fail)
-        printf("Failure on : %s == %s\n", val, expected);
+        printf("%s:%s\tFailure : %s == %s\n", cu_runner.str, cu_run_reg.str, val, expected);
+    return (fail == cu_runner.fail);
 }
 
 void	_cu_result_reset(t_cu_result *result)
@@ -78,6 +82,18 @@ void	_cu_result_update_str(const char *head, const char *new_str, t_cu_result *r
     result->str = new_str;
     printf("%s%s\n", head, new_str);
 }
+
+// Debug print
+void	_cu_dump_int(int output, int ref)
+{
+	printf("\tOutput: %i\t\tExpected: %i\n", output, ref);
+}
+
+// void	cu_dump_str(char *in, char *expect, char *out)
+// {
+// 	printf("\tOutput: %s Expected: %s", expect, out);
+// }
+
 
 // Suite fonctions:
 int 	_cu_end(void)

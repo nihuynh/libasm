@@ -28,14 +28,14 @@ void	test_isodd()
 {
     CU_RUN_START;
     CU_RUN_SECTION("basic");
-    CU_EXPECT(ft_isodd(10), 0);
-    CU_EXPECT(ft_isodd(11), 1);
-    CU_EXPECT(ft_isodd(0), 0);
+    CU_EXPECT(int, ft_isodd(10), 0);
+    CU_EXPECT(int, ft_isodd(11), 1);
+    CU_EXPECT(int, ft_isodd(0), 0);
 
     CU_RUN_SECTION("negative value");
-    CU_EXPECT(ft_isodd(-10), 0);
-    CU_EXPECT(ft_isodd(-1), 1);
-    CU_EXPECT(ft_isodd(-0), 0);
+    CU_EXPECT(int, ft_isodd(-10), 0);
+    CU_EXPECT(int, ft_isodd(-1), 1);
+    CU_EXPECT(int, ft_isodd(-0), 0);
     CU_RUN_END;
 }
 
@@ -43,14 +43,14 @@ void	test_add(void)
 {
     CU_RUN_START;
     CU_RUN_SECTION("basic");
-    CU_EXPECT(ft_add(55, 14), 55 + 14);
-    CU_EXPECT(ft_add(20, 22), 20 + 22);
+    CU_EXPECT(int, ft_add(55, 14), 55 + 14);
+    CU_EXPECT(int, ft_add(20, 22), 20 + 22);
     CU_RUN_SECTION("negatif");
 
-    CU_EXPECT(ft_add(-21, 20), -1);
+    CU_EXPECT(int, ft_add(-21, 20), -1);
     CU_RUN_SECTION("errorous tests");
-    CU_EXPECT(ft_add(2, 22), 4);
-    CU_EXPECT(ft_add(20, 2), 4);
+    CU_EXPECT(int, ft_add(2, 22), 4);
+    CU_EXPECT(int, ft_add(20, 2), 4);
     CU_RUN_END;
 }
 void	test_reset_int(void)
@@ -59,14 +59,14 @@ void	test_reset_int(void)
     ft_reset_int(&a);
     CU_RUN_START;
     CU_RUN_SECTION("basic");
-    CU_EXPECT(a, 0);
+    CU_EXPECT(int, a, 0);
     CU_RUN_SECTION("reset after a set");
     a = 10;
-    CU_EXPECT(a, 10);
+    CU_EXPECT(int, a, 10);
     ft_reset_int(&a);
-    CU_EXPECT(a, 0);
+    CU_EXPECT(int, a, 0);
     CU_RUN_SECTION("errorous tests");
-    CU_EXPECT(a, 10);
+    CU_EXPECT(int, a, 10);
     CU_RUN_END;
 }
 

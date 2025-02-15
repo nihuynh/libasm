@@ -34,3 +34,6 @@ More about asm:
 - https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf
 SSE:
 - https://www.strchr.com/strcmp_and_strlen_using_sse_4.2
+
+GDB on MACarm:
+- https://stackoverflow.com/questions/67310123/how-to-install-gdb-on-mac-m1-apple-silicon
