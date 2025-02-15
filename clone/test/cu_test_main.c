@@ -37,7 +37,6 @@ void	test_isodd()
     CU_EXPECT(ft_isodd(-1), 1);
     CU_EXPECT(ft_isodd(-0), 0);
     CU_RUN_END;
-    return ;
 }
 
 void	test_add(void)
@@ -53,7 +52,6 @@ void	test_add(void)
     CU_EXPECT(ft_add(2, 22), 4);
     CU_EXPECT(ft_add(20, 2), 4);
     CU_RUN_END;
-    return ;
 }
 void	test_reset_int(void)
 {
@@ -70,7 +68,6 @@ void	test_reset_int(void)
     CU_RUN_SECTION("errorous tests");
     CU_EXPECT(a, 10);
     CU_RUN_END;
-    return ;
 }
 
 
@@ -81,5 +78,4 @@ int     main(void)
     CU_RUN(test_add);
     CU_RUN(test_reset_int);
     CU_END;
-	return (0);
 }

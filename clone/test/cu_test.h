@@ -34,13 +34,13 @@ static t_cu_result cu_run_reg;  // str: section title
 // Suite:
 # define CU_BEGIN(title) do { _cu_result_update_str("\nCU_TEST -> ", title, &cu_suite); } while (0)
 # define CU_RUN(test_fn) do { _cu_result_update_str("\n\ttesting fn -> ", #test_fn, &cu_runner); test_fn(); } while (0)
-# define CU_END do { _cu_end(); } while (0)
+# define CU_END do { return (_cu_end()); } while (0)
 // Runner:
 # define CU_RUN_START do { _cu_run_start(); } while (0)
 # define CU_TEST(cond) do { _cu_result_test(&cu_runner, !(!(cond))); } while (0)
 # define CU_EXPECT(val, expected) do { _cu_result_expect(!(!(val == expected)), #val, #expected); } while (0)
 # define CU_RUN_SECTION(section_title) do { _cu_run_section(section_title); } while (0)
-# define CU_RUN_END do { _cu_run_end(); } while (0)
+# define CU_RUN_END do { _cu_run_end(); return ;} while (0)
 
 /*
 ** Formating
@@ -80,8 +80,9 @@ void	_cu_result_update_str(const char *head, const char *new_str, t_cu_result *r
 }
 
 // Suite fonctions:
-void	_cu_end(void)
+int 	_cu_end(void)
 {
+    int res = (cu_suite.fail != 0);
     _cu_result_print("\nBilan", cu_suite.str, cu_suite.pass, cu_suite.pass + cu_suite.fail);
     // Clear the global variables of CU_TEST
     _cu_result_reset(&cu_suite);
@@ -90,6 +91,7 @@ void	_cu_end(void)
     // cu_runner.str = NULL;
     _cu_result_reset(&cu_run_reg);
     cu_run_reg.str = NULL;
+    return (res);
 }
 
 // Runner fonctions:
