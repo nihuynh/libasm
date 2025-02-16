@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 15:22:05 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/16 15:37:08 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/02/16 16:14:27 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@ ssize_t ft_write(int fd, const void *buf, size_t count);
 /*
 ** Part II
 */
-typedef struct      s_list
+typedef struct s_list
 {
-    void *data;
+    void          *data;
     struct s_list *next;
 } t_list;
 

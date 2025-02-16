@@ -27,10 +27,10 @@ void test_ft_read(void)
 {
     printf("\nLearner ft_read:\n");
 
-    char buff[100];
-    int fd;
+    char    buff[100];
+    int     fd;
     ssize_t ret;
-    char buff_ref[100];
+    char    buff_ref[100];
     ssize_t ret_ref;
     errno = 0;
 

@@ -17,10 +17,8 @@
  * TODO: Add random test
  * TODO: Add debug for str
  * TODO: Add debug for memory
- * TODO: Add option parsing ?
- *
+ * TODO: Add option parsing
  */
-
 
 #ifndef CU_TEST_H
 # define CU_TEST_H
@@ -30,10 +28,10 @@
 /*
 ** Data
 */
-typedef struct          s_cu_result
+typedef struct s_cu_result
 {
-    int pass;
-    int fail;
+    int        pass;
+    int        fail;
     const char *str;
 } t_cu_result;
 
