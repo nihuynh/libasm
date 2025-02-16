@@ -70,7 +70,7 @@ $(OBJDIR)/%.out: %.c | $(OBJDIR)
 	$(CC) $(CFLAGS) $< -o $@ $(CLIB_FLAGS)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile test_SRC $< $(OKLOGO)"
 
-test: $(NAME) $(TEST)
+test: tclean $(NAME) $(TEST)
 	find $(OBJDIR) -name "*.out" -type f
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mTest are ready $(OKLOGO)"
 .PHONY: test
@@ -81,18 +81,27 @@ usage: ## Print out on how to use this Makefile.
 	| fgrep -v fgrep | awk 'BEGIN {FS = ":.*?## "}; {printf $(PHELP), $$1, $$2}'
 .PHONY: usage
 
-clean: ## Clean of the project directory (.o & .d).
+format: ## Format the sources
+	# TODO: Check if repo is sync/commit
+	find . \( -name "*.cpp" -o -name "*.c" -o -name "*.h" \) -exec uncrustify -c uncrust.conf --no-backup {} +
+	@printf "\033[1;34m$(NAME)\033[25G\033[33mFormating sources $(OKLOGO)"
+.PHONY: format
+
+clean: tclean ## Clean of the project directory (.o & .d).
 	$(RM) $(OBJ)
-	$(RM) $(TEST)
-	$(RM) -r $(OBJDIR)
 	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning objects $(OKLOGO)"
 .PHONY: clean
 
-fclean: clean ## Delete the library, object files & test_SRC binarys.
+fclean: tclean clean ## Delete the library, object files & test_SRC binarys.
 	$(RM) $(NAME)
+	$(RM) -r $(OBJDIR)
+	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning $(NAME) & test executables $(OKLOGO)"
+.PHONY: fclean
+
+tclean: ## Delete executables.
 	$(RM) a.out
 	$(RM) $(TEST)
-	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning $(NAME) & test executables $(OKLOGO)"
+	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning test executables $(OKLOGO)"
 .PHONY: fclean
 
 re: fclean all ## Rebuild the project.
