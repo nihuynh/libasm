@@ -34,8 +34,8 @@ typedef struct          s_cu_result
 {
     int pass;
     int fail;
-    const char          *str;
-}                       t_cu_result;
+    const char *str;
+} t_cu_result;
 
 static t_cu_result cu_suite;    // str: name of the test suite (int hold the tests results)
 static t_cu_result cu_runner;   // str: test fn as str (test_fn in CU_RUN)
@@ -71,10 +71,10 @@ static t_cu_result cu_run_reg;  // str: current test section (int used as stop w
 ** Functions :
 */
 // Misc fonctions:
-void    _cu_result_test(t_cu_result *result, bool cond) {
+void _cu_result_test(t_cu_result *result, bool cond) {
     (cond) ? result->pass++ : result->fail++;
 }
-bool    _cu_result_expect(bool cond, const char *val, const char *expected)
+bool _cu_result_expect(bool cond, const char *val, const char *expected)
 {
     int fail = cu_runner.fail;
     _cu_result_test(&cu_runner, cond);
@@ -83,26 +83,26 @@ bool    _cu_result_expect(bool cond, const char *val, const char *expected)
     return (fail == cu_runner.fail);
 }
 
-void    _cu_result_reset(t_cu_result *result)
+void _cu_result_reset(t_cu_result *result)
 {
     result->pass = 0;
     result->fail = 0;
 }
-void    _cu_result_print(const char *head, const char *subject, int pass, int all)
+void _cu_result_print(const char *head, const char *subject, int pass, int all)
 {
     if (pass == all)
         printf("%s : %s"_CU_SUCCESS_FORMAT, head, subject, pass, pass);
     else
         printf("%s : %s"_CU_ERROR_FORMAT, head, subject, pass, all);
 }
-void    _cu_result_update_str(const char *head, const char *new_str, t_cu_result *result)
+void _cu_result_update_str(const char *head, const char *new_str, t_cu_result *result)
 {
     result->str = new_str;
     printf("%s%s\n", head, new_str);
 }
 
 // Debug print
-void    _cu_dump_int(int output, int ref)
+void _cu_dump_int(int output, int ref)
 {
     printf("\tOutput: %i\tExpected: %i\n", output, ref);
 }
@@ -114,7 +114,7 @@ void    _cu_dump_int(int output, int ref)
 
 
 // Suite fonctions:
-int     _cu_end(void)
+int _cu_end(void)
 {
     int res = (cu_suite.fail != 0);
     _cu_result_print("\nBilan", cu_suite.str, cu_suite.pass, cu_suite.pass + cu_suite.fail);
@@ -129,13 +129,13 @@ int     _cu_end(void)
 }
 
 // Runner fonctions:
-void    _cu_run_start(void)
+void _cu_run_start(void)
 {
     _cu_result_reset(&cu_runner);
     _cu_result_reset(&cu_run_reg);
     cu_run_reg.str = NULL;
 }
-void    _cu_run_section(const char *section_title)
+void _cu_run_section(const char *section_title)
 {
     if (cu_run_reg.str != NULL)
     {
@@ -146,7 +146,7 @@ void    _cu_run_section(const char *section_title)
     cu_run_reg.pass = cu_runner.pass;
     cu_run_reg.fail = cu_runner.fail;
 }
-void    _cu_run_end(void)
+void _cu_run_end(void)
 {
     _cu_result_print(cu_runner.str, cu_run_reg.str, (cu_runner.pass - cu_run_reg.pass),
                      (cu_runner.pass + cu_runner.fail - cu_run_reg.pass - cu_run_reg.fail));

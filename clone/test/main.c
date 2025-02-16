@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/16 15:37:38 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/02/16 15:54:06 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 /*
 ** Part I
 */
-void    test_ft_read(void)
+void test_ft_read(void)
 {
     printf("\nLearner ft_read:\n");
 
@@ -43,7 +43,7 @@ void    test_ft_read(void)
     fd = open("test.txt", O_RDONLY);
     ret_ref = read(fd, buff_ref, 10);
     buff_ref[ret_ref] = '\0';
-    CU_EXPECT(int, strcmp((const char *)&buff_ref, (const char *)&buff), 0);
+    CU_EXPECT(int, strcmp((const char*)&buff_ref, (const char*)&buff), 0);
     CU_EXPECT(int, ret_ref, ret);
     CU_EXPECT(int, errno, 0);
     printf("\nbuff = [%s] REF = [%s]\n", buff, buff_ref);
@@ -62,7 +62,7 @@ void    test_ft_read(void)
     ret_ref = read(fd, buff_ref, 20);
     int ref_errno = errno;
     buff_ref[ret_ref] = '\0';
-    CU_EXPECT(int, strcmp((const char *)&buff_ref, (const char *)&buff), 0);
+    CU_EXPECT(int, strcmp((const char*)&buff_ref, (const char*)&buff), 0);
     CU_EXPECT(int, ret, ret_ref);
     CU_EXPECT(int, tmp_errno, ref_errno);
     printf("\nbuff = [%s] REF = [%s]", buff, buff_ref);
@@ -70,7 +70,7 @@ void    test_ft_read(void)
     CU_RUN_END;
 }
 
-void    test_ft_strcmp(void)
+void test_ft_strcmp(void)
 {
     CU_RUN_START;
     CU_RUN_SECTION("basic");
@@ -80,23 +80,23 @@ void    test_ft_strcmp(void)
     CU_RUN_END;
 }
 
-void    test_ft_strcpy(void)
+void test_ft_strcpy(void)
 {
     char buffy[64];
     ft_strcpy((char*)&buffy, "Helloworld");
     CU_RUN_START;
     CU_RUN_SECTION("basic");
-    CU_EXPECT(int, ft_strlen((const char *)&buffy), strlen("Helloworld"));
-    CU_EXPECT(int, strcmp((const char *)&buffy, "Helloworld"), 0);
+    CU_EXPECT(int, ft_strlen((const char*)&buffy), strlen("Helloworld"));
+    CU_EXPECT(int, strcmp((const char*)&buffy, "Helloworld"), 0);
 
     CU_RUN_SECTION("overwrite");
     ft_strcpy((char*)&buffy, "42");
-    CU_EXPECT(int, ft_strlen((const char *)&buffy), strlen("42"));
-    CU_EXPECT(int, strcmp((const char *)&buffy, "42"), 0);
+    CU_EXPECT(int, ft_strlen((const char*)&buffy), strlen("42"));
+    CU_EXPECT(int, strcmp((const char*)&buffy, "42"), 0);
     CU_RUN_END;
 }
 
-void    test_ft_strlen(void)
+void test_ft_strlen(void)
 {
     CU_RUN_START;
     CU_RUN_SECTION("basic");
@@ -109,7 +109,7 @@ void    test_ft_strlen(void)
     CU_RUN_END;
 }
 
-void    test_ft_strdup(void)
+void test_ft_strdup(void)
 {
     char *dest = ft_strdup("Helloworld");
     CU_RUN_START;
@@ -125,7 +125,7 @@ void    test_ft_strdup(void)
     CU_RUN_END;
 }
 
-void    test_ft_write(void)
+void test_ft_write(void)
 {
     CU_RUN_START;
     CU_RUN_SECTION("simple print");
@@ -143,34 +143,34 @@ void    test_ft_write(void)
 ** Part II
 */
 
-void    test_ft_atoi_base(void)
+void test_ft_atoi_base(void)
 {
     CU_RUN_START;
     CU_RUN_END;
 }
-void    test_ft_list_push_front(void)
+void test_ft_list_push_front(void)
 {
     CU_RUN_START;
     CU_RUN_END;
 }
-void    test_ft_list_size(void)
+void test_ft_list_size(void)
 {
     CU_RUN_START;
     CU_RUN_END;
 }
-void    test_ft_list_sort(void)
+void test_ft_list_sort(void)
 {
     CU_RUN_START;
     CU_RUN_END;
 }
-void    test_ft_list_remove_if(void)
+void test_ft_list_remove_if(void)
 {
     CU_RUN_START;
     CU_RUN_END;
 }
 
 
-int     main(void)
+int main(void)
 {
     CU_BEGIN("Testing libasm, part I & II");
     CU_RUN(test_ft_write);
