@@ -37,3 +37,8 @@ SSE:
 
 GDB on MACarm:
 - https://stackoverflow.com/questions/67310123/how-to-install-gdb-on-mac-m1-apple-silicon
+
+
+```shell
+    sudo apt update && sudo apt install -y build-essential gdb clang nasm
+```

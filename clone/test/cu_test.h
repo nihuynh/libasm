@@ -7,7 +7,20 @@
  *  CU_test goal is to accelerate unit test developpement.
  *  Small memory usage and no heap allocation.
  * Copyright 2025 NH
+ * 
+ * TODO: Add timers
+ * TODO: Add quiet some log
+ * TODO: Test memory footprint
+ * TODO: Add debug for float
+ * TODO: Add leak testing
+ * TODO: Add setup and teardown
+ * TODO: Add random test
+ * TODO: Add debug for str
+ * TODO: Add debug for memory
+ * TODO: Add option parsing ?
+ * 
  */
+
 
 #ifndef CU_TEST_H
 # define CU_TEST_H
@@ -24,9 +37,9 @@ typedef struct          s_cu_result
     const char          *str;
 }                       t_cu_result;
 
-static t_cu_result cu_suite;    // str: suite title
-static t_cu_result cu_runner;   // str: current test fn
-static t_cu_result cu_run_reg;  // str: section title
+static t_cu_result cu_suite;    // str: name of the test suite (int hold the tests results)
+static t_cu_result cu_runner;   // str: test fn as str (test_fn in CU_RUN)
+static t_cu_result cu_run_reg;  // str: current test section (int used as stop watch during the test run)
 
 /*
 ** Macros:
@@ -41,15 +54,16 @@ static t_cu_result cu_run_reg;  // str: section title
 # define CU_EXPECT(expected_type, val, expected) do {\
     expected_type _cu_a = val ; \
     expected_type _cu_b = expected; \
-    (_cu_result_expect(!(!(_cu_a == _cu_b)), #val, #expected)) ? (void)0 : _cu_dump_int(_cu_a, _cu_b); } while (0)
+    (_cu_result_expect(!(!(_cu_a == _cu_b)), #val, #expected)) ? (void)0 : _cu_dump_##expected_type(_cu_a, _cu_b); } while (0)
 # define CU_RUN_SECTION(section_title) do { _cu_run_section(section_title); } while (0)
 # define CU_RUN_END do { _cu_run_end(); return ;} while (0)
 
 /*
 ** Formating
 */
-# define _CU_SUCCESS_FORMAT "\033[64G\33[32m[%d / %d]\033[0m\n"
-# define _CU_ERROR_FORMAT "\033[64G\33[31m[%d / %d]\033[0m\n"
+# define _CU_RUN_RESULT "[%d / %d]"
+# define _CU_SUCCESS_FORMAT "\033[64G\33[32m"_CU_RUN_RESULT"\033[0m\n"
+# define _CU_ERROR_FORMAT "\033[63G\33[31m"_CU_RUN_RESULT"\033[0m\n"
 
 /*
 ** Functions :
@@ -86,7 +100,7 @@ void	_cu_result_update_str(const char *head, const char *new_str, t_cu_result *r
 // Debug print
 void	_cu_dump_int(int output, int ref)
 {
-	printf("\tOutput: %i\t\tExpected: %i\n", output, ref);
+	printf("\tOutput: %i\tExpected: %i\n", output, ref);
 }
 
 // void	cu_dump_str(char *in, char *expect, char *out)
@@ -132,8 +146,9 @@ void	_cu_run_end(void)
 {
     _cu_result_print(cu_runner.str, cu_run_reg.str, (cu_runner.pass - cu_run_reg.pass),
         (cu_runner.pass + cu_runner.fail - cu_run_reg.pass - cu_run_reg.fail));
-    _cu_result_print("\tcompleted", cu_runner.str, cu_runner.pass, cu_runner.pass + cu_runner.fail);
-    _cu_result_test(&cu_suite, (cu_runner.fail == 0));
+    _cu_result_print("  completed", cu_runner.str, cu_runner.pass, cu_runner.pass + cu_runner.fail);
+    if ((cu_runner.pass + cu_runner.fail) > 0)
+        _cu_result_test(&cu_suite, (cu_runner.fail == 0));
     _cu_result_reset(&cu_runner);
     _cu_result_reset(&cu_run_reg);
 }

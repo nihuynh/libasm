@@ -19,7 +19,8 @@ SRC			+=	ft_atoi_base.s \
 				ft_list_remove_if.s
 
 TEST_SRC	:= 	main.c \
-				cu_test_main.c
+				cu_test_main.c \
+                size_demo.c
 
 VPATH		:=	./src ./test
 # ---

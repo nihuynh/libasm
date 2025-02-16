@@ -6,21 +6,19 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/16 00:50:46 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/02/16 02:34:56 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
-
-#include <errno.h>
-
-#include "libasm.h"
 
 #include "cu_test.h"
+#include "libasm.h"
 
 /*
 ** Part I
@@ -41,34 +39,34 @@ void    test_ft_read(void)
     fd = open("test.txt", O_RDONLY);
     ret = ft_read(fd, buff, 10);
     buff[ret] = '\0';
-    // close(fd);
-    // fd = open("test.txt", O_RDONLY);
+    close(fd);
+    fd = open("test.txt", O_RDONLY);
     ret_ref = read(fd, buff_ref, 10);
     buff_ref[ret_ref] = '\0';
     CU_EXPECT(int, strcmp((const char *)&buff_ref, (const char *)&buff), 0);
     CU_EXPECT(int, ret_ref, ret);
     CU_EXPECT(int, errno, 0);
-    printf("\nbuff = [%s] REF = [%s] ret = [%zd] REF = [%zd]\n", buff, buff_ref, ret, ret_ref);
+    printf("\nbuff = [%s] REF = [%s]\n", buff, buff_ref);
     close(fd);
 
     buff[0] = '\0';
     buff_ref[0] = '\0';
-    // CU_RUN_SECTION("missing file");
+    CU_RUN_SECTION("missing file");
 
-    // fd = open("lol.txt", O_RDONLY);
-    // ret = ft_read(fd, buff, 20);
-    // buff[ret] = '\0';
-    // int tmp_errno = errno;
-    // close(fd);
-    // fd = open("lol.txt", O_RDONLY);
-    // int tmp_errno = errno;
-    // ret_ref = read(fd, buff_ref, 20);
-    // buff_ref[ret_ref] = '\0';
-    // CU_EXPECT(int, strcmp((const char *)&buff_ref, (const char *)&buff), 0);
-    // CU_EXPECT(int, ret_ref, ret);
-    // CU_EXPECT(int, tmp_errno, errno);
-    // printf("\nbuff = [%s] REF = [%s] ret = [%zd] REF = [%zd]\nerrno = %d REF = %d", buff, buff_ref, ret, ret_ref, tmp_errno, errno);
-    // close(fd);
+    fd = open("lol.txt", O_RDONLY);
+    ret = ft_read(fd, buff, 20);
+    int tmp_errno = errno;
+    buff[ret] = '\0';
+    close(fd);
+    fd = open("lol.txt", O_RDONLY);
+    ret_ref = read(fd, buff_ref, 20);
+    int ref_errno = errno;
+    buff_ref[ret_ref] = '\0';
+    CU_EXPECT(int, strcmp((const char *)&buff_ref, (const char *)&buff), 0);
+    CU_EXPECT(int, ret, ret_ref);
+    CU_EXPECT(int, tmp_errno, ref_errno);
+    printf("\nbuff = [%s] REF = [%s]", buff, buff_ref);
+    close(fd);
     CU_RUN_END;
 }
 
@@ -131,10 +129,13 @@ void    test_ft_write(void)
 {
     CU_RUN_START;
     CU_RUN_SECTION("simple print");
-    CU_EXPECT(int, ft_write(1, "\nft_write:\n", strlen("\nft_write:\n")), strlen("\nft_write:\n"));
+    CU_EXPECT(int, ft_write(1, "\nft_write:", strlen("\nft_write:")), strlen("\nft_write:"));
     CU_EXPECT(int, ft_write(1, "Test Test\n", strlen("Test Test\n")), strlen("Test Test\n"));
     CU_RUN_SECTION("Empty string");
     CU_EXPECT(int, ft_write(1, "", strlen("")), strlen(""));
+    CU_RUN_SECTION("Negative fd");
+    CU_EXPECT(int, ft_write(1, NULL, 5), -1);
+    CU_EXPECT(int, errno, -3);
     CU_RUN_END;
 }
 
@@ -172,17 +173,17 @@ void    test_ft_list_remove_if(void)
 int     main(void)
 {
     CU_BEGIN("Testing libasm, part I & II");
-    // CU_RUN(test_ft_write);
+    CU_RUN(test_ft_write);
     CU_RUN(test_ft_read);
-    // CU_RUN(test_ft_strcmp);
-    // CU_RUN(test_ft_strlen);
-    // CU_RUN(test_ft_strcpy);
-    // CU_RUN(test_ft_strdup);
-    // CU_RUN(test_ft_atoi_base);
-    // CU_RUN(test_ft_list_push_front);
-    // CU_RUN(test_ft_list_size);
-    // CU_RUN(test_ft_list_sort);
-    // CU_RUN(test_ft_list_remove_if);
+    CU_RUN(test_ft_strcmp);
+    CU_RUN(test_ft_strlen);
+    CU_RUN(test_ft_strcpy);
+    CU_RUN(test_ft_strdup);
+    CU_RUN(test_ft_atoi_base);
+    CU_RUN(test_ft_list_push_front);
+    CU_RUN(test_ft_list_size);
+    CU_RUN(test_ft_list_sort);
+    CU_RUN(test_ft_list_remove_if);
     CU_END;
 }
 
