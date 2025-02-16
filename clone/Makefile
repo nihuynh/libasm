@@ -3,14 +3,14 @@
 # Requirements: 64 bits ASM, compile with nasm, Intel syntax
 # Forbidden to use -no-pie
 
-NAME	:=	libasm.a
-VERBOSE	:=	1
-SRC 	:=	ft_strlen.s \
-			ft_strcpy.s \
-			ft_strcmp.s \
-			ft_write.s \
-			ft_read.s \
-			ft_strdup.s
+NAME		:=	libasm.a
+VERBOSE		:=	1
+SRC 		:=	ft_strlen.s \
+				ft_strcpy.s \
+				ft_strcmp.s \
+				ft_write.s \
+				ft_read.s \
+				ft_strdup.s
 
 SRC			+=	ft_atoi_base.s \
 				ft_list_push_front.s \
@@ -18,15 +18,15 @@ SRC			+=	ft_atoi_base.s \
 				ft_list_sort.s \
 				ft_list_remove_if.s
 
-TEST_SRC	:= 	main.c \
+TEST_SRC	:=	main.c \
 				cu_test_main.c \
-                size_demo.c
+				size_demo.c
 
 VPATH		:=	./src ./test
 # ---
 NA			:=	nasm
-CC			:=  clang
-CFLAGS		:=  -Wall -Wextra -Werror -Iinclude
+CC			:=	clang
+CFLAGS		:=	-Wall -Wextra -Werror -Iinclude
 CLIB_FLAGS	:=	-L . -l asm
 # Compiling on mac ARM
 ifeq ($(shell uname -m), arm64)

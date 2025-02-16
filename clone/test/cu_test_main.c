@@ -9,22 +9,22 @@
 
 #include "cu_test.h"
 
-int		ft_isodd(int value)
+int ft_isodd(int value)
 {
-	return (value % 2) ? 1 : 0;
+    return (value % 2) ? 1 : 0;
 }
 
-void	ft_reset_int(int *val)
+void ft_reset_int(int *val)
 {
-	*val = 0;
+    *val = 0;
 }
 
-int		ft_add(int a, int b)
+int ft_add(int a, int b)
 {
-	return a + b;
+    return a + b;
 }
 
-void	test_isodd()
+void test_isodd()
 {
     CU_RUN_START;
     CU_RUN_SECTION("basic");
@@ -39,7 +39,7 @@ void	test_isodd()
     CU_RUN_END;
 }
 
-void	test_add(void)
+void test_add(void)
 {
     CU_RUN_START;
     CU_RUN_SECTION("basic");
@@ -53,7 +53,7 @@ void	test_add(void)
     CU_EXPECT(int, ft_add(20, 2), 4);
     CU_RUN_END;
 }
-void	test_reset_int(void)
+void test_reset_int(void)
 {
     int a;
     ft_reset_int(&a);
@@ -70,8 +70,7 @@ void	test_reset_int(void)
     CU_RUN_END;
 }
 
-
-int     main(void)
+int main(void)
 {
     CU_BEGIN("Test project for cu_test developpement");
     CU_RUN(test_isodd);

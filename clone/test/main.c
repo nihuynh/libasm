@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/16 02:34:56 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/02/16 15:37:38 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ void    test_ft_read(void)
 {
     printf("\nLearner ft_read:\n");
 
-    char		buff[100];
-    int         fd;
-    ssize_t     ret;
-    char		buff_ref[100];
-    ssize_t     ret_ref;
+    char buff[100];
+    int fd;
+    ssize_t ret;
+    char buff_ref[100];
+    ssize_t ret_ref;
     errno = 0;
 
     CU_RUN_START;
@@ -186,7 +186,3 @@ int     main(void)
     CU_RUN(test_ft_list_remove_if);
     CU_END;
 }
-
-
-
-
