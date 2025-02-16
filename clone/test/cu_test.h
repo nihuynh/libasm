@@ -43,85 +43,97 @@ static t_cu_result cu_run_reg;  // str: current test section (int used as stop w
 ** Macros:
 */
 // Suite:
-# define CU_BEGIN(title) do { _cu_result_update_str("\nCU_TEST -> ", title, &cu_suite); } while (0)
-# define CU_RUN(test_fn) do { _cu_result_update_str("\n\ttesting fn -> ", #test_fn, &cu_runner); \
-                              test_fn(); } while (0)
-# define CU_END do { return (_cu_end()); } while (0)
+# define CU_BEGIN(_cu_title)   do { _cu_res_set_str("CU_TEST -> ", _cu_title, \
+                                                    &cu_suite); } while (0)
+# define CU_RUN(test_fn)       do { _cu_res_set_str("\ttesting fn -> ", \
+                                                    #test_fn, &cu_runner); \
+                                    test_fn(); } while (0)
+# define CU_END                do { return (_cu_end()); } while (0)
 // Runner:
-# define CU_RUN_START do { _cu_run_start(); } while (0)
-# define CU_TEST(cond) do { _cu_result_test(&cu_runner, !(!(cond))); } while (0)
-# define CU_EXPECT(expected_type, val, expected) do { \
-            expected_type _cu_a = val; \
-            expected_type _cu_b = expected; \
-            (_cu_result_expect(!(!(_cu_a == _cu_b)), #val, #expected)) \
-                               ? (void)0 : _cu_dump_ ## expected_type(_cu_a, _cu_b); } while (0)
-# define CU_RUN_SECTION(section_title) do { _cu_run_section(section_title); } while (0)
-# define CU_RUN_END do { _cu_run_end(); return;} while (0)
+# define CU_RUN_START          do { _cu_run_start(); } while (0)
+# define CU_TEST(cond)         do { _cu_res_test(&cu_runner, !(!(cond))); \
+} while (0)
+# define CU_SECTION(_cu_title) do { _CU_SECTION(_cu_title); } while (0)
+# define CU_RUN_END            do { _cu_run_end(); return;} while (0)
+
+/*
+** Polymorphic expect
+*/
+
+# define CU_EXPECT(_cu_e_type, _cu_v, _cu_e) do { \
+            if (!_cu_res_test(&cu_runner, _CU_COND_TYPE_##_cu_e_type(_cu_v, _cu_e))) \
+            printf("%s:%s\t\tFailure\n\t%s="_CU_DUMP_TYPE_##_cu_e_type \
+                   "\tExpected: "_CU_DUMP_TYPE_##_cu_e_type "\n", cu_runner.str, cu_run_reg.str, \
+                   #_cu_v, _cu_v, _cu_e);} while (0)
+/*
+** Polymorphic macros
+*/
+// General cond
+# define _CU_COND_TYPE_NUM_EQU(a, b)         ((a) == (b))
+// Derive cond
+// # define _CU_COND_TYPE_float(_cu_a, _cu_b) !(!(_cu_a == _cu_b)))
+# define _CU_COND_TYPE_int(a, b)             _CU_COND_TYPE_NUM_EQU(a, b)
+# define _CU_COND_TYPE_long(a, b)            _CU_COND_TYPE_NUM_EQU(a, b)
+# define _CU_COND_TYPE_short(a, b)           _CU_COND_TYPE_NUM_EQU(a, b)
+# define _CU_COND_TYPE_size_t(a, b)          _CU_COND_TYPE_NUM_EQU(a, b)
+# define _CU_COND_TYPE_ssize_t(a, b)         _CU_COND_TYPE_NUM_EQU(a, b)
+# define _CU_COND_TYPE_str(a, b)             (strcmp((const char*)a, (const char*)b) == 0)
+// Prints
+
+// # define _CU_DUMP_TYPE_float  "%f"
+# define _CU_DUMP_TYPE_int     "%d"
+# define _CU_DUMP_TYPE_long    "%ld"
+# define _CU_DUMP_TYPE_short   "%hd"
+# define _CU_DUMP_TYPE_size_t  "%zu"
+# define _CU_DUMP_TYPE_ssize_t "%zd"
+# define _CU_DUMP_TYPE_str     "[%s]\n"
 
 /*
 ** Formating
 */
-# define _CU_RUN_RESULT "[%d / %d]"
+
+# define _CU_RUN_RESULT     "[%d / %d]"
 # define _CU_SUCCESS_FORMAT "\033[64G\33[32m"_CU_RUN_RESULT"\033[0m\n"
-# define _CU_ERROR_FORMAT "\033[63G\33[31m"_CU_RUN_RESULT"\033[0m\n"
+# define _CU_ERROR_FORMAT   "\033[63G\33[31m"_CU_RUN_RESULT"\033[0m\n"
 
 /*
 ** Functions :
 */
 // Misc fonctions:
-void _cu_result_test(t_cu_result *result, bool cond) {
+bool _cu_res_test(t_cu_result *result, bool cond) {
     (cond) ? result->pass++ : result->fail++;
-}
-bool _cu_result_expect(bool cond, const char *val, const char *expected)
-{
-    int fail = cu_runner.fail;
-    _cu_result_test(&cu_runner, cond);
-    if (fail != cu_runner.fail)
-        printf("%s:%s\tFailure : %s == %s\n", cu_runner.str, cu_run_reg.str, val, expected);
-    return (fail == cu_runner.fail);
+    return (cond);
 }
 
-void _cu_result_reset(t_cu_result *result)
+void _cu_res_reset(t_cu_result *result)
 {
     result->pass = 0;
     result->fail = 0;
 }
-void _cu_result_print(const char *head, const char *subject, int pass, int all)
+void _cu_res_print(const char *head, const char *subject, int pass, int all)
 {
     if (pass == all)
         printf("%s : %s"_CU_SUCCESS_FORMAT, head, subject, pass, pass);
     else
         printf("%s : %s"_CU_ERROR_FORMAT, head, subject, pass, all);
 }
-void _cu_result_update_str(const char *head, const char *new_str, t_cu_result *result)
+void _cu_res_set_str(const char *head, const char *new_str, t_cu_result *result)
 {
     result->str = new_str;
     printf("%s%s\n", head, new_str);
 }
 
-// Debug print
-void _cu_dump_int(int output, int ref)
-{
-    printf("\tOutput: %i\tExpected: %i\n", output, ref);
-}
-
-// void	cu_dump_str(char *in, char *expect, char *out)
-// {
-//      printf("\tOutput: %s Expected: %s", expect, out);
-// }
-
-
 // Suite fonctions:
 int _cu_end(void)
 {
     int res = (cu_suite.fail != 0);
-    _cu_result_print("\nBilan", cu_suite.str, cu_suite.pass, cu_suite.pass + cu_suite.fail);
+    _cu_res_print("\nBilan", cu_suite.str, cu_suite.pass, cu_suite.pass + cu_suite.fail);
     // Clear the global variables of CU_TEST
-    _cu_result_reset(&cu_suite);
+    _cu_res_reset(&cu_suite);
     cu_suite.str = NULL;
-    _cu_result_reset(&cu_runner);
+    _cu_res_reset(&cu_runner);
     // cu_runner.str = NULL;
-    _cu_result_reset(&cu_run_reg);
+    _cu_res_reset(&cu_run_reg);
     cu_run_reg.str = NULL;
     return (res);
 }
@@ -129,16 +141,16 @@ int _cu_end(void)
 // Runner fonctions:
 void _cu_run_start(void)
 {
-    _cu_result_reset(&cu_runner);
-    _cu_result_reset(&cu_run_reg);
+    _cu_res_reset(&cu_runner);
+    _cu_res_reset(&cu_run_reg);
     cu_run_reg.str = NULL;
 }
-void _cu_run_section(const char *section_title)
+void _CU_SECTION(const char *section_title)
 {
     if (cu_run_reg.str != NULL)
     {
-        _cu_result_print(cu_runner.str, cu_run_reg.str, (cu_runner.pass - cu_run_reg.pass),
-                         (cu_runner.pass + cu_runner.fail - cu_run_reg.pass - cu_run_reg.fail));
+        _cu_res_print(cu_runner.str, cu_run_reg.str, (cu_runner.pass - cu_run_reg.pass),
+                      (cu_runner.pass + cu_runner.fail - cu_run_reg.pass - cu_run_reg.fail));
     }
     cu_run_reg.str = section_title;
     cu_run_reg.pass = cu_runner.pass;
@@ -146,13 +158,13 @@ void _cu_run_section(const char *section_title)
 }
 void _cu_run_end(void)
 {
-    _cu_result_print(cu_runner.str, cu_run_reg.str, (cu_runner.pass - cu_run_reg.pass),
-                     (cu_runner.pass + cu_runner.fail - cu_run_reg.pass - cu_run_reg.fail));
-    _cu_result_print("  completed", cu_runner.str, cu_runner.pass, cu_runner.pass + cu_runner.fail);
+    _cu_res_print(cu_runner.str, cu_run_reg.str, (cu_runner.pass - cu_run_reg.pass),
+                  (cu_runner.pass + cu_runner.fail - cu_run_reg.pass - cu_run_reg.fail));
+    _cu_res_print("  completed", cu_runner.str, cu_runner.pass, cu_runner.pass + cu_runner.fail);
     if ((cu_runner.pass + cu_runner.fail) > 0)
-        _cu_result_test(&cu_suite, (cu_runner.fail == 0));
-    _cu_result_reset(&cu_runner);
-    _cu_result_reset(&cu_run_reg);
+        _cu_res_test(&cu_suite, (cu_runner.fail == 0));
+    _cu_res_reset(&cu_runner);
+    _cu_res_reset(&cu_run_reg);
 }
 
 #endif
