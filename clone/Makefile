@@ -99,7 +99,6 @@ fclean: tclean clean ## Delete the library, object files & test_SRC binarys.
 .PHONY: fclean
 
 tclean: ## Delete executables.
-	$(RM) a.out
 	$(RM) $(TEST)
 	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning test executables $(OKLOGO)"
 .PHONY: fclean
