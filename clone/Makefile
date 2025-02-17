@@ -27,7 +27,7 @@ VPATH		:=	./src ./test
 NA			:=	nasm
 CC			:=	clang
 CFLAGS		:=	-Wall -Wextra -Werror -Iinclude
-CLIB_FLAGS	:=	-L . -l asm
+CLIB_FLAGS	:=	-L. -lasm
 # Compiling on mac ARM
 ifeq ($(shell uname -m), arm64)
 	CFLAGS	+=	-ld_classic --target=x86_64-apple-darwin

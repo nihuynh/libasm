@@ -5,17 +5,17 @@
 ; Description: <Desc of the file goal(s)>
 ; Copyright 2025 NH
 
+
 %ifidn __OUTPUT_FORMAT__, macho64
-    extern ___error
     %define ERRNO_FN        ___error
     %define WRITE_LABEL     _ft_write
     %define WRITE_SYSCALL   0x2000004
 %elifidn __OUTPUT_FORMAT__, elf64
-    extern __errno_location
     %define ERRNO_FN        __errno_location
     %define WRITE_LABEL     ft_write
     %define WRITE_SYSCALL   1
 %endif
+extern ERRNO_FN
 
 global WRITE_LABEL
 WRITE_LABEL:       ; rdi = fd, rsi = buf, rdx = count
@@ -28,6 +28,7 @@ WRITE_LABEL:       ; rdi = fd, rsi = buf, rdx = count
 error_code:
     neg     rax         ; get absolute value of syscall return
     mov     rdi, rax    ; back-up rax before calling ernno
+    ; call    ERRNO_FN wrt ..plt
     call    ERRNO_FN
     mov     [rax], rdi  ; set the value of errno
     mov     rax, -1

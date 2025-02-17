@@ -24,6 +24,7 @@
 # define CU_TEST_H
 # include <stdio.h>
 # include <stdbool.h>
+# include <time.h>
 
 /*
 ** Data
@@ -33,11 +34,15 @@ typedef struct s_cu_result
     int        pass;
     int        fail;
     const char *str;
+    clock_t    time;
 } t_cu_result;
 
-static t_cu_result cu_suite;    // str: name of the test suite (int hold the tests results)
-static t_cu_result cu_runner;   // str: test fn as str (test_fn in CU_RUN)
-static t_cu_result cu_run_reg;  // str: current test section (int used as stop watch during the test run)
+static t_cu_result cu_suite;
+// str: name of the test suite (int hold the tests results)
+static t_cu_result cu_runner;
+// str: test fn as str (test_fn in CU_RUN)
+static t_cu_result cu_run_reg;
+// str: current test section (int used as stop watch during the test run)
 
 /*
 ** Macros:
@@ -93,8 +98,8 @@ static t_cu_result cu_run_reg;  // str: current test section (int used as stop w
 */
 
 # define _CU_RUN_RESULT     "[%d / %d]"
-# define _CU_SUCCESS_FORMAT "\033[64G\33[32m"_CU_RUN_RESULT"\033[0m\n"
-# define _CU_ERROR_FORMAT   "\033[63G\33[31m"_CU_RUN_RESULT"\033[0m\n"
+# define _CU_SUCCESS_FORMAT "\033[54G(%.3fms)\033[64G\33[32m"_CU_RUN_RESULT"\033[0m\n"
+# define _CU_ERROR_FORMAT   "\033[54G(%.3fms)\033[63G\33[31m"_CU_RUN_RESULT"\033[0m\n"
 
 /*
 ** Functions :
@@ -110,16 +115,18 @@ void _cu_res_reset(t_cu_result *result)
     result->pass = 0;
     result->fail = 0;
 }
-void _cu_res_print(const char *head, const char *subject, int pass, int all)
+void _cu_res_print(const char *head, t_cu_result *res, int pass, int all)
 {
+    int ticks_pass = clock() - res->time;
     if (pass == all)
-        printf("%s : %s"_CU_SUCCESS_FORMAT, head, subject, pass, pass);
+        printf("%s:%s"_CU_SUCCESS_FORMAT, head, res->str, (((float)ticks_pass * 1000.0) / CLOCKS_PER_SEC), pass, all);
     else
-        printf("%s : %s"_CU_ERROR_FORMAT, head, subject, pass, all);
+        printf("%s:%s"_CU_ERROR_FORMAT, head, res->str, (((float)ticks_pass * 1000.0) / CLOCKS_PER_SEC), pass, all);
 }
 void _cu_res_set_str(const char *head, const char *new_str, t_cu_result *result)
 {
     result->str = new_str;
+    result->time = clock();
     printf("%s%s\n", head, new_str);
 }
 
@@ -127,7 +134,7 @@ void _cu_res_set_str(const char *head, const char *new_str, t_cu_result *result)
 int _cu_end(void)
 {
     int res = (cu_suite.fail != 0);
-    _cu_res_print("\nBilan", cu_suite.str, cu_suite.pass, cu_suite.pass + cu_suite.fail);
+    _cu_res_print("\nBilan", &cu_suite, cu_suite.pass, cu_suite.pass + cu_suite.fail);
     // Clear the global variables of CU_TEST
     _cu_res_reset(&cu_suite);
     cu_suite.str = NULL;
@@ -149,18 +156,19 @@ void _CU_SECTION(const char *section_title)
 {
     if (cu_run_reg.str != NULL)
     {
-        _cu_res_print(cu_runner.str, cu_run_reg.str, (cu_runner.pass - cu_run_reg.pass),
+        _cu_res_print(cu_runner.str, &cu_run_reg, (cu_runner.pass - cu_run_reg.pass),
                       (cu_runner.pass + cu_runner.fail - cu_run_reg.pass - cu_run_reg.fail));
     }
     cu_run_reg.str = section_title;
+    cu_run_reg.time = clock();
     cu_run_reg.pass = cu_runner.pass;
     cu_run_reg.fail = cu_runner.fail;
 }
 void _cu_run_end(void)
 {
-    _cu_res_print(cu_runner.str, cu_run_reg.str, (cu_runner.pass - cu_run_reg.pass),
+    _cu_res_print(cu_runner.str, &cu_run_reg, (cu_runner.pass - cu_run_reg.pass),
                   (cu_runner.pass + cu_runner.fail - cu_run_reg.pass - cu_run_reg.fail));
-    _cu_res_print("  completed", cu_runner.str, cu_runner.pass, cu_runner.pass + cu_runner.fail);
+    _cu_res_print("  completed", &cu_runner, cu_runner.pass, cu_runner.pass + cu_runner.fail);
     if ((cu_runner.pass + cu_runner.fail) > 0)
         _cu_res_test(&cu_suite, (cu_runner.fail == 0));
     _cu_res_reset(&cu_runner);
