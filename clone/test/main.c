@@ -1,103 +1,188 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
+/*   Updated: 2025/02/16 18:29:18 by nihuynh          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <errno.h>
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <fcntl.h>
 
-#include <errno.h>
-
+#include "cu_test.h"
 #include "libasm.h"
 
-// Test fn
-void    test_ft_read(void)
+/*
+** Part I
+*/
+void test_ft_read(void)
 {
     printf("\nLearner ft_read:\n");
 
-    char		buff[100];
-    int         fd;
-    ssize_t     ret;
+    char    buff[100];
+    int     fd;
+    ssize_t ret;
+    char    buff_ref[100];
+    ssize_t ret_ref;
+    errno = 0;
 
-	printf("ft_read : \n");   
-    	fd = open("test.txt", O_RDONLY);
-    	ret = ft_read(fd, buff, 10);
-    	buff[ret] = '\0';
-	printf("buff = %sret = %zd\n", buff, ret);
-	close(fd);
-
-	printf("read : \n");
-	fd = open("test.txt", O_RDONLY);
-	ret = read(fd, buff, 10);
-	buff[ret] = '\0';
-	printf("buff = %sret = %zd\n", buff, ret);
-    	close(fd);
-	printf("----------\n");
-	printf("ft_read : \n");
-    	fd = open("lol.txt", O_RDONLY);
-    	ret = ft_read(fd, buff, 10);
- 	printf("errno : %d\n", errno);
-    	buff[ret] = '\0';
-	printf("buff = %sret = %zd\n", buff, ret);
-	close(fd);
-
-	errno = 0;
-	printf("read : \n");
-	fd = open("lol.txt", O_RDONLY);
-	ret = read(fd, buff, 10);
- 	printf("errno : %d\n", errno);
-	buff[ret] = '\0';
-	printf("buff = %sret = %zd\n", buff, ret);
+    CU_RUN_START;
+    CU_SECTION("exiting file");
+    fd = open("test.txt", O_RDONLY);
+    ret = ft_read(fd, buff, 10);
+    buff[ret] = '\0';
     close(fd);
+    fd = open("test.txt", O_RDONLY);
+    ret_ref = read(fd, buff_ref, 10);
+    buff_ref[ret_ref] = '\0';
+    CU_EXPECT(str, buff_ref, buff);
+    CU_EXPECT(ssize_t, ret_ref, ret);
+    CU_EXPECT(int, errno, 0);
+    printf("\nbuff = [%s] REF = [%s]\n", buff, buff_ref);
+    close(fd);
+
+    buff[0] = '\0';
+    buff_ref[0] = '\0';
+    CU_SECTION("missing file");
+
+    fd = open("lol.txt", O_RDONLY);
+    ret = ft_read(fd, buff, 20);
+    int tmp_errno = errno;
+    buff[ret] = '\0';
+    close(fd);
+    fd = open("lol.txt", O_RDONLY);
+    ret_ref = read(fd, buff_ref, 20);
+    int ref_errno = errno;
+    buff_ref[ret_ref] = '\0';
+    CU_EXPECT(int, strcmp((const char*)&buff_ref, (const char*)&buff), 0);
+    CU_EXPECT(ssize_t, ret, ret_ref);
+    CU_EXPECT(int, tmp_errno, ref_errno);
+    printf("\nbuff = [%s] REF = [%s]", buff, buff_ref);
+    close(fd);
+    CU_RUN_END;
 }
 
-void    test_ft_strcmp(void)
+void test_ft_strcmp(void)
 {
-    printf("\nft_strcmp:\n");
-	printf("res: %d Expected: %d\n", ft_strcmp("abc", "abc"), strcmp("abc", "abc"));
-	printf("res: %d Expected: %d\n", ft_strcmp("a", "d"), strcmp("a", "d"));
-	printf("res: %d Expected: %d\n", ft_strcmp("d", "a"), strcmp("d", "a"));
-	printf("res: %d Expected: %d\n", ft_strcmp("test", ""), strcmp("test", ""));
+    CU_RUN_START;
+    CU_SECTION("basic");
+    CU_EXPECT(int, ft_strcmp("abc", "abc"), strcmp("abc", "abc"));
+    CU_EXPECT(int, ft_strcmp("d", "a"), strcmp("d", "a"));
+    CU_EXPECT(int, ft_strcmp("test", ""), strcmp("test", ""));
+    CU_RUN_END;
 }
 
-void    test_ft_strcpy(void)
+void test_ft_strcpy(void)
 {
-	printf("\nft_strcpy:\n");
     char buffy[64];
-    ft_strcpy((char *) &buffy, "Helloworld");
-    printf("%s", buffy);
+    ft_strcpy((char*)&buffy, "Helloworld");
+    CU_RUN_START;
+    CU_SECTION("basic");
+    CU_EXPECT(size_t, ft_strlen((const char*)&buffy), strlen("Helloworld"));
+    CU_EXPECT(int, strcmp((const char*)&buffy, "Helloworld"), 0);
+
+    CU_SECTION("overwrite");
+    ft_strcpy((char*)&buffy, "42");
+    CU_EXPECT(size_t, ft_strlen((const char*)&buffy), strlen("42"));
+    CU_EXPECT(int, strcmp((const char*)&buffy, "42"), 0);
+    CU_RUN_END;
 }
 
-void    test_ft_strlen(void)
+void test_ft_strlen(void)
 {
-	printf("\nft_strlen:\n");
-	printf("res: %zu Expected: %zu\n", ft_strlen("test"), strlen("test"));
-	printf("res: %zu Expected: %zu\n", ft_strlen("\0test"), strlen("\0test"));
-	printf("res: %zu Expected: %zu\n", ft_strlen("te\0st"), strlen("te\0st"));
-	printf("res: %zu Expected: %zu\n", ft_strlen(""), strlen(""));
-	printf("res: %zu Expected: %zu\n", ft_strlen("\0\0"), strlen("\0\0"));
+    CU_RUN_START;
+    CU_SECTION("basic");
+    CU_EXPECT(size_t, ft_strlen("test"), strlen("test"));
+    CU_EXPECT(size_t, ft_strlen("\0test"), strlen("\0test"));
+    CU_EXPECT(size_t, ft_strlen("te\0st"), strlen("te\0st"));
+    CU_SECTION("empty string");
+    CU_EXPECT(size_t, ft_strlen(""), strlen(""));
+    CU_EXPECT(size_t, ft_strlen("\0\0"), strlen("\0\0"));
+    CU_RUN_END;
 }
 
-void    test_ft_strdup(void)
+void test_ft_strdup(void)
 {
-    printf("\nft_strdup:\n");
     char *dest = ft_strdup("Helloworld");
-	printf("Dest: %s len: %zu Expected: %zu (Helloworld)\n", dest, strlen(dest), strlen("Helloworld"));
+    CU_RUN_START;
+    CU_SECTION("dup helloworld");
+    CU_EXPECT(size_t, strlen(dest), strlen("Helloworld"));
+    CU_EXPECT(int, strcmp(dest, "Helloworld"), 0);
+    free(dest);
+    CU_SECTION("empty string");
+    char *null_str = ft_strdup("");
+    CU_EXPECT(int, strcmp(null_str, ""), 0);
+    CU_EXPECT(str, null_str, "");
+    free(null_str);
+    CU_RUN_END;
 }
 
-void    test_ft_write(void)
+void test_ft_write(void)
 {
-    ft_write(1, "\nft_write:\n", strlen("\nft_write:\n"));
-    ft_write(1, "test\n", strlen("test\n"));
-    ft_write(1, "Test Test\n", strlen("Test Test\n"));
+    CU_RUN_START;
+    CU_SECTION("simple print");
+    CU_EXPECT(ssize_t, ft_write(1, "\nft_write:", strlen("\nft_write:")), strlen("\nft_write:"));
+    CU_EXPECT(ssize_t, ft_write(1, "Test Test\n", strlen("Test Test\n")), strlen("Test Test\n"));
+    CU_SECTION("Empty string");
+    CU_EXPECT(ssize_t, ft_write(1, "", strlen("")), strlen(""));
+    CU_SECTION("Negative fd");
+    CU_EXPECT(ssize_t, ft_write(1, NULL, 5), (long)-1);
+    CU_EXPECT(int, errno, -3);
+    CU_RUN_END;
 }
 
-// Main program
-int	main(void)
+/*
+** Part II
+*/
+
+void test_ft_atoi_base(void)
 {
-    test_ft_write();
-    test_ft_read();
-    test_ft_strcmp();
-    test_ft_strlen();
-    test_ft_strcpy();
-    test_ft_strdup();
-    return EXIT_SUCCESS;
+    CU_RUN_START;
+    CU_RUN_END;
+}
+void test_ft_list_push_front(void)
+{
+    CU_RUN_START;
+    CU_RUN_END;
+}
+void test_ft_list_size(void)
+{
+    CU_RUN_START;
+    CU_RUN_END;
+}
+void test_ft_list_sort(void)
+{
+    CU_RUN_START;
+    CU_RUN_END;
+}
+void test_ft_list_remove_if(void)
+{
+    CU_RUN_START;
+    CU_RUN_END;
+}
+
+
+int main(void)
+{
+    CU_BEGIN("Testing libasm, part I & II");
+    CU_RUN(test_ft_write);
+    CU_RUN(test_ft_read);
+    CU_RUN(test_ft_strcmp);
+    CU_RUN(test_ft_strlen);
+    CU_RUN(test_ft_strcpy);
+    CU_RUN(test_ft_strdup);
+    // CU_RUN(test_ft_atoi_base);
+    // CU_RUN(test_ft_list_push_front);
+    // CU_RUN(test_ft_list_size);
+    // CU_RUN(test_ft_list_sort);
+    // CU_RUN(test_ft_list_remove_if);
+    CU_END;
 }

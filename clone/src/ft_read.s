@@ -1,3 +1,10 @@
+; File: ft_read.s
+; File Created: 05/02/2025 23:12
+; Author: Nicolas Huynh at (nico.huynh@gmail.com)
+; -----
+; Description: <Desc of the file goal(s)>
+; Copyright 2025 NH
+
 %ifidn __OUTPUT_FORMAT__, macho64
     extern ___error
     %define ERRNO_FN        ___error
@@ -20,8 +27,8 @@ READ_LABEL:       ; rdi = fd, rsi = buf, rdx = count
 
 error_code:
     neg     rax         ; get absolute value of syscall return
-    mov     rdi, rax    ; back-up rax before calling ernno
+    mov     rbx, rax    ; back-up rax before calling ernno
     call    ERRNO_FN
-    mov     [rax], rdi  ; set the value of errno
+    mov     [rax], rbx  ; set the value of errno
     mov     rax, -1
     ret

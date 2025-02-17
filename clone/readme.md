@@ -2,18 +2,14 @@
 
 ## Overview
 ## TODO
-- [x] Export at the end of the work
-- [x] Call functions from a main.c
-- [x] Makefile rules to run asm tests
-- [x] errno for ft_write
-- [x] fixes for ft_strcmp
-- [x] do ft_strdup
-- [x] Prepare correction
-- [ ] Validate mandatory
-- [ ] Add 42 Headers
+- [ ] Setup gdb debug
+- [ ] Setup vsc debug
+- [ ] Rework tests
 - [ ] Bonus: atoi base
 - [ ] Bonus: list size
 - [ ] Bonus: list others
+- [ ] Add 42 Headers
+- [ ] Retry project (before 01/09/25)
 - [ ] ...
 
 
@@ -38,3 +34,11 @@ More about asm:
 - https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf
 SSE:
 - https://www.strchr.com/strcmp_and_strlen_using_sse_4.2
+
+GDB on MACarm:
+- https://stackoverflow.com/questions/67310123/how-to-install-gdb-on-mac-m1-apple-silicon
+
+
+```shell
+    sudo apt update && sudo apt install -y build-essential gdb clang nasm
+```
