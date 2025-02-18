@@ -8,14 +8,11 @@
  *  Small memory usage and no heap allocation.
  * Copyright 2025 NH
  *
- * TODO: Add timers
  * TODO: Add quiet some log
  * TODO: Test memory footprint
- * TODO: Add debug for float
  * TODO: Add leak testing
  * TODO: Add setup and teardown
  * TODO: Add random test
- * TODO: Add debug for str
  * TODO: Add debug for memory
  * TODO: Add option parsing
  */
@@ -98,8 +95,9 @@ static t_cu_result cu_run_reg;
 */
 
 # define _CU_RUN_RESULT     "[%d / %d]"
-# define _CU_SUCCESS_FORMAT "\033[54G(%.3fms)\033[64G\33[32m"_CU_RUN_RESULT"\033[0m\n"
-# define _CU_ERROR_FORMAT   "\033[54G(%.3fms)\033[63G\33[31m"_CU_RUN_RESULT"\033[0m\n"
+# define _CU_RUN_TIMER      "\033[62G(~%.3fms)"
+# define _CU_SUCCESS_FORMAT _CU_RUN_TIMER "\033[76G\33[32m"_CU_RUN_RESULT"\033[0m\n"
+# define _CU_ERROR_FORMAT   _CU_RUN_TIMER "\033[74G\33[31m"_CU_RUN_RESULT"\033[0m\n"
 
 /*
 ** Functions :
@@ -117,11 +115,12 @@ void _cu_res_reset(t_cu_result *result)
 }
 void _cu_res_print(const char *head, t_cu_result *res, int pass, int all)
 {
-    int ticks_pass = clock() - res->time;
     if (pass == all)
-        printf("%s:%s"_CU_SUCCESS_FORMAT, head, res->str, (((float)ticks_pass * 1000.0) / CLOCKS_PER_SEC), pass, all);
+        printf("%s:%s"_CU_SUCCESS_FORMAT, head, res->str,
+               ((double)(clock() - res->time) / (CLOCKS_PER_SEC / 1000)), pass, all);
     else
-        printf("%s:%s"_CU_ERROR_FORMAT, head, res->str, (((float)ticks_pass * 1000.0) / CLOCKS_PER_SEC), pass, all);
+        printf("%s:%s"_CU_ERROR_FORMAT, head, res->str,
+               ((double)(clock() - res->time) / (CLOCKS_PER_SEC / 1000)), pass, all);
 }
 void _cu_res_set_str(const char *head, const char *new_str, t_cu_result *result)
 {
