@@ -70,6 +70,15 @@ void test_reset_int(void)
     CU_RUN_END;
 }
 
+void test_easy_fail(void)
+{
+    CU_RUN_START;
+    CU_SECTION("Just pass or fail with a message");
+    CU_PASS;
+    CU_FAIL("Planned failure");
+    CU_RUN_END;
+}
+
 void test_dump_num(void)
 {
     CU_RUN_START;
@@ -102,9 +111,10 @@ void test_dump_num(void)
 int main(void)
 {
     CU_BEGIN("Test project for cu_test developpement");
-    CU_RUN(test_isodd);
-    CU_RUN(test_add);
-    CU_RUN(test_reset_int);
-    CU_RUN(test_dump_num);
+    // CU_RUN(test_isodd);
+    // CU_RUN(test_add);
+    // CU_RUN(test_reset_int);
+    // CU_RUN(test_dump_num);
+    CU_RUN(test_easy_fail);
     CU_END;
 }

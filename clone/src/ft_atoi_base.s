@@ -11,10 +11,10 @@
     %define ATOI_LABEL      ft_atoi_base
 %endif
 
-SECTION .data
+.data
 basestr    db      '0123456789ABCDEF', 0h
 
-SECTION .text
+.text
 global ATOI_LABEL
 ; rax : hold the result
 ; rbx : negation
