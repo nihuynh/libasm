@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/16 18:29:18 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/02/21 19:49:03 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ void test_ft_read(void)
     CU_EXPECT(int, strcmp((const char*)&buff_ref, (const char*)&buff), 0);
     CU_EXPECT(ssize_t, ret, ret_ref);
     CU_EXPECT(int, tmp_errno, ref_errno);
-    printf("\nbuff = [%s] REF = [%s]", buff, buff_ref);
+    printf("\nbuff = [%s] REF = [%s]\n", buff, buff_ref);
     close(fd);
     CU_RUN_END;
 }

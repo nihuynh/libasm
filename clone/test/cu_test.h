@@ -45,10 +45,9 @@ static t_cu_result cu_run_reg;
 ** Macros:
 */
 // Suite:
-# define CU_BEGIN(_cu_title) do { _cu_res_set_str("CU_TEST -> ", _cu_title, &cu_suite); } while (0)
-# define CU_RUN(test_fn)     do { _cu_res_set_str(" --- testing fn -> ", #test_fn, &cu_runner); \
-                                  test_fn(); } while (0)
-# define CU_END              do { return (_cu_end()); } while (0)
+# define CU_BEGIN(_cu_title)   do { _cu_res_set_str("CU_TEST -> ", _cu_title, &cu_suite); } while (0)
+# define CU_RUN(test_fn)       do { _cu_res_set_str(" --- testing fn -> ", #test_fn, &cu_runner); test_fn(); } while (0)
+# define CU_END                do { return (_cu_end()); } while (0)
 // Runner:
 # define CU_RUN_START          do { _cu_run_start(); } while (0)
 # define CU_TEST(cond)         do { _cu_res_test(&cu_runner, !(!(cond))); } while (0)
@@ -56,22 +55,25 @@ static t_cu_result cu_run_reg;
 # define CU_RUN_END            do { _cu_run_end(); return; } while (0)
 # define CU_PASS               do { _cu_res_test(&cu_runner, true); } while (0)
 # define CU_FAIL(_cu_message)  do { _cu_res_test(&cu_runner, false); \
-                                    printf("%s:%s\tExpected failure at (%s:%d)\n%s\n", \
-                                           cu_runner.str, cu_run_reg.str, __FILE__, __LINE__, \
-                                           _cu_message); } while (0)
+                                    printf("%s:%s\tExpected failure at (%s:%d)\n%s\n", cu_runner.str, cu_run_reg.str, \
+                                           __FILE__, __LINE__, _cu_message); } while (0)
 
 /*
 ** Polymorphic expect
 */
-# define CU_EXPECT(_cu_expected_type, _cu_value, _cu_expected)    _CU_EXPECT(_cu_expected_type, \
-                                                                             _cu_value, \
-                                                                             _cu_expected, \
+# define CU_EXPECT(_cu_type, _cu_value, _cu_expected)             _CU_EXPECT(_cu_type, _cu_value, _cu_expected, \
                                                                              __FILE__, __LINE__)
-# define _CU_EXPECT(_cu_e_type, _cu_v, _cu_e, _cu_file, _cu_line) do { \
-            if (!_cu_res_test(&cu_runner, _CU_COND_TYPE_##_cu_e_type(_cu_v, _cu_e))) \
-            printf("❌ %s:%s\t\tFailure at (%s:%d)\n\t%s="_CU_DUMP_TYPE_##_cu_e_type \
-                   "\tExpected: "_CU_DUMP_TYPE_##_cu_e_type "\n", cu_runner.str, cu_run_reg.str, \
-                   _cu_file, _cu_line, #_cu_v, _cu_v, _cu_e); } while (0)
+# define _CU_EXPECT(_cu_e_type, _cu_v, _cu_e, _cu_file, _cu_line) do { if (!_cu_res_test(&cu_runner, \
+                                                                                         _CU_COND_TYPE_##_cu_e_type( \
+                                                                                             _cu_v, \
+                                                                                             _cu_e))) \
+                                                                       { printf( \
+                                                                             "❌  Failure during (%s:%s) at (%s:%d)\n\t%s = "_CU_DUMP_TYPE_ \
+                                                                             ##_cu_e_type "\tExpected: "_CU_DUMP_TYPE_## \
+                                                                             _cu_e_type "\n", cu_runner.str, \
+                                                                             cu_run_reg.str, _cu_file, _cu_line, #_cu_v, \
+                                                                             _cu_v, _cu_e); } } while (0)
+
 /*
 ** Polymorphic prints & conditons for CU_EXPECT
 */
@@ -96,9 +98,9 @@ static t_cu_result cu_run_reg;
 /*
 ** Formating
 */
-# define _CU_COLOR_FAIL  "\33[31m"
-# define _CU_COLOR_PASS  "\33[32m"
-# define _CU_COLOR_RESET "\033[0m"
+# define _CU_COLOR_FAIL     "\33[31m"
+# define _CU_COLOR_PASS     "\33[32m"
+# define _CU_COLOR_RESET    "\033[0m"
 
 # define _CU_RUN_RESULT     "[%d / %d]"_CU_COLOR_RESET"\n"
 # define _CU_RUN_TIMER      "\033[62G(~%.3fms)"
