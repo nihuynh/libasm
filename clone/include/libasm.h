@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 15:22:05 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/16 16:14:27 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/02/23 23:08:10 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ typedef struct s_list
     struct s_list *next;
 } t_list;
 
-int     ft_atoi_base(char *str, int base);
+int     ft_atoi_base(char *str, char *base);
 void    ft_list_push_front(t_list **begin, void *elt);
 int     ft_list_size(t_list **begin);
 void    ft_list_sort(t_list **begin, int (*cmp)());
