@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/23 23:08:36 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/02/23 23:40:16 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,12 +197,12 @@ void test_ft_list_remove_if(void)
 int main(void)
 {
     CU_BEGIN("Testing libasm, part I & II");
-    // CU_RUN(test_ft_write);
-    // CU_RUN(test_ft_read);
-    // CU_RUN(test_ft_strcmp);
-    // CU_RUN(test_ft_strlen);
-    // CU_RUN(test_ft_strcpy);
-    // CU_RUN(test_ft_strdup);
+    CU_RUN(test_ft_write);
+    CU_RUN(test_ft_read);
+    CU_RUN(test_ft_strcmp);
+    CU_RUN(test_ft_strlen);
+    CU_RUN(test_ft_strcpy);
+    CU_RUN(test_ft_strdup);
     CU_RUN(test_ft_atoi_base);
     // CU_RUN(test_ft_list_push_front);
     // CU_RUN(test_ft_list_size);
