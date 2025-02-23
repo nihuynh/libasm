@@ -6,13 +6,13 @@
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define STRCMP_LABEL    _ft_strcmp
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define STRCMP_LABEL    ft_strcmp
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
 
-global STRCMP_LABEL
-STRCMP_LABEL:      ; rdi = s1, rsi = s2
+global OS_FN_PREFIX(ft_strcmp)
+OS_FN_PREFIX(ft_strcmp):      ; rdi = s1, rsi = s2
     xor     rcx, rcx    ; reset the counter
 
 runloop:

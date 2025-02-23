@@ -6,11 +6,11 @@
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define LIST_SORT_LABEL      _ft_list_sort
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define LIST_SORT_LABEL      ft_list_sort
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
 
-global LIST_SORT_LABEL
-LIST_SORT_LABEL:       ; rdi = ?, rsi = ?, rdx = ? (t_list **alst, int (*cmp_res)(void *res1, void *res2))
+global OS_FN_PREFIX(ft_list_sort)
+OS_FN_PREFIX(ft_list_sort):       ; rdi = ?, rsi = ?, rdx = ? (t_list **alst, int (*cmp_res)(void *res1, void *res2))
     ret

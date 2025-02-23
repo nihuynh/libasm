@@ -6,11 +6,11 @@
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define LIST_PUSH_FRONT_LABEL      _ft_list_PUSH_FRONT
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define LIST_PUSH_FRONT_LABEL      ft_list_PUSH_FRONT
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
 
-global LIST_PUSH_FRONT_LABEL
-LIST_PUSH_FRONT_LABEL:       ; rdi = ?, rsi = ?, rdx = ?
+global OS_FN_PREFIX(ft_list_push_front)
+OS_FN_PREFIX(ft_list_push_front):       ; rdi = ?, rsi = ?, rdx = ?
     ret

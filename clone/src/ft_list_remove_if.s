@@ -6,11 +6,11 @@
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define LIST_REMOVE_IF_LABEL      _ft_list_remove_if
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define LIST_REMOVE_IF_LABEL      ft_list_remove_if
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
 
-global LIST_REMOVE_IF_LABEL
-LIST_REMOVE_IF_LABEL:       ; rdi = ?, rsi = ?, rdx = ?
+global OS_FN_PREFIX(ft_list_remove_if)
+OS_FN_PREFIX(ft_list_remove_if):       ; rdi = ?, rsi = ?, rdx = ?
     ret

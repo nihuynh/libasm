@@ -5,20 +5,20 @@
 ; Description: <Desc of the file goal(s)>
 ; Copyright 2025 NH
 
-
 %ifidn __OUTPUT_FORMAT__, macho64
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
     %define ERRNO_FN        ___error
-    %define WRITE_LABEL     _ft_write
     %define WRITE_SYSCALL   0x2000004
 %elifidn __OUTPUT_FORMAT__, elf64
+    %define OS_FN_PREFIX(fn_call) fn_call
     %define ERRNO_FN        __errno_location
-    %define WRITE_LABEL     ft_write
     %define WRITE_SYSCALL   1
 %endif
+
 extern ERRNO_FN
 
-global WRITE_LABEL
-WRITE_LABEL:       ; rdi = fd, rsi = buf, rdx = count
+global OS_FN_PREFIX(ft_write)
+OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
     mov     rax, WRITE_SYSCALL  ; system call number for sys_write
     syscall
     cmp     rax, 0

@@ -6,33 +6,28 @@
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define MALLOC_FN        _malloc
-    %define STRDUP_LABEL    _ft_strdup
-    %define STRLEN_LABEL    _ft_strlen
-    %define STRCPY_LABEL    _ft_strcpy
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define MALLOC_FN        malloc
-    %define STRDUP_LABEL    ft_strdup
-    %define STRLEN_LABEL    ft_strlen
-    %define STRCPY_LABEL    ft_strcpy
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
-extern MALLOC_FN
-extern STRLEN_LABEL
-extern STRCPY_LABEL
 
-global STRDUP_LABEL
-STRDUP_LABEL:       ; rdi = *str duplicate
-    call    STRLEN_LABEL
+extern OS_FN_PREFIX(malloc)
+extern OS_FN_PREFIX(ft_strlen)
+extern OS_FN_PREFIX(ft_strcpy)
+
+global OS_FN_PREFIX(ft_strdup)
+OS_FN_PREFIX(ft_strdup):       ; rdi = *str duplicate
+    call    OS_FN_PREFIX(ft_strlen)
     push    rdi
     inc     rax
     mov     rdi, rax
-    ; call    MALLOC_FN wrt ..plt
-    call    MALLOC_FN
+    ; call    OS_FN_PREFIX(malloc) wrt ..plt
+    call    OS_FN_PREFIX(malloc)
     pop     rsi         ; restore the stack and the *str to rsi
     cmp     rax, 0      ; check if malloc has failed
     je      error_code
     mov     rdi, rax
-    call    STRCPY_LABEL
+    call    OS_FN_PREFIX(ft_strcpy)
 
 error_code:
     ret

@@ -6,18 +6,19 @@
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
     %define ERRNO_FN        ___error
     %define READ_SYSCALL    0x2000003
-    %define READ_LABEL      _ft_read
 %elifidn __OUTPUT_FORMAT__, elf64
+    %define OS_FN_PREFIX(fn_call) fn_call
     %define ERRNO_FN        __errno_location
     %define READ_SYSCALL    0
-    %define READ_LABEL      ft_read
 %endif
+
 extern ERRNO_FN
 
-global READ_LABEL
-READ_LABEL:       ; rdi = fd, rsi = buf, rdx = count
+global OS_FN_PREFIX(ft_read)
+OS_FN_PREFIX(ft_read):          ; rdi = fd, rsi = buf, rdx = count
     mov     rax, READ_SYSCALL   ; system call number for sys_read
     syscall
     cmp     rax, 0
