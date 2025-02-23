@@ -6,34 +6,48 @@
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define OS_PREFIX(fn_call) _%+ fn_call
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define OS_PREFIX(fn_call) fn_call
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
 
-extern OS_PREFIX(ft_strlen)
+extern OS_FN_PREFIX(ft_strlen)
 
-global OS_PREFIX(ft_atoi_base)
+global OS_FN_PREFIX(ft_atoi_base)
 ; rax : hold the result
 ; rbx : negation
-OS_PREFIX(ft_atoi_base):       ; rdi = *str, rsi = *base
+OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
     cmp     rdi, 0          ; Check that str is not NULL
     je      error
     cmp     rsi, 0          ; Check that base is not NULL
     je      error
-    call    OS_PREFIX(ft_strlen)
+    mov     rbx, rdi        ; store *str in rbx for now
+    mov     rdi, rsi        ; load *base in rdi before call to strlen
+    call    OS_FN_PREFIX(ft_strlen)
     cmp     rax, 2
-    jl      error             ; jump if base smaller than 2
+    jl      error           ; jump if base smaller than 2
     cmp     rax, 16
-    jg      error             ; jump if base bigger than 16
-    ; TODO: Check duplicate in the base -> error
+    jg      error           ; jump if base bigger than 16
+    mov     rdi, rbx        ; load *str from rbx
+
+validate_base:
+    cmp     byte [rbx], 0   ; '\0'
+    je      dedup
+    cmp     byte [rbx], 32  ; ' '
+    je      error
+    cmp     byte [rbx], 43  ; '+'
+    je      error
+    cmp     byte [rbx], 45  ; '-'
+    je      error
+    inc     rbx
+    jmp     validate_base
+
+dedup:
     ; TODO: Check white spaces or -/+ -> error
-
-
-    xor     rax, rax        ; reset rax
-    xor     rbx, rbx        ; reset rbx
-    xor     rcx, rcx        ; reset the counter
-    mov     rax, 1 ; early test return
+    ; TODO: Check duplicate in the base -> error
+    ; xor     rbx, rbx        ; reset rbx
+    ; xor     rcx, rcx        ; reset the counter
+    mov     rax, 69 ; early test return
     ret
 
 ; skip_space:
