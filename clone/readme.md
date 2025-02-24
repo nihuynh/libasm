@@ -32,6 +32,8 @@ More about asm:
 - https://www.agner.org/optimize/optimizing_assembly.pdf
 - https://www.chromium.org/chromium-os/developer-library/reference/linux-constants/syscalls/
 - https://www.ic.unicamp.br/~pannain/mc404/aulas/pdfs/Art%20Of%20Intel%20x86%20Assembly.pdf
+- https://gaultier.github.io/blog/x11_x64.html
+- https://github.com/below/HelloSilicon
 SSE:
 - https://www.strchr.com/strcmp_and_strlen_using_sse_4.2
 
