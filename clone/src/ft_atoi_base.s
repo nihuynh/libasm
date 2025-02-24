@@ -28,18 +28,18 @@ OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
     jl      error           ; jump if base smaller than 2
     cmp     rax, 16
     jg      error           ; jump if base bigger than 16
-    mov     rdi, rbx        ; load *str from rbx
+    mov     rax, rsi        ; load *str from rbx
 
 validate_base:
-    cmp     byte [rbx], 0   ; '\0'
+    cmp     byte [rax], 0   ; '\0'
     je      dedup
-    cmp     byte [rbx], 32  ; ' '
+    cmp     byte [rax], ' '  ; ' '
     je      error
-    cmp     byte [rbx], 43  ; '+'
+    cmp     byte [rax], '+'  ; '+'
     je      error
-    cmp     byte [rbx], 45  ; '-'
+    cmp     byte [rax], '-'  ; '-'
     je      error
-    inc     rbx
+    inc     rax
     jmp     validate_base
 
 dedup:
