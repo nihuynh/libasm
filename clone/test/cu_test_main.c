@@ -24,7 +24,7 @@ int ft_add(int a, int b)
     return a + b;
 }
 
-void test_isodd()
+void test_isodd(void)
 {
     CU_RUN_START;
     CU_SECTION("basic");

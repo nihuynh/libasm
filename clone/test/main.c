@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/24 00:43:24 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/02/28 22:30:02 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ void test_ft_atoi_base(void)
     CU_EXPECT(int, ft_atoi_base("0", "0123456789"), 0);
     CU_EXPECT(int, ft_atoi_base("42", "0123456789"), 42);
     CU_EXPECT(int, ft_atoi_base("-42", "0123456789"), -42);
-    CU_EXPECT(int, ft_atoi_base("1010", "01"), 0b1010);
+    CU_EXPECT(int, ft_atoi_base("1010", "01"), 0xa);
     CU_SECTION("Hex");
     CU_EXPECT(int, ft_atoi_base("3a2b", "0123456789abcdef"), 0x3a2b);
     CU_EXPECT(int, ft_atoi_base("3A2B", "0123456789ABCDEF"), 0x3a2b);

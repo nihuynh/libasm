@@ -33,16 +33,16 @@ INC			:=	-I$(INCDIR)
 CLIB		:=	 -L. -lasm
 CFLAGS		:=	-Werror -Wall -Wextra -Wstrict-aliasing -pedantic -Wunreachable-code
 # --- Configuration ---
-ifeq ($(RUNMODE),dev)
+ifneq ($(RUNMODE), dev)
 DEV_CFLAGS	:=	-g3 -O0
 # Activate or comments below:
 # DEV_CFLAGS	+=	-fsanitize=thread
-# DEV_CFLAGS	+=	-fsanitize=address -fsanitize-recover=address
-# DEV_CFLAGS	+=	-fstack-protector
+DEV_CFLAGS	+=	-fsanitize=address -fsanitize-recover=address
+DEV_CFLAGS	+=	-fstack-protector
 # DEV_CFLAGS	+=	-fsanitize=undefined
 else
 # Default runmode
-DEV_CFLAGS	:=	# -O3 -march=native -flto -g0
+DEV_CFLAGS	:=	-O3 # -march=native -flto -g0
 endif
 CFLAGS		+=	$(DEV_CFLAGS) $(INC)
 # --- Cross platform (Linux x86 or Darwin ARM)

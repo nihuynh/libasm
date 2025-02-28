@@ -43,11 +43,11 @@ validate_base:
     jmp     validate_base
 
 dedup:
-    xor     rbx, rbx        ; reset rbx
     ; TODO: Check duplicate in the base -> error
 ;     mov     rbx, rsi        ; load *base in rbx
 ;     xor     rcx, rcx        ; reset the counter
 
+    xor     rbx, rbx        ; reset rbx
     mov     rcx, r8        ; load *str in rcx
 skip_space:
     cmp     byte [rcx], 0

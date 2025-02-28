@@ -15,3 +15,9 @@ libasmTester
 # ENV
 .secret
 .vscode/settings.json
+clone/.DS_Store
+clone/obj/cu_test_main.out.dSYM/Contents/Resources/Relocations/x86_64/cu_test_main.out.yml
+clone/obj/size_demo.out.dSYM/Contents/Info.plist
+clone/obj/size_demo.out.dSYM/Contents/Resources/Relocations/x86_64/size_demo.out.yml
+clone/obj/main.out.dSYM/Contents/Info.plist
+clone/obj/main.out.dSYM/Contents/Resources/Relocations/x86_64/main.out.yml
