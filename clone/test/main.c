@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/03/01 14:45:17 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/03/01 15:44:26 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,7 @@ void test_ft_atoi_base(void)
     CU_SECTION("space and sign skipping");
     CU_EXPECT(int, ft_atoi_base(" 1", "01"), 1);
     CU_EXPECT(int, ft_atoi_base("  1", "01"), 1);
-    CU_EXPECT(int, ft_atoi_base(" -1", "01"), 1);
+    CU_EXPECT(int, ft_atoi_base(" -1", "01"), -1);
     CU_SECTION("double negation");
     CU_EXPECT(int, ft_atoi_base("-1", "01"), -1);
     CU_EXPECT(int, ft_atoi_base(" +1", "01"), 1);

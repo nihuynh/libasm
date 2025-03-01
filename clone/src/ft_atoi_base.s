@@ -21,6 +21,8 @@ OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
     je      error
     cmp     rsi, 0          ; Check that base is not NULL
     je      error
+    cmp     byte [rdi], 0   ; Check that str is not empty
+    je      error
 
     push    rbx             ; save value rbx
     push    rdi             ; save value rdi
@@ -35,11 +37,11 @@ OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
 
     mov     rcx, rsi        ; load *base in rcx
 validate_base:
-    cmp     byte [rcx], ' '  ; ' '
+    cmp     byte [rcx], ' ' ; ' '
     je      error
-    cmp     byte [rcx], '+'  ; '+'
+    cmp     byte [rcx], '+' ; '+'
     je      error
-    cmp     byte [rcx], '-'  ; '-'
+    cmp     byte [rcx], '-' ; '-'
     je      error
     inc     rcx
     cmp     byte [rcx], 0   ; '\0'
@@ -48,59 +50,52 @@ validate_base:
     mov     rcx, rsi        ; load *base in rcx
     xor     rax, rax        ; reset rax
     xor     rbx, rbx        ; reset rbx
-
-dedup:
-    ;  save current char
+dedup:  ; rcx is a cursor, rax is the seek offset
     mov     bl, byte [rcx + rax]
-    ;  seek the rest of the base
-seek:
+
+seek:   ;  seek the rest of the base
     inc     rax
     cmp     bl, byte [rcx + rax]
     je      error
-    cmp     byte [rcx + rax], 0   ; '\0'
+    cmp     byte [rcx + rax], 0
     jne     seek
-
+        ; move to the next char in the base to check
     xor     rax, rax        ; reset rax
     inc     rcx
     cmp     byte [rcx], 0   ; '\0'
     jne     dedup
-
-    mov     rcx, r8        ; load *str in rcx
+        ; prepare reg for skip space & read sign
+    mov     rcx,rdi         ; load *str in rcx
+    xor     r9, r9          ; reset r9
 skip_space:
     cmp     byte [rcx], 0
-    je      end
+    je      error
     cmp     byte [rcx], ' '
+    jne     read_sign
     inc     rcx
-    je      skip_space
-
-    dec     rcx
-    xor     r9, r9        ; reset r9
-read_sign:
-    cmp     byte [rcx], 0
-    je      end
-; check if the char is '+' or '-'
+    jmp     skip_space
+read_sign: ; check if the char is '+' or '-'
     cmp     byte [rcx], '+'
     je      positive
     cmp     byte [rcx], '-'
     jne     convert
-negative:
-    inc     r9
+    inc     r9              ; Case char is '-'
 positive:
     inc     rcx
+    cmp     byte [rcx], 0
+    je      end
     jmp     read_sign
 
 convert:
     ; TODO: implement atoi
-    mov     rax, 69      ; test value to see that we change sign
-    ret
+    mov     rax, 6          ; test value to see that we change sign
 
 end:
-    and     r9, 1       ; mask r9
-    ; shl     r9, 1       ; bit shift << 1
-    ; sub     r9, 1       ; here r9 is -1 or 1
-    ; mov     rbx, r9     ; load r9 in rbx for the mul
-    ; mul     rax         ; mul rbx*rax -> rax
-    mov     rax, r9     ; Dummy return
+    inc     r9
+    and     r9, 1           ; mask r9
+    shl     r9, 1           ; bit shift << 1
+    sub     r9, 1           ; here r9 is -1 or 1
+    mul     r9              ; mul r9*rax -> rax
     pop     rbx             ; restore rbx
     ret
 
