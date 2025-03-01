@@ -15,24 +15,26 @@ extern OS_FN_PREFIX(ft_strlen)
 
 global OS_FN_PREFIX(ft_atoi_base)
 ; rax : hold the result
-; rbx : negation
+; r9 : negation
 OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
     cmp     rdi, 0          ; Check that str is not NULL
     je      error
     cmp     rsi, 0          ; Check that base is not NULL
     je      error
-    mov     r8, rdi         ; store *str in r8 for now
+
+    push    rbx             ; save value rbx
+    push    rdi             ; save value rdi
+
     mov     rdi, rsi        ; load *base in rdi before call to strlen
     call    OS_FN_PREFIX(ft_strlen)
+    pop     rdi             ; restore rdi
     cmp     rax, 2
     jl      error           ; jump if base smaller than 2
     cmp     rax, 16
     jg      error           ; jump if base bigger than 16
-    mov     rcx, rsi        ; load *base in rcx
 
+    mov     rcx, rsi        ; load *base in rcx
 validate_base:
-    cmp     byte [rcx], 0   ; '\0'
-    je      dedup
     cmp     byte [rcx], ' '  ; ' '
     je      error
     cmp     byte [rcx], '+'  ; '+'
@@ -40,51 +42,69 @@ validate_base:
     cmp     byte [rcx], '-'  ; '-'
     je      error
     inc     rcx
-    jmp     validate_base
+    cmp     byte [rcx], 0   ; '\0'
+    jne     validate_base
+
+    mov     rcx, rsi        ; load *base in rcx
+    xor     rax, rax        ; reset rax
+    xor     rbx, rbx        ; reset rbx
 
 dedup:
-    ; TODO: Check duplicate in the base -> error
-;     mov     rbx, rsi        ; load *base in rbx
-;     xor     rcx, rcx        ; reset the counter
+    ;  save current char
+    mov     bl, byte [rcx + rax]
+    ;  seek the rest of the base
+seek:
+    inc     rax
+    cmp     bl, byte [rcx + rax]
+    je      error
+    cmp     byte [rcx + rax], 0   ; '\0'
+    jne     seek
 
-    xor     rbx, rbx        ; reset rbx
+    xor     rax, rax        ; reset rax
+    inc     rcx
+    cmp     byte [rcx], 0   ; '\0'
+    jne     dedup
+
     mov     rcx, r8        ; load *str in rcx
 skip_space:
     cmp     byte [rcx], 0
     je      end
     cmp     byte [rcx], ' '
     inc     rcx
-    jne     skip_space
-    mov     rax, 1      ; test value to see that we change sign
+    je      skip_space
 
+    dec     rcx
+    xor     r9, r9        ; reset r9
 read_sign:
-;     ; check if the char is '+' or '-'
     cmp     byte [rcx], 0
     je      end
+; check if the char is '+' or '-'
     cmp     byte [rcx], '+'
     je      positive
     cmp     byte [rcx], '-'
     jne     convert
 negative:
-    add     rbx,1
+    inc     r9
 positive:
     inc     rcx
     jmp     read_sign
 
 convert:
+    ; TODO: implement atoi
+    mov     rax, 69      ; test value to see that we change sign
     ret
-    ; inc     rcx
-    ; cmp     byte [rcx], 0
-    ; jne     convert
 
 end:
-    and     rbx, 1      ; mask rbx
-    shl     rbx, 1      ; bit shift << 1
-    sub     rbx, -1     ; here rbx is -1 or 1
-    ; mul     rax
-    mov     rax, rbx
+    and     r9, 1       ; mask r9
+    ; shl     r9, 1       ; bit shift << 1
+    ; sub     r9, 1       ; here r9 is -1 or 1
+    ; mov     rbx, r9     ; load r9 in rbx for the mul
+    ; mul     rax         ; mul rbx*rax -> rax
+    mov     rax, r9     ; Dummy return
+    pop     rbx             ; restore rbx
     ret
 
 error:
+    pop     rbx             ; restore rbx
     xor     rax, rax        ; reset rax
     ret
