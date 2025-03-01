@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/02/28 22:30:02 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/03/01 14:45:17 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,26 +27,26 @@ void test_ft_read(void)
 {
     printf("\nLearner ft_read:\n");
 
-    char    buff[100];
+    char    buff[32];
+    char    buff_ref[32];
     int     fd;
     ssize_t ret;
-    char    buff_ref[100];
     ssize_t ret_ref;
     errno = 0;
 
     CU_RUN_START;
     CU_SECTION("exiting file");
     fd = open("test.txt", O_RDONLY);
-    ret = ft_read(fd, buff, 10);
-    buff[ret] = '\0';
+    ret = ft_read(fd, &buff, 10);
+    buff[10] = '\0';
     close(fd);
     fd = open("test.txt", O_RDONLY);
-    ret_ref = read(fd, buff_ref, 10);
-    buff_ref[ret_ref] = '\0';
+    ret_ref = read(fd, &buff_ref, 10);
+    buff_ref[10] = '\0';
     CU_EXPECT(str, buff_ref, buff);
     CU_EXPECT(ssize_t, ret_ref, ret);
     CU_EXPECT(int, errno, 0);
-    printf("\nbuff = [%s] REF = [%s]\n", buff, buff_ref);
+    // printf("\nbuff = [%s] REF = [%s]\n", buff, buff_ref);
     close(fd);
 
     buff[0] = '\0';
@@ -54,18 +54,18 @@ void test_ft_read(void)
     CU_SECTION("missing file");
 
     fd = open("lol.txt", O_RDONLY);
-    ret = ft_read(fd, buff, 20);
+    ret = ft_read(fd, &buff, 20);
     int tmp_errno = errno;
-    buff[ret] = '\0';
+    buff[20] = '\0';
     close(fd);
     fd = open("lol.txt", O_RDONLY);
-    ret_ref = read(fd, buff_ref, 20);
+    ret_ref = read(fd, &buff_ref, 20);
     int ref_errno = errno;
-    buff_ref[ret_ref] = '\0';
+    buff_ref[20] = '\0';
     CU_EXPECT(int, strcmp((const char*)&buff_ref, (const char*)&buff), 0);
     CU_EXPECT(ssize_t, ret, ret_ref);
     CU_EXPECT(int, tmp_errno, ref_errno);
-    printf("\nbuff = [%s] REF = [%s]\n", buff, buff_ref);
+    // printf("\nbuff = [%s] REF = [%s]\n", buff, buff_ref);
     close(fd);
     CU_RUN_END;
 }
@@ -155,21 +155,29 @@ void test_ft_atoi_base(void)
     CU_EXPECT(int, ft_atoi_base("3a2b", "0123456789abcdef"), 0x3a2b);
     CU_EXPECT(int, ft_atoi_base("3A2B", "0123456789ABCDEF"), 0x3a2b);
     CU_SECTION("Wrong base");
+    CU_EXPECT(int, ft_atoi_base("1", "01"), 1);
     CU_EXPECT(int, ft_atoi_base("42", ""), 0);
     CU_EXPECT(int, ft_atoi_base("42", "1"), 0);
     CU_EXPECT(int, ft_atoi_base("42", "aba"), 0);
-    CU_EXPECT(int, ft_atoi_base("0", " 012"), 0);
-    CU_EXPECT(int, ft_atoi_base("1", "-012"), 0);
-    CU_EXPECT(int, ft_atoi_base("2", "+012"), 0);
-    // CU_SECTION("space and sign skipping");
-    // CU_EXPECT(int, ft_atoi_base(" 1", "01"), 1);
-    // CU_EXPECT(int, ft_atoi_base("  1", "01"), 1);
-    // CU_EXPECT(int, ft_atoi_base(" -1", "01"), 1);
-    // CU_SECTION("double negation");
-    // CU_EXPECT(int, ft_atoi_base("---1", "01"), -1);
-    // CU_EXPECT(int, ft_atoi_base("-+-1", "01"), 1);
-    // CU_EXPECT(int, ft_atoi_base("+++1", "01"), 1);
-    // CU_EXPECT(int, ft_atoi_base("+1", "01"), 1);
+    CU_EXPECT(int, ft_atoi_base("1", "01 2"), 0);
+    CU_EXPECT(int, ft_atoi_base("1", "+012"), 0);
+    CU_EXPECT(int, ft_atoi_base("2", "012+"), 0);
+    CU_EXPECT(int, ft_atoi_base("2", "01+2"), 0);
+    CU_EXPECT(int, ft_atoi_base("2", "-012"), 0);
+    CU_EXPECT(int, ft_atoi_base("+2", "-012"), 0);
+    CU_EXPECT(int, ft_atoi_base(" 2", "-012"), 0);
+    CU_SECTION("space and sign skipping");
+    CU_EXPECT(int, ft_atoi_base(" 1", "01"), 1);
+    CU_EXPECT(int, ft_atoi_base("  1", "01"), 1);
+    CU_EXPECT(int, ft_atoi_base(" -1", "01"), 1);
+    CU_SECTION("double negation");
+    CU_EXPECT(int, ft_atoi_base("-1", "01"), -1);
+    CU_EXPECT(int, ft_atoi_base(" +1", "01"), 1);
+    CU_EXPECT(int, ft_atoi_base("--1", "01"), 1);
+    CU_EXPECT(int, ft_atoi_base("---1", "01"), -1);
+    CU_EXPECT(int, ft_atoi_base("+++1", "01"), 1);
+    CU_EXPECT(int, ft_atoi_base(" ---1", "01"), -1);
+    CU_EXPECT(int, ft_atoi_base("-+-1", "01"), 1);
     CU_RUN_END;
 }
 void test_ft_list_push_front(void)
@@ -197,14 +205,14 @@ void test_ft_list_remove_if(void)
 int main(void)
 {
     CU_BEGIN("Testing libasm, part I & II");
-    // CU_RUN(test_ft_write);
-    // CU_RUN(test_ft_read);
-    // CU_RUN(test_ft_strcmp);
-    // CU_RUN(test_ft_strlen);
-    // CU_RUN(test_ft_strcpy);
-    // CU_RUN(test_ft_strdup);
-
+    CU_RUN(test_ft_write);
+    CU_RUN(test_ft_read);
+    CU_RUN(test_ft_strcmp);
+    CU_RUN(test_ft_strlen);
+    CU_RUN(test_ft_strcpy);
+    CU_RUN(test_ft_strdup);
     CU_RUN(test_ft_atoi_base);
+
     // CU_RUN(test_ft_list_push_front);
     // CU_RUN(test_ft_list_size);
     // CU_RUN(test_ft_list_sort);

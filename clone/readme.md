@@ -12,7 +12,17 @@
 - [ ] Retry project (before 01/09/25)
 - [ ] ...
 
-
+## Assembly
+### Calling conventions
+- The first four integer or pointer parameters are passed in the rcx, rdx, r8, and r9 registers.
+- The first four floating-point parameters are passed in the first four SSE registers, xmm0-xmm3.
+- The caller reserves space on the stack for arguments passed in registers. The called function can use this space to spill the contents of registers to the stack.
+- Any additional arguments are passed on the stack.
+- An integer or pointer return value is returned in the rax register, while a floating-point return value is returned in xmm0.
+- rax, rcx, rdx, r8-r11 are volatile.
+- rbx, rbp, rdi, rsi, r12-r15 are nonvolatile.
+The x64 ABI considers the registers RAX, RCX, RDX, R8, R9, R10, R11, and XMM0-XMM5 volatile. When present, the upper portions of YMM0-YMM15 and ZMM0-ZMM15 are also volatile. On AVX512VL, the ZMM, YMM, and XMM registers 16-31 are also volatile. When AMX support is present, the TMM tile registers are volatile. Consider volatile registers destroyed on function calls unless otherwise safety-provable by analysis such as whole program optimization.
+The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15 nonvolatile. They must be saved and restored by a function that uses them.
 ## Ressources
 Lessons:
 - https://asmtutor.com/
