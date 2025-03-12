@@ -14,8 +14,8 @@
 extern OS_FN_PREFIX(ft_strlen)
 
 global OS_FN_PREFIX(ft_atoi_base)
-; rax : hold the result
-; r9 : negation
+; r8 : negation
+; r9 : base length
 OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
     cmp     rdi, 0          ; Check that str is not NULL
     je      error
@@ -35,6 +35,7 @@ OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
     cmp     rax, 16
     jg      error           ; jump if base bigger than 16
 
+    mov     r9, rax         ; save the length of the base
     mov     rcx, rsi        ; load *base in rcx
 validate_base:
     cmp     byte [rcx], ' ' ; ' '
@@ -66,7 +67,7 @@ seek:   ;  seek the rest of the base
     jne     dedup
         ; prepare reg for skip space & read sign
     mov     rcx,rdi         ; load *str in rcx
-    xor     r9, r9          ; reset r9
+    xor     r8, r8          ; reset r8
 skip_space:
     cmp     byte [rcx], 0
     je      error
@@ -79,23 +80,38 @@ read_sign: ; check if the char is '+' or '-'
     je      positive
     cmp     byte [rcx], '-'
     jne     convert
-    inc     r9              ; Case char is '-'
+    inc     r8              ; Case char is '-'
 positive:
     inc     rcx
     cmp     byte [rcx], 0
     je      end
     jmp     read_sign
 
-convert:
-    ; TODO: implement atoi
-    mov     rax, 6          ; test value to see that we change sign
+convert: ; rcx is the cursor of the str , rbx is the seek offset, r10b hold the current char
+    xor     rbx, rbx
+    mov     r10b, byte[rcx]
+    ; mov     rax, 6          ; test value to see that we change sign
+seek_char:
+    cmp     byte[rsi + rbx], 0
+    je      error
+    cmp     byte[rsi + rbx], r10b
+    je      use_idx
+    inc     rbx
+    jmp     seek_char
+use_idx:
+    mul     r9              ; mul r9*rax -> rax (r9: base length)
+    add     rax, rbx
+    inc     rcx
+    cmp     byte [rcx], 0
+    je      end
+    jmp     convert
 
 end:
-    inc     r9
-    and     r9, 1           ; mask r9
-    shl     r9, 1           ; bit shift << 1
-    sub     r9, 1           ; here r9 is -1 or 1
-    mul     r9              ; mul r9*rax -> rax
+    inc     r8
+    and     r8, 1           ; mask r8
+    shl     r8, 1           ; bit shift << 1
+    sub     r8, 1           ; here r8 is -1 or 1
+    mul     r8              ; mul r8*rax -> rax
     pop     rbx             ; restore rbx
     ret
 
