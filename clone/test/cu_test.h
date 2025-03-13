@@ -11,11 +11,13 @@
  * TODO: Add quiet some log
  * TODO: Test memory footprint
  * TODO: Add leak testing
- * TODO: Add setup and teardown
  * TODO: Add random test
  * TODO: Add debug for memory
  * TODO: Add option parsing
  * TODO: Option to disable colors
+ * TODO: Add setup and teardown
+ * TODO: Handle hanging
+ * TODO: Handle segv
  */
 
 #ifndef CU_TEST_H
