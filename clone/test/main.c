@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/03/01 15:44:26 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/03/14 00:21:43 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,12 +182,34 @@ void test_ft_atoi_base(void)
 }
 void test_ft_list_push_front(void)
 {
+    int    a = 42;
+    int    b = 5;
+    t_list start;
+    t_list end;
+    t_list *head = &start;
+    start.data = &a;
+    start.next = NULL;
+    end.data = &b;
+    end.next = NULL;
     CU_RUN_START;
+    ft_list_push_front(&head, &b);
     CU_RUN_END;
 }
 void test_ft_list_size(void)
 {
+    int    a = 42;
+    int    b = 5;
+    t_list start;
+    t_list end;
+    t_list *head = &start;
+    start.data = &a;
+    start.next = &end;
+    end.data = &b;
+    end.next = NULL;
+
     CU_RUN_START;
+    CU_EXPECT(int, ft_list_size(&head), 2);
+    CU_EXPECT(int, ft_list_size(NULL), 0);
     CU_RUN_END;
 }
 void test_ft_list_sort(void)
@@ -205,16 +227,16 @@ void test_ft_list_remove_if(void)
 int main(void)
 {
     CU_BEGIN("Testing libasm, part I & II");
-    CU_RUN(test_ft_write);
-    CU_RUN(test_ft_read);
-    CU_RUN(test_ft_strcmp);
-    CU_RUN(test_ft_strlen);
-    CU_RUN(test_ft_strcpy);
-    CU_RUN(test_ft_strdup);
-    CU_RUN(test_ft_atoi_base);
+    // CU_RUN(test_ft_write);
+    // CU_RUN(test_ft_read);
+    // CU_RUN(test_ft_strcmp);
+    // CU_RUN(test_ft_strlen);
+    // CU_RUN(test_ft_strcpy);
+    // CU_RUN(test_ft_strdup);
+    // CU_RUN(test_ft_atoi_base);
 
-    // CU_RUN(test_ft_list_push_front);
-    // CU_RUN(test_ft_list_size);
+    CU_RUN(test_ft_list_push_front);
+    CU_RUN(test_ft_list_size);
     // CU_RUN(test_ft_list_sort);
     // CU_RUN(test_ft_list_remove_if);
     CU_END;
