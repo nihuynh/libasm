@@ -46,11 +46,7 @@ void test_add(void)
     CU_EXPECT(int, ft_add(55, 14), 55 + 14);
     CU_EXPECT(int, ft_add(20, 22), 20 + 22);
     CU_SECTION("negatif");
-
     CU_EXPECT(int, ft_add(-21, 20), -1);
-    // CU_SECTION("errorous tests");
-    // CU_EXPECT(int, ft_add(2, 22), 4);
-    // CU_EXPECT(int, ft_add(20, 2), 4);
     CU_RUN_END;
 }
 void test_reset_int(void)
@@ -65,8 +61,6 @@ void test_reset_int(void)
     CU_EXPECT(int, a, 10);
     ft_reset_int(&a);
     CU_EXPECT(int, a, 0);
-    // CU_SECTION("errorous tests");
-    // CU_EXPECT(int, a, 10);
     CU_RUN_END;
 }
 
@@ -111,10 +105,10 @@ void test_dump_num(void)
 int main(void)
 {
     CU_BEGIN("Test project for cu_test developpement");
-    // CU_RUN(test_isodd);
-    // CU_RUN(test_add);
-    // CU_RUN(test_reset_int);
-    // CU_RUN(test_dump_num);
+    CU_RUN(test_isodd);
+    CU_RUN(test_add);
+    CU_RUN(test_reset_int);
+    CU_RUN(test_dump_num);
     CU_RUN(test_easy_fail);
     CU_END;
 }

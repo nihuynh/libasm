@@ -21,7 +21,8 @@ SRC			+=	ft_atoi_base.s \
 				ft_list_remove_if.s
 TEST_SRC	:=	main.c \
 				cu_test_main.c \
-				size_demo.c
+				size_demo.c \
+				cu_test_fix.c
 VPATH		:=	./src ./test
 OBJDIR		:=	obj
 INCDIR		:=	include
@@ -59,6 +60,7 @@ endif
 OBJ			:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))
 DEP			:=	$(addprefix $(OBJDIR)/, $(SRC:.c=.d))
 TEST		:=	$(addprefix $(OBJDIR)/, $(TEST_SRC:.c=.out))
+DEP			+=	$(addprefix $(OBJDIR)/, $(test_SRC:.c=.d))
 ifndef VERBOSE
 .SILENT:
 endif
@@ -74,6 +76,7 @@ $(NAME): $(OBJ) ## Built the library (default goal).
 	ar rcs $@ $(OBJ)
 	ar -t $@
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mDone $@ $(OKLOGO)"
+
 -include $(DEP)
 
 $(OBJDIR):
@@ -87,7 +90,7 @@ $(OBJDIR)/%.out: %.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -MMD -MP $< -o $@ $(CLIB)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile test_SRC $< $(OKLOGO)"
 
-test: tclean $(NAME) $(TEST)
+test: $(NAME) $(TEST) ## Built the tests execs.
 	find $(OBJDIR) -name "*.out" -type f
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mTest are ready $(OKLOGO)"
 .PHONY: test
@@ -99,13 +102,15 @@ usage: ## Print out on how to use this Makefile.
 .PHONY: usage
 
 format: ## Format the sources
-	# TODO: Check if repo is sync/commit
+	git status
 	find . \( -name "*.cpp" -o -name "*.c" -o -name "*.h" \) -exec uncrustify -c uncrust.conf --no-backup {} +
+	git status
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mFormating sources $(OKLOGO)"
 .PHONY: format
 
 clean: tclean ## Clean of the project directory (.o & .d).
 	$(RM) $(OBJ)
+	$(RM) $(DEP)
 	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning objects $(OKLOGO)"
 .PHONY: clean
 

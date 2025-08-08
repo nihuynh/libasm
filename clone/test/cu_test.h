@@ -3,11 +3,12 @@
  * File Created: 13/02/2025 21:19
  * Author: Nicolas Huynh at (nico.huynh@gmail.com)
  * -----
- * Description: Single header for Unit testing C
- *  CU_test goal is to accelerate unit test developpement.
- *  Small memory usage and no heap allocation.
+ * Description: CU_test is a framework for unit test.
+ *  Single C header
+ *  No heap allocations
  * Copyright 2025 NH
  *
+ * TODO: Fix test report as error depending on the order
  * TODO: Add quiet some log
  * TODO: Test memory footprint
  * TODO: Add leak testing
