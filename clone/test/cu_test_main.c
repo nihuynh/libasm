@@ -69,7 +69,7 @@ void test_easy_fail(void)
     CU_RUN_START;
     CU_SECTION("Just pass or fail with a message");
     CU_PASS;
-    CU_FAIL("Planned failure");
+    CU_FAIL;
     CU_RUN_END;
 }
 

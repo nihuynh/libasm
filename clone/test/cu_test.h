@@ -45,6 +45,18 @@ static t_cu_result cu_run_reg;
 // str: current test section (int used as stop watch during the test run)
 
 /*
+** Formating
+*/
+# define _CU_COLOR_FAIL     "\33[31m"
+# define _CU_COLOR_PASS     "\33[32m"
+# define _CU_COLOR_RESET    "\033[0m"
+
+# define _CU_RUN_RESULT     "[%d / %d]"_CU_COLOR_RESET"\n"
+# define _CU_RUN_TIMER      "\033[62G(~%.3fms)"
+# define _CU_SUCCESS_FORMAT "✅ %s:%s"_CU_RUN_TIMER"\033[76G"_CU_COLOR_PASS _CU_RUN_RESULT
+# define _CU_ERROR_FORMAT   "❌ %s:%s"_CU_RUN_TIMER"\033[74G"_CU_COLOR_FAIL _CU_RUN_RESULT
+
+/*
 ** Macros:
 */
 // Suite:
@@ -56,28 +68,22 @@ static t_cu_result cu_run_reg;
 # define CU_TEST(cond)         do { _cu_res_test(&cu_runner, !(!(cond))); } while (0)
 # define CU_SECTION(_cu_title) do { _CU_SECTION(_cu_title); } while (0)
 # define CU_RUN_END            do { _cu_run_end(); return; } while (0)
-# define CU_PASS               do { _cu_res_test(&cu_runner, true); } while (0)
-# define CU_FAIL(_cu_message)  do { _cu_res_test(&cu_runner, false); \
-                                    printf("%s:%s\tExpected failure at (%s:%d)\n%s\n", cu_runner.str, cu_run_reg.str, \
-                                           __FILE__, __LINE__, _cu_message); } while (0)
 
 /*
 ** Polymorphic expect
 */
-# define CU_EXPECT(_cu_type, _cu_value, _cu_expected)         _CU_EXPECT(_cu_type, _cu_value, _cu_expected, \
-                                                                         __FILE__, __LINE__)
-# define _CU_EXPECT(_cu_et, _cu_v, _cu_e, _cu_file, _cu_line) do { \
-            if (!_cu_res_test(&cu_runner, \
-                              _CU_COND_TYPE_##_cu_et( \
-                                  _cu_v, \
-                                  _cu_e))) \
+# define CU_EXPECT(_cu_type, _cu_value, _cu_expected) _CU_EXPECT(_cu_type, _cu_value, _cu_expected, __FILE__, __LINE__)
+# define _CU_EXPECT(_cu_et, _cu_v, _cu_e, _cu_file, _cu_line) \
+        do { \
+            if (!_cu_res_test(&cu_runner, _CU_COND_TYPE_##_cu_et(_cu_v, _cu_e))) \
             { printf( \
-                  "❌  Failure during (%s:%s) at (%s:%d)\n\t%s = "_CU_DUMP_TYPE_ \
-                  ##_cu_et "\tExpected: "_CU_DUMP_TYPE_## \
-                  _cu_et "\n", cu_runner.str, \
-                  cu_run_reg.str, _cu_file, _cu_line, #_cu_v, \
-                  _cu_v, _cu_e); } } while (0)
+                  "❌  Failure during (%s:%s) at (%s:%d)\n\t%s = "_CU_DUMP_TYPE_##_cu_et "\tExpected: "_CU_DUMP_TYPE_## \
+                  _cu_et "\n", cu_runner.str, cu_run_reg.str, _cu_file, _cu_line, #_cu_v, _cu_v, _cu_e); } \
+            else if (cu_run_reg.fail != cu_runner.fail) { printf("✅ %s:%s\n", cu_runner.str, cu_run_reg.str); } \
+        } while (0)
 
+# define CU_PASS                     do { CU_EXPECT(bool, true, true); } while (0)
+# define CU_FAIL                     do { CU_EXPECT(bool, true, false); } while (0)
 /*
 ** Polymorphic prints & conditons for CU_EXPECT
 */
@@ -90,6 +96,8 @@ static t_cu_result cu_run_reg;
 # define _CU_COND_TYPE_short(a, b)   _CU_COND_TYPE_NUM_EQU(a, b)
 # define _CU_COND_TYPE_size_t(a, b)  _CU_COND_TYPE_NUM_EQU(a, b)
 # define _CU_COND_TYPE_ssize_t(a, b) _CU_COND_TYPE_NUM_EQU(a, b)
+# define _CU_COND_TYPE__Bool(a, b)   _CU_COND_TYPE_NUM_EQU(a, b)
+
 // Prints
 // # define _CU_DUMP_TYPE_float  "%f"
 # define _CU_DUMP_TYPE_int     "%d"
@@ -98,23 +106,7 @@ static t_cu_result cu_run_reg;
 # define _CU_DUMP_TYPE_size_t  "%zu"
 # define _CU_DUMP_TYPE_ssize_t "%zd"
 # define _CU_DUMP_TYPE_str     "[%s]\n"
-
-/*
-** Formating
-*/
-# define _CU_COLOR_FAIL     "\33[31m"
-# define _CU_COLOR_PASS     "\33[32m"
-# define _CU_COLOR_RESET    "\033[0m"
-
-# define _CU_RUN_RESULT     "[%d / %d]"_CU_COLOR_RESET"\n"
-# define _CU_RUN_TIMER      "\033[62G(~%.3fms)"
-# define _CU_SUCCESS_FORMAT "✅ %s:%s"_CU_RUN_TIMER"\033[76G"_CU_COLOR_PASS _CU_RUN_RESULT
-# define _CU_ERROR_FORMAT   "❌ %s:%s"_CU_RUN_TIMER"\033[74G"_CU_COLOR_FAIL _CU_RUN_RESULT
-
-// # define _CU_DUMP_FAIL_FORMAT( \
-//             _cu_et)           "❌  Failure during (%s:%s) at (%s:%d)\n\t%s = "_CU_DUMP_TYPE_##_cu_et \
-//         "\tExpected: "_CU_DUMP_TYPE_##_cu_et "\n"
-// # define _CU_DUMP_PASS_FORMAT "✅ %s:%s\t%s = "_CU_DUMP_TYPE_##_cu_et "\n"
+# define _CU_DUMP_TYPE__Bool   _CU_DUMP_TYPE_int
 
 /*
 ** Functions :

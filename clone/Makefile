@@ -90,7 +90,7 @@ $(OBJDIR)/%.out: %.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -MMD -MP $< -o $@ $(CLIB)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile test_SRC $< $(OKLOGO)"
 
-test: $(NAME) $(TEST) ## Built the tests execs.
+test: clean $(NAME) $(TEST) ## Built the tests execs.
 	find $(OBJDIR) -name "*.out" -type f
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mTest are ready $(OKLOGO)"
 .PHONY: test
@@ -108,21 +108,17 @@ format: ## Format the sources
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mFormating sources $(OKLOGO)"
 .PHONY: format
 
-clean: tclean ## Clean of the project directory (.o & .d).
+clean: ## Clean of the project directory (.o, .out & .d).
 	$(RM) $(OBJ)
+	$(RM) $(TEST)
 	$(RM) $(DEP)
 	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning objects $(OKLOGO)"
 .PHONY: clean
 
-fclean: tclean clean ## Delete the library, object files & test_SRC binarys.
+fclean: clean ## Delete the library, object files & test_SRC binarys.
 	$(RM) $(NAME)
 	$(RM) -r $(OBJDIR)
 	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning $(NAME) & test executables $(OKLOGO)"
-.PHONY: fclean
-
-tclean: ## Delete executables.
-	$(RM) $(TEST)
-	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning test executables $(OKLOGO)"
 .PHONY: fclean
 
 re: fclean all ## Rebuild the project.
