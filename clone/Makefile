@@ -32,7 +32,7 @@ NA			:=	nasm
 CC			:=	clang
 INC			:=	-I$(INCDIR)
 CLIB		:=	 -L. -lasm
-CFLAGS		:=	-Werror -Wall -Wextra -Wstrict-aliasing -pedantic -Wunreachable-code
+CFLAGS		:=	-Werror -Wall -Wextra -Wstrict-aliasing -Wunreachable-code
 # --- Configuration ---
 ifneq ($(RUNMODE), dev)
 DEV_CFLAGS	:=	-g3 -O0

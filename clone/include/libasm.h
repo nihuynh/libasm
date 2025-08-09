@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 15:22:05 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/09 15:08:14 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/09 17:06:55 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ typedef struct s_list
 int     ft_atoi_base(char *str, char *base);
 void    ft_list_push_front(t_list **head, void *elt);
 int     ft_list_size(t_list *begin);
-void    ft_list_sort(t_list **head, int (*cmp)(void));
-void    ft_list_remove_if(t_list **head, void *ref, int (*cmp)(void), void (*free_fn)(void*));
+void    ft_list_sort(t_list **head, int (*cmp)());
+void    ft_list_remove_if(t_list **head, void *ref, int (*cmp)(), void (*free_fn)());
 
 #endif

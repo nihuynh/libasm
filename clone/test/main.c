@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/09 15:25:42 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/09 17:12:26 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,17 +182,39 @@ void test_ft_atoi_base(void)
 }
 void test_ft_list_push_front(void)
 {
-    int    a = 42;
-    int    b = 5;
     t_list start;
-    t_list end;
+    t_list node;
     t_list *head = &start;
-    start.data = &a;
     start.next = NULL;
-    end.data = &b;
-    end.next = NULL;
+    node.next = NULL;
     CU_RUN_START;
-    ft_list_push_front(&head, &b);
+    CU_SECTION("Setup");
+    CU_EXPECT(int, ft_list_size(head), 1);
+    CU_EXPECT(int, ft_list_size(&start), 1);
+    CU_EXPECT(int, ft_list_size(&node), 1);
+
+    CU_SECTION("Pushing item to list.");
+    ft_list_push_front(&head, &node);
+    CU_EXPECT(int, ft_list_size(head), 2);
+    CU_EXPECT(int, ft_list_size(&node), 2);
+    CU_EXPECT(ptr, (void*)node.next, (void*)&start);
+    CU_EXPECT(ptr, (void*)head, (void*)&node);
+
+
+    CU_SECTION("More in the list.");
+    t_list node_a;
+    node_a.next = NULL;
+    t_list node_b;
+    node_b.next = NULL;
+    ft_list_push_front(&head, &node_a);
+    ft_list_push_front(&head, &node_b);
+    CU_EXPECT(int, ft_list_size(head), 4);
+    CU_EXPECT(ptr, (void*)head, (void*)&node_b);
+
+    CU_SECTION("Error detection, node NULL");
+    ft_list_push_front(&head, NULL);
+    CU_EXPECT(int, ft_list_size(head), 4);
+    CU_EXPECT(ptr, (void*)head, (void*)&node_b);
     CU_RUN_END;
 }
 void test_ft_list_size(void)
@@ -204,24 +226,72 @@ void test_ft_list_size(void)
     end.next = NULL;
 
     CU_RUN_START;
-    printf("head: %p\t", (void*)&start);
-    printf("next: %p\t", (void*)&start.next);
-    printf("end: %p\n", (void*)&end);
-
+    CU_SECTION("Bonus: list size");
     CU_EXPECT(int, ft_list_size(NULL), 0);
     CU_EXPECT(int, ft_list_size(&end), 1);
     CU_EXPECT(int, ft_list_size(&start), 2);
     CU_EXPECT(int, ft_list_size(NULL), 0);
     CU_RUN_END;
 }
+
+
+int compare_int(int a, int b) {
+    return (b - a);
+}
+void del_node(int *node_data) {
+    printf("%d",(int)*node_data);
+    return;
+}
 void test_ft_list_sort(void)
 {
+    int a = 42;
+    int b = 16;
+    int c = 3;
+    t_list start;
+    t_list node;
+    t_list node_b;
+    t_list *head = &start;
+    start.next = &node;
+    start.data = &b;
+    node.next = &node_b;
+    node.data = &a;
+    node_b.next = NULL;
+    node_b.data = &c;
     CU_RUN_START;
+    CU_SECTION("Initialize int list");
+    CU_EXPECT(int, ft_list_size(head), 3);
+    CU_EXPECT(ptr, head->data, &b);
+    CU_SECTION("Sorting");
+    ft_list_sort(&head, compare_int);
+    CU_EXPECT(ptr, head->data, &c);
+    CU_EXPECT(ptr, head->data, &a);
+    // CU_EXPECT(int, head->data, 3);
+
     CU_RUN_END;
 }
 void test_ft_list_remove_if(void)
 {
     CU_RUN_START;
+    int a = 42;
+    int b = 16;
+    int c = 3;
+    int ref = 42;
+    t_list start;
+    t_list node;
+    t_list node_b;
+    t_list *head = &start;
+    start.next = &node;
+    start.data = &b;
+    node.next = &node_b;
+    node.data = &a;
+    node_b.next = NULL;
+    node_b.data = &c;
+    CU_SECTION("Initialize int list");
+    CU_EXPECT(int, ft_list_size(head), 3);
+    CU_EXPECT(ptr, head->data, &b);
+    CU_SECTION("Remove elt");
+    ft_list_remove_if(&head, &ref, compare_int, del_node);
+    CU_EXPECT(int, ft_list_size(head), 2);
     CU_RUN_END;
 }
 
@@ -239,7 +309,7 @@ int main(void)
 
     CU_RUN(test_ft_list_size);
     CU_RUN(test_ft_list_push_front);
-    // CU_RUN(test_ft_list_sort);
-    // CU_RUN(test_ft_list_remove_if);
+    CU_RUN(test_ft_list_sort);
+    CU_RUN(test_ft_list_remove_if);
     CU_END;
 }

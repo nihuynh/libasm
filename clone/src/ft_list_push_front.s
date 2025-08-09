@@ -11,5 +11,11 @@
 %endif
 
 global OS_FN_PREFIX(ft_list_push_front)
-OS_FN_PREFIX(ft_list_push_front):       ; rdi = ?, rsi = ?, rdx = ?
+OS_FN_PREFIX(ft_list_push_front):       ; rdi = **head rsi = *list node
+    cmp     rsi, 0
+    je      end
+    mov     r8, [rdi]       ; Save head *list node to r8
+    mov     [rsi + 8], r8   ; Link new elt.next to r8
+    mov     [rdi], rsi      ; Change head value to *elt
+end:
     ret

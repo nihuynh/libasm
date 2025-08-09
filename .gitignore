@@ -15,6 +15,6 @@ libasmTester
 # ENV
 .secret
 .vscode/settings.json
-clone/.DS_Store
 clone/obj/*.dSYM/Contents/Info.plist
 clone/obj/*.out.dSYM/Contents/Resources/Relocations/x86_64/*.out.yml
+.DS_Store
