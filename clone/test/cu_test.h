@@ -109,7 +109,7 @@ static t_cu_result cu_run_reg;
 # define _CU_DUMP_TYPE_ssize_t "%zd"
 # define _CU_DUMP_TYPE_str     "[%s]\n"
 # define _CU_DUMP_TYPE__Bool   _CU_DUMP_TYPE_int
-# define _CU_DUMP_TYPE_ptr      "%p"
+# define _CU_DUMP_TYPE_ptr     "%p"
 
 /*
 ** Functions :

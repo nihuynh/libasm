@@ -200,7 +200,6 @@ void test_ft_list_push_front(void)
     CU_EXPECT(ptr, (void*)node.next, (void*)&start);
     CU_EXPECT(ptr, (void*)head, (void*)&node);
 
-
     CU_SECTION("More in the list.");
     t_list node_a;
     node_a.next = NULL;
@@ -239,14 +238,14 @@ int compare_int(int a, int b) {
     return (b - a);
 }
 void del_node(int *node_data) {
-    printf("%d",(int)*node_data);
+    printf("%d", (int)*node_data);
     return;
 }
 void test_ft_list_sort(void)
 {
-    int a = 42;
-    int b = 16;
-    int c = 3;
+    int    a = 42;
+    int    b = 16;
+    int    c = 3;
     t_list start;
     t_list node;
     t_list node_b;
@@ -271,10 +270,10 @@ void test_ft_list_sort(void)
 void test_ft_list_remove_if(void)
 {
     CU_RUN_START;
-    int a = 42;
-    int b = 16;
-    int c = 3;
-    int ref = 42;
+    int    a = 42;
+    int    b = 16;
+    int    c = 3;
+    int    ref = 42;
     t_list start;
     t_list node;
     t_list node_b;
