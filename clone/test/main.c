@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/09 17:12:26 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/09 21:00:27 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -264,8 +264,7 @@ void test_ft_list_sort(void)
     CU_SECTION("Sorting");
     ft_list_sort(&head, compare_int);
     CU_EXPECT(ptr, head->data, &c);
-    CU_EXPECT(ptr, head->data, &a);
-    // CU_EXPECT(int, head->data, 3);
+    CU_EXPECT(int, *((int*)head->data), 3);
 
     CU_RUN_END;
 }
