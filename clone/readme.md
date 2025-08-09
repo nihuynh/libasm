@@ -8,13 +8,20 @@
 - [ ] Setup vsc debug
 - [x] Rework tests
 - [x] Bonus: atoi base
-- [ ] Bonus: list size
+- [x] Bonus: list size
+- [x] Bonus: list pushfront
 - [ ] Bonus: list others
 - [ ] Add 42 Headers
 - [ ] Retry project (before 01/09/25)
 - [ ] ...
 
 ## Assembly
+
+### Using debugger
+```shell
+make test && ./obj/main.out
+lldb  ./obj/main.out
+```
 
 ### Calling conventions
 

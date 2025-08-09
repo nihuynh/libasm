@@ -11,5 +11,15 @@
 %endif
 
 global OS_FN_PREFIX(ft_list_size)
-OS_FN_PREFIX(ft_list_size):       ; rdi = ?, rsi = ?, rdx = ?
+OS_FN_PREFIX(ft_list_size):       ; rdi = *list node
+    xor     rcx, rcx    ; reset the counter
+    mov     r8, rdi
+follow:
+    cmp     r8, 0
+    je      end
+    inc     rcx
+    mov     r8, [r8 + 8]
+    jmp     follow
+end:
+    mov     rax, rcx
     ret
