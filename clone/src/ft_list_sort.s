@@ -9,39 +9,48 @@
 %elifidn __OUTPUT_FORMAT__, elf64
     %define OS_FN_PREFIX(fn_call) fn_call
 %endif
-; r8 head
-; r9 runner x
-; r10 runner y
-; r11 fn ptr
+; r12 head
+; r13 runner x
+; r14 runner y
+; r15 fn ptr
 global OS_FN_PREFIX(ft_list_sort)
 OS_FN_PREFIX(ft_list_sort):       ; t_list **head, rsi = fnptr
     cmp     rdi, 0
     je      end
-    mov     r8, [rdi]       ; Save head *list node to r8
-    mov     r11, rsi        ; Save fnptr to r11
-    mov     r9, r8
-x_loop: ; change r9
-    cmp     r9, 0
+    push    r12
+    push    r13
+    push    r14
+    push    r15
+    mov     r12, [rdi]       ; Save head *list node to r12
+    mov     r15, rsi        ; Save fnptr to r15
+    mov     r13, r12          ; Init r13 to first node
+x_loop: ; change r13
+    cmp     r13, 0
     je      end
-    mov     r10, r8
-y_loop: ; change r10
-    mov     rdi, [r9]
-    mov     rsi, [r10]
-    call    r11
+    mov     r14, r12          ; Init r14 to first node
+y_loop: ; change r14
+    cmp     r13, r14
+    je      inc_loop        ; Jump if we look at the same nodes
+    mov     rdi, [r13]       ; Prepare for cmp
+    mov     rsi, [r14]      ; Prepare for cmp
+    call    r15             ; Call cmp fn
     cmp     rax, 0
-    jl      inc_loop
+    jle     inc_loop        ; Jump if no swap is needed
 swap_val:
-    mov     [r9], rsi
-    mov     [r10], rdi
-
+    mov     rdi, [r13]
+    mov     rsi, [r14]
+    mov     [r13], rsi
+    mov     [r14], rdi
 inc_loop:
-    mov     r10, [r10 + 8]
-    cmp     r10, 0
+    mov     r14, [r14 + 8]
+    cmp     r14, 0
     jne     y_loop
-    mov     r9, [r9 + 8]
-    cmp     r9, 0
+    mov     r13, [r13 + 8]
+    cmp     r13, 0
     jne     x_loop
 end:
+    pop     r15         ; Load r15
+    pop     r14         ; Load r14
+    pop     r13         ; Load r13
+    pop     r12         ; Load r13
     ret
-
-

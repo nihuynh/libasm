@@ -56,6 +56,10 @@ endif
 ifeq ($(shell uname -m), x86_64)
 	NFLAGS	:=	-f elf64
 endif
+ifeq ($(shell uname -m), aarch64)
+	NFLAGS	:=	-f elf64
+endif
+
 # --- Misc
 OBJ			:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))
 DEP			:=	$(addprefix $(OBJDIR)/, $(SRC:.c=.d))

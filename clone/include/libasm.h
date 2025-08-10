@@ -6,13 +6,15 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 15:22:05 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/09 17:06:55 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/09 21:52:50 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef LIBASM_H
 # define LIBASM_H
 
+#include <stdlib.h>
+#include <unistd.h>
 /*
 ** Part I
 */

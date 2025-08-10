@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/09 21:00:27 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/10 13:43:02 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,13 +218,14 @@ void test_ft_list_push_front(void)
 }
 void test_ft_list_size(void)
 {
-    t_list start;
-    t_list end;
-    // t_list *head = &start;
-    start.next = &end;
-    end.next = NULL;
+    t_list end = {.data=NULL, .next=NULL};
+    t_list start = {.data=NULL, .next=&end};
 
     CU_RUN_START;
+    // t_list *head = &start;
+    // printf("start: %p, %p, %p\n", head, &head->data, &head->next);
+    // printf("start: %p, %p, %p\n", &end, end.data, end.next);
+
     CU_SECTION("Bonus: list size");
     CU_EXPECT(int, ft_list_size(NULL), 0);
     CU_EXPECT(int, ft_list_size(&end), 1);
@@ -234,39 +235,84 @@ void test_ft_list_size(void)
 }
 
 
-int compare_int(int a, int b) {
-    return (b - a);
+int compare_int(int *a, int *b) {
+    printf("Compare %d, %d result %d\n", *a, *b, (*b - *a));
+    return (*b - *a);
 }
 void del_node(int *node_data) {
-    printf("%d", (int)*node_data);
+    printf("removing %d", (int)*node_data);
     return;
 }
 void test_ft_list_sort(void)
 {
-    int    a = 42;
-    int    b = 16;
+    int    a = 5;
+    int    b = 4;
     int    c = 3;
-    t_list start;
-    t_list node;
-    t_list node_b;
+    t_list node_b = {.data=&c};
+    t_list node = {.data=&a, .next=&node_b};
+    t_list start = {.data=&b, .next=&node};
     t_list *head = &start;
-    start.next = &node;
-    start.data = &b;
-    node.next = &node_b;
-    node.data = &a;
-    node_b.next = NULL;
-    node_b.data = &c;
     CU_RUN_START;
     CU_SECTION("Initialize int list");
     CU_EXPECT(int, ft_list_size(head), 3);
     CU_EXPECT(ptr, head->data, &b);
+    t_list *runner = NULL;
+    runner = head;
+    while (runner)
+	{
+        int *tmp = runner->data;
+        printf("node %p, %d\n", runner, *tmp);
+        runner = runner->next;
+    }
     CU_SECTION("Sorting");
     ft_list_sort(&head, compare_int);
     CU_EXPECT(ptr, head->data, &c);
     CU_EXPECT(int, *((int*)head->data), 3);
-
+    runner = head;
+    while (runner)
+	{
+        int *tmp = runner->data;
+        printf("node %p, %d\n", runner, *tmp);
+        runner = runner->next;
+    }
     CU_RUN_END;
 }
+
+void test_ft_list_sort_str(void)
+{
+    char*   a = "Helloword";
+    char*   b = "Core";
+    char*   c = "Byebye";
+    t_list node_b = {.data=c};
+    t_list node = {.data=a, .next=&node_b};
+    t_list start = {.data=b, .next=&node};
+    t_list *head = &start;
+    t_list *runner = NULL;
+    runner = head;
+    while (runner)
+	{
+        char *tmp = runner->data;
+        printf("node %p, %s\n", runner, tmp);
+        runner = runner->next;
+    }
+    CU_RUN_START;
+    CU_SECTION("Initialize str list");
+    CU_EXPECT(int, ft_list_size(head), 3);
+    CU_EXPECT(ptr, head->data, &b);
+    CU_SECTION("Sorting");
+    ft_list_sort(&head, strcmp);
+    runner = head;
+    while (runner)
+	{
+        char *tmp = runner->data;
+        printf("node %p, %s\n", runner, tmp);
+        runner = runner->next;
+    }
+    CU_EXPECT(ptr, head->data, &c);
+    CU_EXPECT(str, (char*)head->data, "Byebye");
+    CU_RUN_END;
+}
+
 void test_ft_list_remove_if(void)
 {
     CU_RUN_START;
@@ -274,16 +320,10 @@ void test_ft_list_remove_if(void)
     int    b = 16;
     int    c = 3;
     int    ref = 42;
-    t_list start;
-    t_list node;
-    t_list node_b;
+    t_list node_b = {.data=&c};
+    t_list node = {.data=&a, .next=&node_b};
+    t_list start = {.data=&b, .next=&node};
     t_list *head = &start;
-    start.next = &node;
-    start.data = &b;
-    node.next = &node_b;
-    node.data = &a;
-    node_b.next = NULL;
-    node_b.data = &c;
     CU_SECTION("Initialize int list");
     CU_EXPECT(int, ft_list_size(head), 3);
     CU_EXPECT(ptr, head->data, &b);
@@ -297,17 +337,23 @@ void test_ft_list_remove_if(void)
 int main(void)
 {
     CU_BEGIN("Testing libasm, part I & II");
-    // CU_RUN(test_ft_write);
-    // CU_RUN(test_ft_read);
-    // CU_RUN(test_ft_strcmp);
-    // CU_RUN(test_ft_strlen);
-    // CU_RUN(test_ft_strcpy);
-    // CU_RUN(test_ft_strdup);
-    // CU_RUN(test_ft_atoi_base);
+    // CU_SECTION("fails on mac");
 
+    CU_RUN(test_ft_write);
+    CU_RUN(test_ft_read);
+    CU_RUN(test_ft_strcmp);
+    // CU_SECTION("mandatory");
+
+    CU_RUN(test_ft_strlen);
+    CU_RUN(test_ft_strcpy);
+    CU_RUN(test_ft_strdup);
+    CU_RUN(test_ft_atoi_base);
+
+    // CU_SECTION("bonus");
     CU_RUN(test_ft_list_size);
     CU_RUN(test_ft_list_push_front);
     CU_RUN(test_ft_list_sort);
+    CU_RUN(test_ft_list_sort_str); // TODO: fix me
     CU_RUN(test_ft_list_remove_if);
     CU_END;
 }
