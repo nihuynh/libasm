@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/10 17:10:50 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/10 17:23:45 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -243,6 +243,16 @@ void del_node(int *node_data) {
     printf("removing %d", (int)*node_data);
     return;
 }
+
+int compare_str(char *a, char *b) {
+    printf("Compare %s, %s\n", a, b);
+    return strcmp(a, b);
+}
+void del_str(char *str_node) {
+    printf("removing %s", str_node);
+    // free(&str_node);
+    return;
+}
 void test_ft_list_sort(void)
 {
     int    a = 5;
@@ -358,6 +368,67 @@ void test_ft_list_remove_if(void)
     CU_RUN_END;
 }
 
+void test_ft_list_remove_if_str(void)
+{
+    char*   a = "Helloword";
+    char*   b = "Core";
+    char*   c = "Byebye";
+    char*   ref = "Core";
+
+    t_list node_b = {.data=c};
+    t_list node = {.data=a, .next=&node_b};
+    t_list start = {.data=b, .next=&node};
+    t_list *head = &start;
+    t_list *runner = NULL;
+    runner = head;
+    while (runner)
+	{
+        char *tmp = runner->data;
+        printf("node %p, %s\n", runner, tmp);
+        runner = runner->next;
+    }
+    CU_RUN_START;
+    CU_SECTION("Initialize str list");
+    CU_EXPECT(int, ft_list_size(head), 3);
+    CU_EXPECT(ptr, head->data, b);
+    CU_SECTION("Remove elt");
+    ft_list_remove_if(&head, ref, compare_str, del_str);
+    CU_EXPECT(int, ft_list_size(head), 2);
+    runner = head;
+    while (runner)
+	{
+        char *tmp = runner->data;
+        printf("node %p, %s\n", runner, tmp);
+        runner = runner->next;
+    }
+    CU_SECTION("Unknowned elt");
+    ref = "panic?";
+    ft_list_remove_if(&head, ref, compare_str, del_str);
+    CU_EXPECT(int, ft_list_size(head), 2);
+    runner = head;
+    while (runner)
+	{
+        char *tmp = runner->data;
+        printf("node %p, %s\n", runner, tmp);
+        runner = runner->next;
+    }
+    CU_SECTION("Remove first elt");
+    ref = "Helloword";
+    ft_list_remove_if(&head, ref, compare_str, del_str);
+    runner = head;
+    while (runner)
+	{
+        char *tmp = runner->data;
+        printf("node %p, %s\n", runner, tmp);
+        runner = runner->next;
+    }
+    CU_EXPECT(int, ft_list_size(head), 1);
+    CU_RUN_END;
+}
+
+
+
+
 
 int main(void)
 {
@@ -380,5 +451,6 @@ int main(void)
     CU_RUN(test_ft_list_sort);
     CU_RUN(test_ft_list_sort_str);
     CU_RUN(test_ft_list_remove_if);
+    CU_RUN(test_ft_list_remove_if_str);
     CU_END;
 }
