@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/10 13:43:02 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/10 17:10:50 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -298,7 +298,7 @@ void test_ft_list_sort_str(void)
     CU_RUN_START;
     CU_SECTION("Initialize str list");
     CU_EXPECT(int, ft_list_size(head), 3);
-    CU_EXPECT(ptr, head->data, &b);
+    CU_EXPECT(ptr, head->data, b);
     CU_SECTION("Sorting");
     ft_list_sort(&head, strcmp);
     runner = head;
@@ -308,7 +308,7 @@ void test_ft_list_sort_str(void)
         printf("node %p, %s\n", runner, tmp);
         runner = runner->next;
     }
-    CU_EXPECT(ptr, head->data, &c);
+    CU_EXPECT(ptr, head->data, c);
     CU_EXPECT(str, (char*)head->data, "Byebye");
     CU_RUN_END;
 }
@@ -327,9 +327,34 @@ void test_ft_list_remove_if(void)
     CU_SECTION("Initialize int list");
     CU_EXPECT(int, ft_list_size(head), 3);
     CU_EXPECT(ptr, head->data, &b);
+    t_list *runner = NULL;
+    runner = head;
+    while (runner)
+	{
+        int *tmp = runner->data;
+        printf("node %p, %d\n", runner, *tmp);
+        runner = runner->next;
+    }
     CU_SECTION("Remove elt");
     ft_list_remove_if(&head, &ref, compare_int, del_node);
-    CU_EXPECT(int, ft_list_size(head), 2);
+    runner = head;
+    while (runner)
+	{
+        int *tmp = runner->data;
+        printf("node %p, %d\n", runner, *tmp);
+        runner = runner->next;
+    }
+    CU_SECTION("Remove first elt");
+    ref = 16;
+    ft_list_remove_if(&head, &ref, compare_int, del_node);
+    runner = head;
+    while (runner)
+	{
+        int *tmp = runner->data;
+        printf("node %p, %d\n", runner, *tmp);
+        runner = runner->next;
+    }
+    CU_EXPECT(int, ft_list_size(head), 1);
     CU_RUN_END;
 }
 
@@ -353,7 +378,7 @@ int main(void)
     CU_RUN(test_ft_list_size);
     CU_RUN(test_ft_list_push_front);
     CU_RUN(test_ft_list_sort);
-    CU_RUN(test_ft_list_sort_str); // TODO: fix me
+    CU_RUN(test_ft_list_sort_str);
     CU_RUN(test_ft_list_remove_if);
     CU_END;
 }

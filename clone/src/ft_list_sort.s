@@ -9,21 +9,21 @@
 %elifidn __OUTPUT_FORMAT__, elf64
     %define OS_FN_PREFIX(fn_call) fn_call
 %endif
-; r12 head
-; r13 runner x
-; r14 runner y
-; r15 fn ptr
+; r12 - head
+; r13 - runner x
+; r14 - runner y
+; r15 - cmp fn
 global OS_FN_PREFIX(ft_list_sort)
-OS_FN_PREFIX(ft_list_sort):       ; t_list **head, rsi = fnptr
+OS_FN_PREFIX(ft_list_sort):     ; rsi = **head, rsi = fnptr
     cmp     rdi, 0
-    je      end
+    je      err
     push    r12
     push    r13
     push    r14
     push    r15
-    mov     r12, [rdi]       ; Save head *list node to r12
-    mov     r15, rsi        ; Save fnptr to r15
-    mov     r13, r12          ; Init r13 to first node
+    mov     r12, [rdi] ; Save head *list node to r12
+    mov     r15, rsi   ; Save fnptr to r15
+    mov     r13, r12   ; Init r13 to first node
 x_loop: ; change r13
     cmp     r13, 0
     je      end
@@ -53,4 +53,5 @@ end:
     pop     r14         ; Load r14
     pop     r13         ; Load r13
     pop     r12         ; Load r13
+err:
     ret
