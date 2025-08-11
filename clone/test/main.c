@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/10 20:53:02 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/11 21:26:36 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,13 +147,18 @@ void test_ft_atoi_base(void)
 {
     CU_RUN_START;
     CU_SECTION("basic");
+    [SEGFAULT]: ft_atoi_base.s:  : SEGFAULT:  ft_atoi_base("", "")
+[SEGFAULT]: ft_atoi_base.s:  : SEGFAULT:  ft_atoi_base("", "01")
+[SEGFAULT]: ft_list_push_front.s:  : SEGFAULT:  tmp = NULL; ft_list_push_front(&tmp, malloc(1));list_destroy(tmp)
     CU_EXPECT(int, ft_atoi_base("0", "0123456789"), 0);
     CU_EXPECT(int, ft_atoi_base("42", "0123456789"), 42);
     CU_EXPECT(int, ft_atoi_base("-42", "0123456789"), -42);
     CU_EXPECT(int, ft_atoi_base("1010", "01"), 0xa);
+    CU_EXPECT(int, ft_atoi_base("111", "01"), 7);
     CU_SECTION("Hex");
     CU_EXPECT(int, ft_atoi_base("3a2b", "0123456789abcdef"), 0x3a2b);
-    CU_EXPECT(int, ft_atoi_base("3A2B", "0123456789ABCDEF"), 0x3a2b);
+    CU_EXPECT(int, ft_atoi_base("3a2b", "0123456789abcdef"), 0x3a2b);
+    CU_EXPECT(int, ft_atoi_base("---ff", "0123456789abcdef"), -255);
     CU_SECTION("Wrong base");
     CU_EXPECT(int, ft_atoi_base("1", "01"), 1);
     CU_EXPECT(int, ft_atoi_base("42", ""), 0);
@@ -166,6 +171,7 @@ void test_ft_atoi_base(void)
     CU_EXPECT(int, ft_atoi_base("2", "-012"), 0);
     CU_EXPECT(int, ft_atoi_base("+2", "-012"), 0);
     CU_EXPECT(int, ft_atoi_base(" 2", "-012"), 0);
+    CU_EXPECT(int, ft_atoi_base("568", "012345	6789"), 0);
     CU_SECTION("space and sign skipping");
     CU_EXPECT(int, ft_atoi_base(" 1", "01"), 1);
     CU_EXPECT(int, ft_atoi_base("  1", "01"), 1);
@@ -178,6 +184,12 @@ void test_ft_atoi_base(void)
     CU_EXPECT(int, ft_atoi_base("+++1", "01"), 1);
     CU_EXPECT(int, ft_atoi_base(" ---1", "01"), -1);
     CU_EXPECT(int, ft_atoi_base("-+-1", "01"), 1);
+    CU_SECTION("Error checks");
+    CU_EXPECT(int, ft_atoi_base("", "01"), 0);
+    CU_EXPECT(int, ft_atoi_base("", ""), 0);
+    CU_EXPECT(int, ft_atoi_base(NULL, "01"), 0);
+    CU_EXPECT(int, ft_atoi_base("01", NULL), 0);
+
     CU_RUN_END;
 }
 void test_ft_list_push_front(void)

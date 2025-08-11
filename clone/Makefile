@@ -14,11 +14,11 @@ SRC 		:=	ft_strlen.s \
 				ft_read.s \
 				ft_strdup.s
 # Bonus
-SRC			+=	ft_atoi_base.s \
-				ft_list_push_front.s \
-				ft_list_size.s \
-				ft_list_sort.s \
-				ft_list_remove_if.s
+BNS_SRC		:=	ft_atoi_base_bonus.s \
+				ft_list_push_front_bonus.s \
+				ft_list_size_bonus.s \
+				ft_list_sort_bonus.s \
+				ft_list_remove_if_bonus.s
 TEST_SRC	:=	main.c \
 				cu_test_main.c \
 				size_demo.c \
@@ -62,6 +62,7 @@ endif
 
 # --- Misc
 OBJ			:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))
+BONUS_OBJ	:=	$(addprefix $(OBJDIR)/, $(BNS_SRC:.s=.o))
 DEP			:=	$(addprefix $(OBJDIR)/, $(SRC:.c=.d))
 TEST		:=	$(addprefix $(OBJDIR)/, $(TEST_SRC:.c=.out))
 DEP			+=	$(addprefix $(OBJDIR)/, $(test_SRC:.c=.d))
@@ -72,16 +73,21 @@ OKLOGO		:=	\033[78G\033[32m[Done]\033[0m\n
 PHELP		:=	"\033[36m%-26s\033[0m %s\n"
 # --- Rules ---
 .DEFAULT_GOAL := all
+-include $(DEP)
 
 all: $(NAME)
 .PHONY: all
 
 $(NAME): $(OBJ) ## Built the library (default goal).
-	ar rcs $@ $(OBJ)
-	ar -t $@
+	$(AR) rs $@ $(OBJ)
+	$(AR) -t $@
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mDone $@ $(OKLOGO)"
 
--include $(DEP)
+bonus: $(NAME) $(BONUS_OBJ) ## Built the library with bonus.
+	$(AR) rs $(NAME) $(BONUS_OBJ)
+	$(AR) -t $(NAME)
+	@printf "\033[1;34m$(NAME)\033[25G\033[33mDone $@ $(OKLOGO)"
+.PHONY: bonus
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -94,7 +100,7 @@ $(OBJDIR)/%.out: %.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -MMD -MP $< -o $@ $(CLIB)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile test_SRC $< $(OKLOGO)"
 
-test: clean $(NAME) $(TEST) ## Built the tests execs.
+test: clean $(NAME) bonus $(TEST) ## Built the tests execs.
 	find $(OBJDIR) -name "*.out" -type f
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mTest are ready $(OKLOGO)"
 .PHONY: test
@@ -114,6 +120,7 @@ format: ## Format the sources
 
 clean: ## Clean of the project directory (.o, .out & .d).
 	$(RM) $(OBJ)
+	$(RM) $(BONUS_OBJ)
 	$(RM) $(TEST)
 	$(RM) $(DEP)
 	@printf "\033[1;34m$(NAME)\033[25G\033[31mCleaning objects $(OKLOGO)"
