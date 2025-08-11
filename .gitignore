@@ -11,6 +11,7 @@ a.out
 # Testers
 libasmTester
 42libasm_tester
+libasm_test
 
 # ENV
 .secret

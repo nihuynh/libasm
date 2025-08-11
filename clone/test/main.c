@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/10 17:23:45 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/10 20:53:02 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,8 +218,8 @@ void test_ft_list_push_front(void)
 }
 void test_ft_list_size(void)
 {
-    t_list end = {.data=NULL, .next=NULL};
-    t_list start = {.data=NULL, .next=&end};
+    t_list end = { .data = NULL, .next = NULL };
+    t_list start = { .data = NULL, .next = &end };
 
     CU_RUN_START;
     // t_list *head = &start;
@@ -258,9 +258,9 @@ void test_ft_list_sort(void)
     int    a = 5;
     int    b = 4;
     int    c = 3;
-    t_list node_b = {.data=&c};
-    t_list node = {.data=&a, .next=&node_b};
-    t_list start = {.data=&b, .next=&node};
+    t_list node_b = { .data = &c };
+    t_list node = { .data = &a, .next = &node_b };
+    t_list start = { .data = &b, .next = &node };
     t_list *head = &start;
     CU_RUN_START;
     CU_SECTION("Initialize int list");
@@ -269,7 +269,7 @@ void test_ft_list_sort(void)
     t_list *runner = NULL;
     runner = head;
     while (runner)
-	{
+    {
         int *tmp = runner->data;
         printf("node %p, %d\n", runner, *tmp);
         runner = runner->next;
@@ -280,7 +280,7 @@ void test_ft_list_sort(void)
     CU_EXPECT(int, *((int*)head->data), 3);
     runner = head;
     while (runner)
-	{
+    {
         int *tmp = runner->data;
         printf("node %p, %d\n", runner, *tmp);
         runner = runner->next;
@@ -290,17 +290,17 @@ void test_ft_list_sort(void)
 
 void test_ft_list_sort_str(void)
 {
-    char*   a = "Helloword";
-    char*   b = "Core";
-    char*   c = "Byebye";
-    t_list node_b = {.data=c};
-    t_list node = {.data=a, .next=&node_b};
-    t_list start = {.data=b, .next=&node};
+    char   *a = "Helloword";
+    char   *b = "Core";
+    char   *c = "Byebye";
+    t_list node_b = { .data = c };
+    t_list node = { .data = a, .next = &node_b };
+    t_list start = { .data = b, .next = &node };
     t_list *head = &start;
     t_list *runner = NULL;
     runner = head;
     while (runner)
-	{
+    {
         char *tmp = runner->data;
         printf("node %p, %s\n", runner, tmp);
         runner = runner->next;
@@ -313,7 +313,7 @@ void test_ft_list_sort_str(void)
     ft_list_sort(&head, strcmp);
     runner = head;
     while (runner)
-	{
+    {
         char *tmp = runner->data;
         printf("node %p, %s\n", runner, tmp);
         runner = runner->next;
@@ -330,9 +330,9 @@ void test_ft_list_remove_if(void)
     int    b = 16;
     int    c = 3;
     int    ref = 42;
-    t_list node_b = {.data=&c};
-    t_list node = {.data=&a, .next=&node_b};
-    t_list start = {.data=&b, .next=&node};
+    t_list node_b = { .data = &c };
+    t_list node = { .data = &a, .next = &node_b };
+    t_list start = { .data = &b, .next = &node };
     t_list *head = &start;
     CU_SECTION("Initialize int list");
     CU_EXPECT(int, ft_list_size(head), 3);
@@ -340,7 +340,7 @@ void test_ft_list_remove_if(void)
     t_list *runner = NULL;
     runner = head;
     while (runner)
-	{
+    {
         int *tmp = runner->data;
         printf("node %p, %d\n", runner, *tmp);
         runner = runner->next;
@@ -349,7 +349,7 @@ void test_ft_list_remove_if(void)
     ft_list_remove_if(&head, &ref, compare_int, del_node);
     runner = head;
     while (runner)
-	{
+    {
         int *tmp = runner->data;
         printf("node %p, %d\n", runner, *tmp);
         runner = runner->next;
@@ -359,7 +359,7 @@ void test_ft_list_remove_if(void)
     ft_list_remove_if(&head, &ref, compare_int, del_node);
     runner = head;
     while (runner)
-	{
+    {
         int *tmp = runner->data;
         printf("node %p, %d\n", runner, *tmp);
         runner = runner->next;
@@ -370,19 +370,19 @@ void test_ft_list_remove_if(void)
 
 void test_ft_list_remove_if_str(void)
 {
-    char*   a = "Helloword";
-    char*   b = "Core";
-    char*   c = "Byebye";
-    char*   ref = "Core";
+    char   *a = "Helloword";
+    char   *b = "Core";
+    char   *c = "Byebye";
+    char   *ref = "Core";
 
-    t_list node_b = {.data=c};
-    t_list node = {.data=a, .next=&node_b};
-    t_list start = {.data=b, .next=&node};
+    t_list node_b = { .data = c };
+    t_list node = { .data = a, .next = &node_b };
+    t_list start = { .data = b, .next = &node };
     t_list *head = &start;
     t_list *runner = NULL;
     runner = head;
     while (runner)
-	{
+    {
         char *tmp = runner->data;
         printf("node %p, %s\n", runner, tmp);
         runner = runner->next;
@@ -396,7 +396,7 @@ void test_ft_list_remove_if_str(void)
     CU_EXPECT(int, ft_list_size(head), 2);
     runner = head;
     while (runner)
-	{
+    {
         char *tmp = runner->data;
         printf("node %p, %s\n", runner, tmp);
         runner = runner->next;
@@ -407,7 +407,7 @@ void test_ft_list_remove_if_str(void)
     CU_EXPECT(int, ft_list_size(head), 2);
     runner = head;
     while (runner)
-	{
+    {
         char *tmp = runner->data;
         printf("node %p, %s\n", runner, tmp);
         runner = runner->next;
@@ -417,7 +417,7 @@ void test_ft_list_remove_if_str(void)
     ft_list_remove_if(&head, ref, compare_str, del_str);
     runner = head;
     while (runner)
-	{
+    {
         char *tmp = runner->data;
         printf("node %p, %s\n", runner, tmp);
         runner = runner->next;
@@ -425,9 +425,6 @@ void test_ft_list_remove_if_str(void)
     CU_EXPECT(int, ft_list_size(head), 1);
     CU_RUN_END;
 }
-
-
-
 
 
 int main(void)
