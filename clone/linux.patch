@@ -1,0 +1,60 @@
+diff --git a/clone/src/ft_list_push_front_bonus.s b/clone/src/ft_list_push_front_bonus.s
+index cb417ba..7b3f053 100644
+--- a/clone/src/ft_list_push_front_bonus.s
++++ b/clone/src/ft_list_push_front_bonus.s
+@@ -20,8 +20,8 @@ OS_FN_PREFIX(ft_list_push_front):       ; rdi = **head rsi = *data
+     push    rdi     ; Store **head
+     push    rsi     ; Store *data
+     mov     rdi, 16 ; 16 for the 2 ptr
+-    ; call    OS_FN_PREFIX(malloc) wrt ..plt
+-    call    OS_FN_PREFIX(malloc)
++    call    OS_FN_PREFIX(malloc) wrt ..plt
++    ; call    OS_FN_PREFIX(malloc)
+     pop     rsi
+     pop     rdi
+     cmp     rax, 0          ; Check if malloc has failed
+diff --git a/clone/src/ft_read.s b/clone/src/ft_read.s
+index 7dca635..e56aa9f 100644
+--- a/clone/src/ft_read.s
++++ b/clone/src/ft_read.s
+@@ -27,8 +27,8 @@ OS_FN_PREFIX(ft_read):          ; rdi = fd, rsi = buf, rdx = count
+ error_code:
+     neg     rax         ; get absolute value of syscall return
+     mov     r8, rax    ; back-up rax before calling ernno
+-    ; call    ERRNO_FN wrt ..plt
+-    call    ERRNO_FN
++    call    ERRNO_FN wrt ..plt
++    ; call    ERRNO_FN
+     mov     [rax], r8  ; set the value of errno
+     mov     rax, -1
+     ret
+diff --git a/clone/src/ft_strdup.s b/clone/src/ft_strdup.s
+index 08cda9b..fd510e6 100644
+--- a/clone/src/ft_strdup.s
++++ b/clone/src/ft_strdup.s
+@@ -20,8 +20,8 @@ OS_FN_PREFIX(ft_strdup):       ; rdi = *str duplicate
+     push    rdi
+     inc     rax
+     mov     rdi, rax
+-    ; call    OS_FN_PREFIX(malloc) wrt ..plt
+-    call    OS_FN_PREFIX(malloc)
++    call    OS_FN_PREFIX(malloc) wrt ..plt
++    ; call    OS_FN_PREFIX(malloc)
+     pop     rsi         ; restore the stack and the *str to rsi
+     cmp     rax, 0      ; check if malloc has failed
+     je      error_code
+diff --git a/clone/src/ft_write.s b/clone/src/ft_write.s
+index d2173f5..b573741 100644
+--- a/clone/src/ft_write.s
++++ b/clone/src/ft_write.s
+@@ -27,8 +27,8 @@ OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
+ error_code:
+     neg     rax         ; get absolute value of syscall return
+     mov     r8, rax    ; back-up rax before calling ernno
+-    ; call    ERRNO_FN wrt ..plt
+-    call    ERRNO_FN
++    call    ERRNO_FN wrt ..plt
++    ; call    ERRNO_FN
+     mov     [rax], r8  ; set the value of errno
+     mov     rax, -1
+     ret
