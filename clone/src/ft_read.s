@@ -4,16 +4,7 @@
 ; -----
 ; Copyright 2025 NH
 
-%ifidn __OUTPUT_FORMAT__, macho64
-    %define OS_FN_PREFIX(fn_call) _%+ fn_call
-    %define ERRNO_FN        ___error
-    %define READ_SYSCALL    0x2000003
-%elifidn __OUTPUT_FORMAT__, elf64
-    %define OS_FN_PREFIX(fn_call) fn_call
-    %define ERRNO_FN        __errno_location
-    %define READ_SYSCALL    0
-%endif
-
+%include "os_support.s"
 extern ERRNO_FN
 
 global OS_FN_PREFIX(ft_read)

@@ -4,11 +4,7 @@
 ; -----
 ; Copyright 2025 NH
 
-%ifidn __OUTPUT_FORMAT__, macho64
-    %define OS_FN_PREFIX(fn_call) _%+ fn_call
-%elifidn __OUTPUT_FORMAT__, elf64
-    %define OS_FN_PREFIX(fn_call) fn_call
-%endif
+%include "os_support.s"
 ; r12 - head
 ; r13 - runner x
 ; r14 - runner y

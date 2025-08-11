@@ -4,12 +4,7 @@
 ; -----
 ; Copyright 2025 NH
 
-%ifidn __OUTPUT_FORMAT__, macho64
-    %define OS_FN_PREFIX(fn_call) _%+ fn_call
-%elifidn __OUTPUT_FORMAT__, elf64
-    %define OS_FN_PREFIX(fn_call) fn_call
-%endif
-
+%include "os_support.s"
 extern OS_FN_PREFIX(malloc)
 extern OS_FN_PREFIX(ft_strlen)
 extern OS_FN_PREFIX(ft_strcpy)

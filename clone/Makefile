@@ -3,7 +3,6 @@
 # Requirements: 64 bits ASM, compile with nasm, Intel syntax
 # Forbidden to use -no-pie
 
-
 RUNMODE		?=	dev		# Run the tests in release mode if not defined (See $(DEV_CFLAGS))
 VERBOSE		:=	1		# Run the makefile silent if not defined
 NAME		:=	libasm.a
@@ -50,15 +49,15 @@ CFLAGS		+=	$(DEV_CFLAGS) $(INC)
 ifeq ($(shell uname -m), arm64)
 # Compiling on mac ARM
 	CFLAGS	+=	-ld_classic --target=x86_64-apple-darwin
-	NFLAGS	:=	-f macho64
+	NFLAGS	:=	-i ./src -f macho64
 endif
 # Compiling on Linux x86
 ifeq ($(shell uname -m), x86_64)
-	NFLAGS	:=	-f elf64
+	NFLAGS	:=	-i ./src  -f elf64
 endif
-ifeq ($(shell uname -m), aarch64)
-	NFLAGS	:=	-f elf64
-endif
+# ifeq ($(shell uname -m), aarch64)
+# 	NFLAGS	:=	-i ./src -f elf64
+# endif
 
 # --- Misc
 OBJ			:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))

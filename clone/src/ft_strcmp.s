@@ -4,12 +4,7 @@
 ; -----
 ; Copyright 2025 NH
 
-%ifidn __OUTPUT_FORMAT__, macho64
-    %define OS_FN_PREFIX(fn_call) _%+ fn_call
-%elifidn __OUTPUT_FORMAT__, elf64
-    %define OS_FN_PREFIX(fn_call) fn_call
-%endif
-
+%include "os_support.s"
 global OS_FN_PREFIX(ft_strcmp)
 OS_FN_PREFIX(ft_strcmp):      ; rdi = s1, rsi = s2
     xor     rcx, rcx    ; reset the counter
