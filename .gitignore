@@ -1,6 +1,7 @@
 # Object files
 obj/*
 *.o
+*.d
 *.out
 libasm.a
 
@@ -10,7 +11,11 @@ a.out
 # Testers
 libasmTester
 42libasm_tester
+libasm_test
 
 # ENV
 .secret
 .vscode/settings.json
+clone/obj/*.dSYM/Contents/Info.plist
+clone/obj/*.out.dSYM/Contents/Resources/Relocations/x86_64/*.out.yml
+.DS_Store

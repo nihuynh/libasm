@@ -2,17 +2,16 @@
 ; File Created: 05/02/2025 23:12
 ; Author: Nicolas Huynh at (nico.huynh@gmail.com)
 ; -----
-; Description: <Desc of the file goal(s)>
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define STRLEN_LABEL    _ft_strlen
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define STRLEN_LABEL    ft_strlen
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
 
-global STRLEN_LABEL
-STRLEN_LABEL:      ; rdi = *str to check
+global OS_FN_PREFIX(ft_strlen)
+OS_FN_PREFIX(ft_strlen):      ; rdi = *str to check
     mov     rax, rdi
 
 runloop:

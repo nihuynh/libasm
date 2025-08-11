@@ -2,15 +2,20 @@
 ; File Created: 12/02/2025 20:25
 ; Author: Nicolas Huynh at (nico.huynh@gmail.com)
 ; -----
-; Description: <Desc of the file goal(s)>
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define LIST_PUSH_FRONT_LABEL      _ft_list_PUSH_FRONT
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define LIST_PUSH_FRONT_LABEL      ft_list_PUSH_FRONT
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
 
-global LIST_PUSH_FRONT_LABEL
-LIST_PUSH_FRONT_LABEL:       ; rdi = ?, rsi = ?, rdx = ?
+global OS_FN_PREFIX(ft_list_push_front)
+OS_FN_PREFIX(ft_list_push_front):       ; rdi = **head rsi = *list node
+    cmp     rsi, 0
+    je      end
+    mov     r8, [rdi]       ; Save head *list node to r8
+    mov     [rsi + 8], r8   ; Link new elt.next to r8
+    mov     [rdi], rsi      ; Change head value to *elt
+end:
     ret

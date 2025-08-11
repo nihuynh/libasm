@@ -2,22 +2,22 @@
 ; File Created: 05/02/2025 23:12
 ; Author: Nicolas Huynh at (nico.huynh@gmail.com)
 ; -----
-; Description: <Desc of the file goal(s)>
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
     %define ERRNO_FN        ___error
     %define READ_SYSCALL    0x2000003
-    %define READ_LABEL      _ft_read
 %elifidn __OUTPUT_FORMAT__, elf64
+    %define OS_FN_PREFIX(fn_call) fn_call
     %define ERRNO_FN        __errno_location
     %define READ_SYSCALL    0
-    %define READ_LABEL      ft_read
 %endif
+
 extern ERRNO_FN
 
-global READ_LABEL
-READ_LABEL:       ; rdi = fd, rsi = buf, rdx = count
+global OS_FN_PREFIX(ft_read)
+OS_FN_PREFIX(ft_read):          ; rdi = fd, rsi = buf, rdx = count
     mov     rax, READ_SYSCALL   ; system call number for sys_read
     syscall
     cmp     rax, 0
@@ -26,9 +26,9 @@ READ_LABEL:       ; rdi = fd, rsi = buf, rdx = count
 
 error_code:
     neg     rax         ; get absolute value of syscall return
-    mov     rbx, rax    ; back-up rax before calling ernno
-    ; call    ERRNO_FN wrt ..plt
-    call    ERRNO_FN
-    mov     [rax], rbx  ; set the value of errno
+    mov     r8, rax    ; back-up rax before calling ernno
+    call    ERRNO_FN wrt ..plt
+    ; call    ERRNO_FN
+    mov     [rax], r8  ; set the value of errno
     mov     rax, -1
     ret

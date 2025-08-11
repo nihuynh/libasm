@@ -2,17 +2,16 @@
 ; File Created: 05/02/2025 23:12
 ; Author: Nicolas Huynh at (nico.huynh@gmail.com)
 ; -----
-; Description: <Desc of the file goal(s)>
 ; Copyright 2025 NH
 
 %ifidn __OUTPUT_FORMAT__, macho64
-    %define STRCPY_LABEL    _ft_strcpy
+    %define OS_FN_PREFIX(fn_call) _%+ fn_call
 %elifidn __OUTPUT_FORMAT__, elf64
-    %define STRCPY_LABEL    ft_strcpy
+    %define OS_FN_PREFIX(fn_call) fn_call
 %endif
 
-global STRCPY_LABEL
-STRCPY_LABEL:      ; rdi = dst, rsi = src
+global OS_FN_PREFIX(ft_strcpy)
+OS_FN_PREFIX(ft_strcpy):      ; rdi = dst, rsi = src
     xor     rcx, rcx    ; reset the counter
 
 runloop:
