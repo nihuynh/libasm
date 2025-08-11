@@ -26,9 +26,9 @@ OS_FN_PREFIX(ft_read):          ; rdi = fd, rsi = buf, rdx = count
 
 error_code:
     neg     rax         ; get absolute value of syscall return
-    mov     rbx, rax    ; back-up rax before calling ernno
-    ; call    ERRNO_FN wrt ..plt
-    call    ERRNO_FN
-    mov     [rax], rbx  ; set the value of errno
+    mov     r8, rax    ; back-up rax before calling ernno
+    call    ERRNO_FN wrt ..plt
+    ; call    ERRNO_FN
+    mov     [rax], r8  ; set the value of errno
     mov     rax, -1
     ret

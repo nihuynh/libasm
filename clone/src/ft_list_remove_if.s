@@ -25,6 +25,8 @@ OS_FN_PREFIX(ft_list_remove_if):    ; rdi = **head, rsi = *data_ref, rdx = CMP, 
     je      err
     cmp     rcx, 0
     je      err
+    push    rdi
+    push    rsi
     push    rbx
     push    r12
     push    r13
@@ -52,7 +54,6 @@ remove_elt:
 ; remove node (check if it is the first)
     cmp     r13, [r12] ; are we on the first node ?
     jne     next
-    ; mov     [0x0], r12 ; crash plz
     mov     r13, [r13 + 8]  ; Save next node to r13
     mov     [r12], r13      ; Change head value to r13
     jmp     loop
@@ -70,6 +71,8 @@ end:
     pop     r13         ; Load r13
     pop     r12         ; Load r12
     pop     rbx         ; Load rdx
+    pop     rsi         ; Load rsi
+    pop     rdi         ; Load rdi
 
 err:
     ret

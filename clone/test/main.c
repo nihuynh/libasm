@@ -236,11 +236,12 @@ void test_ft_list_size(void)
 
 
 int compare_int(int *a, int *b) {
-    printf("Compare %d, %d result %d\n", *a, *b, (*b - *a));
+    // printf("Compare %d, %d result %d\n", *a, *b, (*b - *a));
     return (*b - *a);
 }
 void del_node(int *node_data) {
     printf("removing %d", (int)*node_data);
+    (void)node_data;
     return;
 }
 

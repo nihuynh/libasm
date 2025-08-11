@@ -17,6 +17,8 @@ global OS_FN_PREFIX(ft_list_sort)
 OS_FN_PREFIX(ft_list_sort):     ; rsi = **head, rsi = fnptr
     cmp     rdi, 0
     je      err
+    push    rdi
+    push    rsi
     push    r12
     push    r13
     push    r14
@@ -52,6 +54,9 @@ end:
     pop     r15         ; Load r15
     pop     r14         ; Load r14
     pop     r13         ; Load r13
-    pop     r12         ; Load r13
+    pop     r12         ; Load r12
+    pop     rsi         ; Load rsi
+    pop     rdi         ; Load rdi
+
 err:
     ret

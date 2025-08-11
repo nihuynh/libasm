@@ -20,8 +20,8 @@ OS_FN_PREFIX(ft_strdup):       ; rdi = *str duplicate
     push    rdi
     inc     rax
     mov     rdi, rax
-    ; call    OS_FN_PREFIX(malloc) wrt ..plt
-    call    OS_FN_PREFIX(malloc)
+    call    OS_FN_PREFIX(malloc) wrt ..plt
+    ; call    OS_FN_PREFIX(malloc)
     pop     rsi         ; restore the stack and the *str to rsi
     cmp     rax, 0      ; check if malloc has failed
     je      error_code
