@@ -9,13 +9,26 @@
 %elifidn __OUTPUT_FORMAT__, elf64
     %define OS_FN_PREFIX(fn_call) fn_call
 %endif
+extern OS_FN_PREFIX(malloc)
 
 global OS_FN_PREFIX(ft_list_push_front)
-OS_FN_PREFIX(ft_list_push_front):       ; rdi = **head rsi = *list node
-    cmp     rsi, 0
+OS_FN_PREFIX(ft_list_push_front):       ; rdi = **head rsi = *data
+    cmp     rdi, 0  ; Check if the **head is NULL
     je      end
-    mov     r8, [rdi]       ; Save head *list node to r8
-    mov     [rsi + 8], r8   ; Link new elt.next to r8
-    mov     [rdi], rsi      ; Change head value to *elt
+    cmp     rsi, 0  ; Check if the *data is NULL
+    je      end
+    push    rdi     ; Store **head
+    push    rsi     ; Store *data
+    mov     rdi, 16 ; 16 for the 2 ptr
+    ; call    OS_FN_PREFIX(malloc) wrt ..plt
+    call    OS_FN_PREFIX(malloc)
+    pop     rsi
+    pop     rdi
+    cmp     rax, 0          ; Check if malloc has failed
+    je      end
+    mov     [rax], rsi      ; Link *data to node.data
+    mov     r8, [rdi]       ; Save *head to r8
+    mov     [rax + 8], r8   ; Link *head to node.next
+    mov     [rdi], rax      ; Change head value to *elt
 end:
     ret

@@ -16,16 +16,17 @@ global OS_FN_PREFIX(ft_atoi_base)
 ; r8 : negation
 ; r9 : base length
 OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
+    push    rbx             ; save value rbx
     cmp     rdi, 0          ; Check that str is not NULL
     je      error
     cmp     rsi, 0          ; Check that base is not NULL
     je      error
     cmp     byte [rdi], 0   ; Check that str is not empty
     je      error
+    cmp     byte [rsi], 0   ; Check that base is not empty
+    je      error
 
-    push    rbx             ; save value rbx
     push    rdi             ; save value rdi
-
     mov     rdi, rsi        ; load *base in rdi before call to strlen
     call    OS_FN_PREFIX(ft_strlen)
     pop     rdi             ; restore rdi

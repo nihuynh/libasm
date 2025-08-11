@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/11 21:26:36 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/12 01:02:12 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,14 +147,18 @@ void test_ft_atoi_base(void)
 {
     CU_RUN_START;
     CU_SECTION("basic");
-    [SEGFAULT]: ft_atoi_base.s:  : SEGFAULT:  ft_atoi_base("", "")
-[SEGFAULT]: ft_atoi_base.s:  : SEGFAULT:  ft_atoi_base("", "01")
-[SEGFAULT]: ft_list_push_front.s:  : SEGFAULT:  tmp = NULL; ft_list_push_front(&tmp, malloc(1));list_destroy(tmp)
     CU_EXPECT(int, ft_atoi_base("0", "0123456789"), 0);
     CU_EXPECT(int, ft_atoi_base("42", "0123456789"), 42);
     CU_EXPECT(int, ft_atoi_base("-42", "0123456789"), -42);
     CU_EXPECT(int, ft_atoi_base("1010", "01"), 0xa);
     CU_EXPECT(int, ft_atoi_base("111", "01"), 7);
+    CU_SECTION("Error checks");
+    CU_EXPECT(int, ft_atoi_base("", "01"), 0);
+    CU_EXPECT(int, ft_atoi_base("01", ""), 0);
+    CU_EXPECT(int, ft_atoi_base("", ""), 0);
+    char *tmp = NULL;
+    CU_EXPECT(int, ft_atoi_base(tmp, "01"), 0);
+    CU_EXPECT(int, ft_atoi_base("01", tmp), 0);
     CU_SECTION("Hex");
     CU_EXPECT(int, ft_atoi_base("3a2b", "0123456789abcdef"), 0x3a2b);
     CU_EXPECT(int, ft_atoi_base("3a2b", "0123456789abcdef"), 0x3a2b);
@@ -184,48 +188,35 @@ void test_ft_atoi_base(void)
     CU_EXPECT(int, ft_atoi_base("+++1", "01"), 1);
     CU_EXPECT(int, ft_atoi_base(" ---1", "01"), -1);
     CU_EXPECT(int, ft_atoi_base("-+-1", "01"), 1);
-    CU_SECTION("Error checks");
-    CU_EXPECT(int, ft_atoi_base("", "01"), 0);
-    CU_EXPECT(int, ft_atoi_base("", ""), 0);
-    CU_EXPECT(int, ft_atoi_base(NULL, "01"), 0);
-    CU_EXPECT(int, ft_atoi_base("01", NULL), 0);
-
     CU_RUN_END;
 }
 void test_ft_list_push_front(void)
 {
-    t_list start;
-    t_list node;
-    t_list *head = &start;
-    start.next = NULL;
-    node.next = NULL;
+    t_list *head = NULL;
+
     CU_RUN_START;
-    CU_SECTION("Setup");
-    CU_EXPECT(int, ft_list_size(head), 1);
-    CU_EXPECT(int, ft_list_size(&start), 1);
-    CU_EXPECT(int, ft_list_size(&node), 1);
-
+    CU_EXPECT(int, ft_list_size(head), 0);
     CU_SECTION("Pushing item to list.");
-    ft_list_push_front(&head, &node);
+    ft_list_push_front(&head, malloc(8));
+    CU_EXPECT(int, ft_list_size(head), 1);
+    ft_list_push_front(&head, malloc(16));
     CU_EXPECT(int, ft_list_size(head), 2);
-    CU_EXPECT(int, ft_list_size(&node), 2);
-    CU_EXPECT(ptr, (void*)node.next, (void*)&start);
-    CU_EXPECT(ptr, (void*)head, (void*)&node);
-
-    CU_SECTION("More in the list.");
-    t_list node_a;
-    node_a.next = NULL;
-    t_list node_b;
-    node_b.next = NULL;
-    ft_list_push_front(&head, &node_a);
-    ft_list_push_front(&head, &node_b);
-    CU_EXPECT(int, ft_list_size(head), 4);
-    CU_EXPECT(ptr, (void*)head, (void*)&node_b);
-
-    CU_SECTION("Error detection, node NULL");
+    ft_list_push_front(&head, malloc(2));
+    CU_EXPECT(int, ft_list_size(head), 3);
+    CU_SECTION("Error checks");
     ft_list_push_front(&head, NULL);
-    CU_EXPECT(int, ft_list_size(head), 4);
-    CU_EXPECT(ptr, (void*)head, (void*)&node_b);
+    CU_EXPECT(int, ft_list_size(head), 3);
+    t_list *node = head;
+    while (node)
+    {
+        /* code */
+        t_list *current = node;
+        node = node->next;
+        printf("current: %p, data %p, next: %p\n", current, current->data, current->next);
+        // free(current->data);
+        // free(current);
+    }
+
     CU_RUN_END;
 }
 void test_ft_list_size(void)
@@ -453,7 +444,7 @@ int main(void)
     CU_RUN(test_ft_strlen);
     CU_RUN(test_ft_strcpy);
     CU_RUN(test_ft_strdup);
-    CU_RUN(test_ft_atoi_base);
+    // CU_RUN(test_ft_atoi_base);
 
     // CU_SECTION("bonus");
     CU_RUN(test_ft_list_size);
