@@ -20,7 +20,7 @@ OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
     je      error
     cmp     byte [rsi], 0   ; Check that base is not empty
     je      error
-
+; Check the base length
     push    rdi             ; save value rdi
     mov     rdi, rsi        ; load *base in rdi before call to strlen
     call    OS_FN_PREFIX(ft_strlen)
@@ -29,7 +29,6 @@ OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
     jl      error           ; jump if base smaller than 2
     cmp     rax, 16
     jg      error           ; jump if base bigger than 16
-
     mov     r9, rax         ; save the length of the base
     mov     rcx, rsi        ; load *base in rcx
 validate_base:
@@ -39,35 +38,44 @@ validate_base:
     je      error
     cmp     byte [rcx], '-' ; '-'
     je      error
+    cmp     byte [rcx], 13 ; keep checking if *base > than 13
+    jg      inc_base
+    cmp     byte [rcx], 9 ; Error if 9 < *base <= than 13
+    jge     error
+inc_base:
     inc     rcx
     cmp     byte [rcx], 0   ; '\0'
     jne     validate_base
-
+; Check if the base has no duplicate char
     mov     rcx, rsi        ; load *base in rcx
     xor     rax, rax        ; reset rax
     xor     rbx, rbx        ; reset rbx
 dedup:  ; rcx is a cursor, rax is the seek offset
     mov     bl, byte [rcx + rax]
-
 seek:   ;  seek the rest of the base
     inc     rax
     cmp     bl, byte [rcx + rax]
     je      error
     cmp     byte [rcx + rax], 0
     jne     seek
-        ; move to the next char in the base to check
+; move to the next char in the base to check
     xor     rax, rax        ; reset rax
     inc     rcx
     cmp     byte [rcx], 0   ; '\0'
     jne     dedup
-        ; prepare reg for skip space & read sign
+; prepare reg for skip space & read sign
     mov     rcx,rdi         ; load *str in rcx
     xor     r8, r8          ; reset r8
 skip_space:
     cmp     byte [rcx], 0
     je      error
     cmp     byte [rcx], ' '
-    jne     read_sign
+    je      keep_skip
+    cmp     byte [rcx], 9 ; jmp read if *str < than 9
+    jl      read_sign
+    cmp     byte [rcx], 13 ; jmp read if *str > than 13
+    jg      read_sign
+keep_skip:
     inc     rcx
     jmp     skip_space
 read_sign: ; check if the char is '+' or '-'
@@ -85,10 +93,9 @@ positive:
 convert: ; rcx is the cursor of the str , rbx is the seek offset, r10b hold the current char
     xor     rbx, rbx
     mov     r10b, byte[rcx]
-    ; mov     rax, 6          ; test value to see that we change sign
 seek_char:
     cmp     byte[rsi + rbx], 0
-    je      error
+    je      end
     cmp     byte[rsi + rbx], r10b
     je      use_idx
     inc     rbx

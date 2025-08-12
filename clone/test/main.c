@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/12 03:34:02 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/13 00:11:54 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -188,6 +188,11 @@ void test_ft_atoi_base(void)
     CU_EXPECT(int, ft_atoi_base("+++1", "01"), 1);
     CU_EXPECT(int, ft_atoi_base(" ---1", "01"), -1);
     CU_EXPECT(int, ft_atoi_base("-+-1", "01"), 1);
+    CU_SECTION("garbage after the data");
+    CU_EXPECT(int, ft_atoi_base("-++++++-+--ff\xff", "0123456789abcdef"), 255);
+    CU_EXPECT(int, ft_atoi_base("+-123", "01"), -1);
+    CU_EXPECT(int, ft_atoi_base("-++++01++-+--ff", "01"), -1);
+    CU_EXPECT(int, ft_atoi_base(" 644yo", "01234567"), 420);
     CU_RUN_END;
 }
 void test_ft_list_push_front(void)
@@ -213,8 +218,8 @@ void test_ft_list_push_front(void)
         t_list *current = node;
         node = node->next;
         printf("current: %p, data %p, next: %p\n", current, current->data, current->next);
-        // free(current->data);
-        // free(current);
+        free(current->data);
+        free(current);
     }
 
     CU_RUN_END;
@@ -239,21 +244,22 @@ void test_ft_list_size(void)
 
 
 int compare_int(int *a, int *b) {
-    printf("Compare %d, %d result %d\n", *a, *b, (*b - *a));
-    return (*b - *a);
+    // printf("Compare %d, %d result %d\n", *a, *b, (*a - *b));
+    return (*a - *b);
 }
 void del_node(int *node_data) {
-    printf("removing %d\n", (int)*node_data);
+    // printf("removing %d\n", (int)*node_data);
     (void)node_data;
     return;
 }
 
 int compare_str(char *a, char *b) {
-    printf("Compare %s, %s\n", a, b);
-    return strcmp(a, b);
+    int res = strcmp(a, b);
+    // printf("Compare %s, %s [res: %d]\n", a, b, res);
+    return res;
 }
 void del_str(char* str_node) {
-    printf("removing %s\n", str_node);
+    // printf("removing %s\n", str_node);
     free(str_node);
     return;
 }
@@ -311,20 +317,43 @@ void test_ft_list_sort(void)
     CU_RUN_END;
 }
 
+void test_ft_list_sort_sorted_list(void)
+{
+    int    list[5] = {1, 2, 3 , 4, 5};
+    t_list *head = NULL;
+
+    CU_RUN_START;
+    CU_SECTION("Sorted list of 5 int");
+    CU_EXPECT(int, ft_list_size(head), 0);
+    for (size_t i = 5; i > 0 ; i--)
+    {
+        ft_list_push_front(&head, &list[i - 1]);
+    }
+    CU_EXPECT(int, ft_list_size(head), 5);
+    CU_EXPECT(int, *((int*)head->data), 1);
+    dump_tlist(head, DUMP_INT);
+    CU_SECTION("Sorting");
+    ft_list_sort(&head, compare_int);
+    CU_EXPECT(int, *((int*)head->data), 1);
+    dump_tlist(head, DUMP_INT);
+    CU_RUN_END;
+}
+
+
 void test_ft_list_sort_str(void)
 {
     t_list *head = NULL;
     CU_RUN_START;
     CU_SECTION("Initialize str list");
     CU_EXPECT(int, ft_list_size(head), 0);
-    ft_list_push_front(&head, strdup("Helloword"));
+    ft_list_push_front(&head, strdup("Hellow"));
     ft_list_push_front(&head, strdup("Byebye"));
     ft_list_push_front(&head, strdup("Coucou"));
     CU_EXPECT(int, ft_list_size(head), 3);
     dump_tlist(head, DUMP_STR);
     CU_EXPECT(str, (char*)head->data, "Coucou");
     CU_SECTION("Sorting");
-    ft_list_sort(&head, strcmp);
+    ft_list_sort(&head, compare_str);
     dump_tlist(head, DUMP_STR);
     CU_EXPECT(str, (char*)head->data, "Byebye");
     CU_RUN_END;
@@ -379,17 +408,17 @@ void test_ft_list_remove_if_str(void)
     CU_SECTION("Initialize str list");
     CU_EXPECT(int, ft_list_size(head), 4);
     CU_SECTION("Remove elt");
-    ft_list_remove_if(&head, ref, compare_str, del_str);
+    ft_list_remove_if(&head, ref, strcmp, del_str);
     CU_EXPECT(int, ft_list_size(head), 3);
     dump_tlist(head, DUMP_STR);
     CU_SECTION("Unknowned elt");
     ref = "panic?";
-    ft_list_remove_if(&head, ref, compare_str, del_str);
+    ft_list_remove_if(&head, ref, strcmp, del_str);
     CU_EXPECT(int, ft_list_size(head), 3);
     dump_tlist(head, DUMP_STR);
     CU_SECTION("Remove first elt");
     ref = "Helloword";
-    ft_list_remove_if(&head, ref, compare_str, del_str);
+    ft_list_remove_if(&head, ref, strcmp, del_str);
     dump_tlist(head, DUMP_STR);
     CU_EXPECT(int, ft_list_size(head), 2);
     CU_RUN_END;
@@ -401,20 +430,20 @@ int main(void)
     CU_BEGIN("Testing libasm, part I & II");
     // CU_SECTION("fails on mac");
 
-    CU_RUN(test_ft_write);
-    CU_RUN(test_ft_read);
-    CU_RUN(test_ft_strcmp);
-    // CU_SECTION("mandatory");
+    // CU_RUN(test_ft_write);
+    // CU_RUN(test_ft_read);
+    // CU_RUN(test_ft_strcmp);
+    // // CU_SECTION("mandatory");
 
-    CU_RUN(test_ft_strlen);
-    CU_RUN(test_ft_strcpy);
-    CU_RUN(test_ft_strdup);
-    // CU_RUN(test_ft_atoi_base);
-
+    // CU_RUN(test_ft_strlen);
+    // CU_RUN(test_ft_strcpy);
+    // CU_RUN(test_ft_strdup);
     // CU_SECTION("bonus");
+    CU_RUN(test_ft_atoi_base);
     CU_RUN(test_ft_list_size);
     CU_RUN(test_ft_list_push_front);
     CU_RUN(test_ft_list_sort);
+    CU_RUN(test_ft_list_sort_sorted_list);
     CU_RUN(test_ft_list_sort_str);
     CU_RUN(test_ft_list_remove_if);
     CU_RUN(test_ft_list_remove_if_str);

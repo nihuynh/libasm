@@ -10,7 +10,7 @@
 ; r14 - runner y
 ; r15 - cmp fn
 global OS_FN_PREFIX(ft_list_sort)
-OS_FN_PREFIX(ft_list_sort):     ; rsi = **head, rsi = fnptr
+OS_FN_PREFIX(ft_list_sort):     ; rdi = **head, rsi = fnptr
     cmp     rdi, 0
     je      err
     push    rdi
@@ -25,20 +25,21 @@ OS_FN_PREFIX(ft_list_sort):     ; rsi = **head, rsi = fnptr
 x_loop: ; change r13
     cmp     r13, 0
     je      end
-    mov     r14, r12        ; Init r14 to first node
+    mov     r14, r13        ; Init r14 to current node
 y_loop: ; change r14
     cmp     r13, r14
     je      inc_loop        ; Jump if we look at the same nodes
     mov     rdi, [r13]      ; Prepare for cmp
     mov     rsi, [r14]      ; Prepare for cmp
     call    r15             ; Call cmp fn
-    cmp     rax, 0
+    cmp     eax, 0
     jle     inc_loop        ; Jump if no swap is needed
 swap_val:
-    mov     rdi, [r13]
-    mov     rsi, [r14]
-    mov     [r13], rsi
-    mov     [r14], rdi
+    mov     rdi, [r13]      ; Load *data of the x node
+    mov     rsi, [r14]      ; Load *data of the y node
+    mov     [r13], rsi      ; Swap data addresses
+    mov     [r14], rdi      ; Swap data addresses
+    ; mov     byte [0x0], 'F'
 inc_loop:
     mov     r14, [r14 + 8]
     cmp     r14, 0
