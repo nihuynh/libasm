@@ -5,6 +5,7 @@
 ; Copyright 2025 NH
 
 %include "os_support.s"
+extern OS_FN_PREFIX(free)
 ; r12 - head
 ; r13 - runner
 ; r14 - ref
@@ -50,16 +51,22 @@ remove_elt:
 ; remove node (check if it is the first)
     cmp     r13, [r12] ; are we on the first node ?
     jne     next
-    mov     r13, [r13 + 8]  ; Save next node to r13
-    mov     [r12], r13      ; Change head value to r13
-    jmp     loop
+    mov     r8, [r13 + 8]  ; Load node->next in r8
+    mov     [r12], r8      ; Change head value to node->next
+    jmp     freenode
 next:
     mov     r8, [r13 + 8]   ; Load node->next in r8
-    mov     [r12 + 8], r8   ; Change prevnode->next to r8
+    mov     [r12 + 8], r8   ; Change prevnode->next to node->next
     ; maybe free the node here ??
+freenode:
+    mov     rdi, r13
+    mov     r13, r8     ; node = node->next
+    ; call    OS_FN_PREFIX(free) wrt ..plt
+    call    OS_FN_PREFIX(free)
+    jmp     loop
 inc_loop:
-    mov     r12, r13
-    mov     r13, [r13 + 8]
+    mov     r12, r13        ; Save current node in r12
+    mov     r13, [r13 + 8]  ; node = node->next
     jmp     loop
 end:
     pop     r15         ; Load r15

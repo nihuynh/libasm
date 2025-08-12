@@ -22,6 +22,13 @@
 make test && ./obj/main.out
 lldb  ./obj/main.out
 ```
+### Patch linux 
+```bash
+# Generate the patch:
+git diff > linux.patch
+# Apply the diff:
+git apply linux.patch
+```
 
 ### Calling conventions
 

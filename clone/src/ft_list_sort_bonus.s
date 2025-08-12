@@ -25,11 +25,11 @@ OS_FN_PREFIX(ft_list_sort):     ; rsi = **head, rsi = fnptr
 x_loop: ; change r13
     cmp     r13, 0
     je      end
-    mov     r14, r12          ; Init r14 to first node
+    mov     r14, r12        ; Init r14 to first node
 y_loop: ; change r14
     cmp     r13, r14
     je      inc_loop        ; Jump if we look at the same nodes
-    mov     rdi, [r13]       ; Prepare for cmp
+    mov     rdi, [r13]      ; Prepare for cmp
     mov     rsi, [r14]      ; Prepare for cmp
     call    r15             ; Call cmp fn
     cmp     rax, 0

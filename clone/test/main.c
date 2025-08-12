@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/12 01:02:12 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/12 03:34:02 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -239,11 +239,11 @@ void test_ft_list_size(void)
 
 
 int compare_int(int *a, int *b) {
-    // printf("Compare %d, %d result %d\n", *a, *b, (*b - *a));
+    printf("Compare %d, %d result %d\n", *a, *b, (*b - *a));
     return (*b - *a);
 }
 void del_node(int *node_data) {
-    printf("removing %d", (int)*node_data);
+    printf("removing %d\n", (int)*node_data);
     (void)node_data;
     return;
 }
@@ -252,181 +252,146 @@ int compare_str(char *a, char *b) {
     printf("Compare %s, %s\n", a, b);
     return strcmp(a, b);
 }
-void del_str(char *str_node) {
-    printf("removing %s", str_node);
-    // free(&str_node);
+void del_str(char* str_node) {
+    printf("removing %s\n", str_node);
+    free(str_node);
     return;
+}
+enum e_dump_type {
+    DUMP_PTR,
+    DUMP_STR,
+    DUMP_INT,
+};
+void dump_tlist(t_list *runner, enum e_dump_type type_dump) {
+    int idx = 0;
+    while (runner)
+    {
+        switch (type_dump)
+        {
+            case DUMP_INT :
+            printf("node %d %p, %d\n", idx, runner, *((int*)runner->data));
+            break;
+            case DUMP_STR :
+            printf("node %d %p, %s\n", idx, runner, (char*)runner->data);
+            break;
+        default:
+            printf("node %d %p, %p\n", idx, runner, runner->data);
+            break;
+        }
+        idx++;
+        runner = runner->next;
+    }
 }
 void test_ft_list_sort(void)
 {
-    int    a = 5;
-    int    b = 4;
+    int    a = 42;
+    int    b = 16;
     int    c = 3;
-    t_list node_b = { .data = &c };
-    t_list node = { .data = &a, .next = &node_b };
-    t_list start = { .data = &b, .next = &node };
-    t_list *head = &start;
+    t_list *head = NULL;
+
     CU_RUN_START;
     CU_SECTION("Initialize int list");
-    CU_EXPECT(int, ft_list_size(head), 3);
+    CU_EXPECT(int, ft_list_size(head), 0);
+    ft_list_push_front(&head, &c);
+    ft_list_push_front(&head, &a);
+    ft_list_push_front(&head, &c);
+    ft_list_push_front(&head, &b);
+    ft_list_push_front(&head, &b);
+    ft_list_push_front(&head, &b);
+    ft_list_push_front(&head, &a);
+    ft_list_push_front(&head, &b);
+    CU_EXPECT(int, ft_list_size(head), 8);
     CU_EXPECT(ptr, head->data, &b);
-    t_list *runner = NULL;
-    runner = head;
-    while (runner)
-    {
-        int *tmp = runner->data;
-        printf("node %p, %d\n", runner, *tmp);
-        runner = runner->next;
-    }
+    dump_tlist(head, DUMP_INT);
     CU_SECTION("Sorting");
     ft_list_sort(&head, compare_int);
     CU_EXPECT(ptr, head->data, &c);
     CU_EXPECT(int, *((int*)head->data), 3);
-    runner = head;
-    while (runner)
-    {
-        int *tmp = runner->data;
-        printf("node %p, %d\n", runner, *tmp);
-        runner = runner->next;
-    }
+    dump_tlist(head, DUMP_INT);
     CU_RUN_END;
 }
 
 void test_ft_list_sort_str(void)
 {
-    char   *a = "Helloword";
-    char   *b = "Core";
-    char   *c = "Byebye";
-    t_list node_b = { .data = c };
-    t_list node = { .data = a, .next = &node_b };
-    t_list start = { .data = b, .next = &node };
-    t_list *head = &start;
-    t_list *runner = NULL;
-    runner = head;
-    while (runner)
-    {
-        char *tmp = runner->data;
-        printf("node %p, %s\n", runner, tmp);
-        runner = runner->next;
-    }
+    t_list *head = NULL;
     CU_RUN_START;
     CU_SECTION("Initialize str list");
+    CU_EXPECT(int, ft_list_size(head), 0);
+    ft_list_push_front(&head, strdup("Helloword"));
+    ft_list_push_front(&head, strdup("Byebye"));
+    ft_list_push_front(&head, strdup("Coucou"));
     CU_EXPECT(int, ft_list_size(head), 3);
-    CU_EXPECT(ptr, head->data, b);
+    dump_tlist(head, DUMP_STR);
+    CU_EXPECT(str, (char*)head->data, "Coucou");
     CU_SECTION("Sorting");
     ft_list_sort(&head, strcmp);
-    runner = head;
-    while (runner)
-    {
-        char *tmp = runner->data;
-        printf("node %p, %s\n", runner, tmp);
-        runner = runner->next;
-    }
-    CU_EXPECT(ptr, head->data, c);
+    dump_tlist(head, DUMP_STR);
     CU_EXPECT(str, (char*)head->data, "Byebye");
     CU_RUN_END;
 }
 
 void test_ft_list_remove_if(void)
 {
-    CU_RUN_START;
     int    a = 42;
     int    b = 16;
     int    c = 3;
     int    ref = 42;
-    t_list node_b = { .data = &c };
-    t_list node = { .data = &a, .next = &node_b };
-    t_list start = { .data = &b, .next = &node };
-    t_list *head = &start;
-    CU_SECTION("Initialize int list");
-    CU_EXPECT(int, ft_list_size(head), 3);
+    t_list *head = NULL;
+
+    CU_RUN_START;
+    CU_SECTION("Setup");
+    CU_EXPECT(int, ft_list_size(head), 0);
+    ft_list_push_front(&head, &a);
+    ft_list_push_front(&head, &a);
+    ft_list_push_front(&head, &c);
+    ft_list_push_front(&head, &b);
+    ft_list_push_front(&head, &b);
+    CU_EXPECT(int, ft_list_size(head), 5);
     CU_EXPECT(ptr, head->data, &b);
-    t_list *runner = NULL;
-    runner = head;
-    while (runner)
-    {
-        int *tmp = runner->data;
-        printf("node %p, %d\n", runner, *tmp);
-        runner = runner->next;
-    }
-    CU_SECTION("Remove elt");
+    dump_tlist(head, DUMP_INT);
+    CU_SECTION("Remove starting elt");
     ft_list_remove_if(&head, &ref, compare_int, del_node);
-    runner = head;
-    while (runner)
-    {
-        int *tmp = runner->data;
-        printf("node %p, %d\n", runner, *tmp);
-        runner = runner->next;
-    }
-    CU_SECTION("Remove first elt");
+    dump_tlist(head, DUMP_INT);
+    CU_EXPECT(int, ft_list_size(head), 3);
+    CU_SECTION("Remove more elt");
     ref = 16;
     ft_list_remove_if(&head, &ref, compare_int, del_node);
-    runner = head;
-    while (runner)
-    {
-        int *tmp = runner->data;
-        printf("node %p, %d\n", runner, *tmp);
-        runner = runner->next;
-    }
+    dump_tlist(head, DUMP_INT);
     CU_EXPECT(int, ft_list_size(head), 1);
+    CU_SECTION("Remove last elt");
+    ref = 3;
+    ft_list_remove_if(&head, &ref, compare_int, del_node);
+    CU_EXPECT(int, ft_list_size(head), 0);
+    CU_EXPECT(ptr, head, NULL);
     CU_RUN_END;
 }
 
 void test_ft_list_remove_if_str(void)
 {
-    char   *a = "Helloword";
-    char   *b = "Core";
-    char   *c = "Byebye";
+    t_list *head = NULL;
+    ft_list_push_front(&head, strdup("Helloword"));
+    ft_list_push_front(&head, strdup("Coucou"));
+    ft_list_push_front(&head, strdup("Byebye"));
+    ft_list_push_front(&head, strdup("Core"));
     char   *ref = "Core";
-
-    t_list node_b = { .data = c };
-    t_list node = { .data = a, .next = &node_b };
-    t_list start = { .data = b, .next = &node };
-    t_list *head = &start;
-    t_list *runner = NULL;
-    runner = head;
-    while (runner)
-    {
-        char *tmp = runner->data;
-        printf("node %p, %s\n", runner, tmp);
-        runner = runner->next;
-    }
+    dump_tlist(head, DUMP_STR);
     CU_RUN_START;
     CU_SECTION("Initialize str list");
-    CU_EXPECT(int, ft_list_size(head), 3);
-    CU_EXPECT(ptr, head->data, b);
+    CU_EXPECT(int, ft_list_size(head), 4);
     CU_SECTION("Remove elt");
     ft_list_remove_if(&head, ref, compare_str, del_str);
-    CU_EXPECT(int, ft_list_size(head), 2);
-    runner = head;
-    while (runner)
-    {
-        char *tmp = runner->data;
-        printf("node %p, %s\n", runner, tmp);
-        runner = runner->next;
-    }
+    CU_EXPECT(int, ft_list_size(head), 3);
+    dump_tlist(head, DUMP_STR);
     CU_SECTION("Unknowned elt");
     ref = "panic?";
     ft_list_remove_if(&head, ref, compare_str, del_str);
-    CU_EXPECT(int, ft_list_size(head), 2);
-    runner = head;
-    while (runner)
-    {
-        char *tmp = runner->data;
-        printf("node %p, %s\n", runner, tmp);
-        runner = runner->next;
-    }
+    CU_EXPECT(int, ft_list_size(head), 3);
+    dump_tlist(head, DUMP_STR);
     CU_SECTION("Remove first elt");
     ref = "Helloword";
     ft_list_remove_if(&head, ref, compare_str, del_str);
-    runner = head;
-    while (runner)
-    {
-        char *tmp = runner->data;
-        printf("node %p, %s\n", runner, tmp);
-        runner = runner->next;
-    }
-    CU_EXPECT(int, ft_list_size(head), 1);
+    dump_tlist(head, DUMP_STR);
+    CU_EXPECT(int, ft_list_size(head), 2);
     CU_RUN_END;
 }
 
