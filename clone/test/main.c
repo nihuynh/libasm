@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/13 00:11:54 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/13 01:20:07 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -258,7 +258,7 @@ int compare_str(char *a, char *b) {
     // printf("Compare %s, %s [res: %d]\n", a, b, res);
     return res;
 }
-void del_str(char* str_node) {
+void del_str(char *str_node) {
     // printf("removing %s\n", str_node);
     free(str_node);
     return;
@@ -274,10 +274,10 @@ void dump_tlist(t_list *runner, enum e_dump_type type_dump) {
     {
         switch (type_dump)
         {
-            case DUMP_INT :
+        case DUMP_INT:
             printf("node %d %p, %d\n", idx, runner, *((int*)runner->data));
             break;
-            case DUMP_STR :
+        case DUMP_STR:
             printf("node %d %p, %s\n", idx, runner, (char*)runner->data);
             break;
         default:
@@ -317,11 +317,11 @@ void test_ft_list_sort(void)
     CU_RUN_END;
 }
 
+
 void test_ft_list_sort_sorted_list(void)
 {
-    int    list[5] = {1, 2, 3 , 4, 5};
+    int    list[5] = { 1, 2, 3, 4, 5 };
     t_list *head = NULL;
-
     CU_RUN_START;
     CU_SECTION("Sorted list of 5 int");
     CU_EXPECT(int, ft_list_size(head), 0);
@@ -336,6 +336,38 @@ void test_ft_list_sort_sorted_list(void)
     ft_list_sort(&head, compare_int);
     CU_EXPECT(int, *((int*)head->data), 1);
     dump_tlist(head, DUMP_INT);
+
+    t_list *head_rev = NULL;
+    CU_SECTION("Reversed list of 5 int");
+    CU_EXPECT(int, ft_list_size(head_rev), 0);
+    for (size_t i = 5; i > 0 ; i--)
+    {
+        ft_list_push_front(&head_rev, &list[i - 1]);
+    }
+    CU_EXPECT(int, ft_list_size(head_rev), 5);
+    CU_EXPECT(int, *((int*)head_rev->data), 1);
+    dump_tlist(head_rev, DUMP_INT);
+    CU_SECTION("Sorting");
+    ft_list_sort(&head_rev, compare_int);
+    CU_EXPECT(int, *((int*)head_rev->data), 1);
+    dump_tlist(head_rev, DUMP_INT);
+
+    t_list *head_zero = NULL;
+    int    list_zero[5] = { 1, 2, 0, 4, 5 };
+    CU_SECTION("List of int with zero value");
+    CU_EXPECT(int, ft_list_size(head_zero), 0);
+    for (size_t i = 5; i > 0 ; i--)
+    {
+        ft_list_push_front(&head_zero, &list_zero[i - 1]);
+    }
+    CU_EXPECT(int, ft_list_size(head_zero), 5);
+    CU_EXPECT(int, *((int*)head_zero->data), 1);
+    dump_tlist(head_zero, DUMP_INT);
+    CU_SECTION("Sorting");
+    ft_list_sort(&head_zero, compare_int);
+    CU_EXPECT(int, *((int*)head_zero->data), 0);
+    dump_tlist(head_zero, DUMP_INT);
+
     CU_RUN_END;
 }
 
@@ -430,14 +462,14 @@ int main(void)
     CU_BEGIN("Testing libasm, part I & II");
     // CU_SECTION("fails on mac");
 
-    // CU_RUN(test_ft_write);
-    // CU_RUN(test_ft_read);
-    // CU_RUN(test_ft_strcmp);
-    // // CU_SECTION("mandatory");
+    CU_RUN(test_ft_write);
+    CU_RUN(test_ft_read);
+    CU_RUN(test_ft_strcmp);
+    // CU_SECTION("mandatory");
 
-    // CU_RUN(test_ft_strlen);
-    // CU_RUN(test_ft_strcpy);
-    // CU_RUN(test_ft_strdup);
+    CU_RUN(test_ft_strlen);
+    CU_RUN(test_ft_strcpy);
+    CU_RUN(test_ft_strdup);
     // CU_SECTION("bonus");
     CU_RUN(test_ft_atoi_base);
     CU_RUN(test_ft_list_size);

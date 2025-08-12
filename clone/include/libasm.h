@@ -36,10 +36,10 @@ typedef struct s_list
 
 // # define size_struct sizeof(t_list)
 
-int     ft_atoi_base(char *str, char *base);
-void    ft_list_push_front(t_list **head, void *data);
-int     ft_list_size(t_list *begin);
-void    ft_list_sort(t_list **head, int (*cmp)());
-void    ft_list_remove_if(t_list **head, void *ref, int (*cmp)(), void (*free_fn)());
+int  ft_atoi_base(char *str, char *base);
+void ft_list_push_front(t_list **head, void *data);
+int  ft_list_size(t_list *begin);
+void ft_list_sort(t_list **head, int (*cmp)());
+void ft_list_remove_if(t_list **head, void *ref, int (*cmp)(), void (*free_fn)());
 
 #endif
