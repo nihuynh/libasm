@@ -5,23 +5,24 @@
 ; Copyright 2025 NH
 
 %include "os_support.s"
-; r12 - head
-; r13 - runner x
-; r14 - runner y
-; r15 - cmp fn
 global OS_FN_PREFIX(ft_list_sort)
-OS_FN_PREFIX(ft_list_sort):     ; rdi = **head, rsi = fnptr
+
+; r12 : head
+; r13 : runner x
+; r14 : runner y
+; r15 : cmp fn
+OS_FN_PREFIX(ft_list_sort): ; rdi = **head, rsi = fnptr
     cmp     rdi, 0
-    je      err
-    push    rdi
+    je      error
+    push    rdi             ; Saving register values to the stack
     push    rsi
     push    r12
     push    r13
     push    r14
     push    r15
-    mov     r12, [rdi] ; Save head *list node to r12
-    mov     r15, rsi   ; Save fnptr to r15
-    mov     r13, r12   ; Init r13 to first node
+    mov     r12, [rdi]      ; Save head *list node to r12
+    mov     r15, rsi        ; Save fnptr to r15
+    mov     r13, r12        ; Init r13 to first node
 x_loop: ; change r13
     cmp     r13, 0
     je      end
@@ -39,21 +40,20 @@ swap_val:
     mov     rsi, [r14]      ; Load *data of the y node
     mov     [r13], rsi      ; Swap data addresses
     mov     [r14], rdi      ; Swap data addresses
-    ; mov     byte [0x0], 'F'
 inc_loop:
     mov     r14, [r14 + 8]
     cmp     r14, 0
-    jne     y_loop
+    jne     y_loop          ; Iterate & comparing with r13
     mov     r13, [r13 + 8]
     cmp     r13, 0
-    jne     x_loop
-end:
-    pop     r15         ; Load r15
-    pop     r14         ; Load r14
-    pop     r13         ; Load r13
-    pop     r12         ; Load r12
-    pop     rsi         ; Load rsi
-    pop     rdi         ; Load rdi
+    jne     x_loop          ; Increment r13->next
 
-err:
+end:
+    pop     r15          ; Restore register values
+    pop     r14
+    pop     r13
+    pop     r12
+    pop     rsi
+    pop     rdi
+error:
     ret

@@ -6,8 +6,8 @@
 
 %include "os_support.s"
 extern OS_FN_PREFIX(ft_strlen)
-
 global OS_FN_PREFIX(ft_atoi_base)
+
 ; r8 : negation
 ; r9 : base length
 OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
@@ -38,9 +38,9 @@ validate_base:
     je      error
     cmp     byte [rcx], '-' ; '-'
     je      error
-    cmp     byte [rcx], 13 ; keep checking if *base > than 13
+    cmp     byte [rcx], 13  ; keep checking if *base > than 13
     jg      inc_base
-    cmp     byte [rcx], 9 ; Error if 9 < *base <= than 13
+    cmp     byte [rcx], 9   ; Error if 9 < *base <= than 13
     jge     error
 inc_base:
     inc     rcx
@@ -71,13 +71,14 @@ skip_space:
     je      error
     cmp     byte [rcx], ' '
     je      keep_skip
-    cmp     byte [rcx], 9 ; jmp read if *str < than 9
+    cmp     byte [rcx], 9   ; jmp read if *str < than 9
     jl      read_sign
-    cmp     byte [rcx], 13 ; jmp read if *str > than 13
+    cmp     byte [rcx], 13  ; jmp read if *str > than 13
     jg      read_sign
 keep_skip:
     inc     rcx
     jmp     skip_space
+
 read_sign: ; check if the char is '+' or '-'
     cmp     byte [rcx], '+'
     je      positive
@@ -100,6 +101,7 @@ seek_char:
     je      use_idx
     inc     rbx
     jmp     seek_char
+
 use_idx:
     mul     r9              ; mul r9*rax -> rax (r9: base length)
     add     rax, rbx

@@ -6,16 +6,16 @@
 
 %include "os_support.s"
 extern OS_FN_PREFIX(malloc)
-
 global OS_FN_PREFIX(ft_list_push_front)
-OS_FN_PREFIX(ft_list_push_front):       ; rdi = **head rsi = *data
-    cmp     rdi, 0  ; Check if the **head is NULL
+
+OS_FN_PREFIX(ft_list_push_front):   ; rdi = **head rsi = *data
+    cmp     rdi, 0          ; Check if the **head is NULL
     je      end
-    cmp     rsi, 0  ; Check if the *data is NULL
+    cmp     rsi, 0          ; Check if the *data is NULL
     je      end
-    push    rdi     ; Store **head
-    push    rsi     ; Store *data
-    mov     rdi, 16 ; 16 for the 2 ptr
+    push    rdi             ; Store **head
+    push    rsi             ; Store *data
+    mov     rdi, 16         ; 16 for the 2 ptr
     ; call    OS_FN_PREFIX(malloc) wrt ..plt
     call    OS_FN_PREFIX(malloc)
     pop     rsi

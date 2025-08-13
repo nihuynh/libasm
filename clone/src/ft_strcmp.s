@@ -6,13 +6,13 @@
 
 %include "os_support.s"
 global OS_FN_PREFIX(ft_strcmp)
-OS_FN_PREFIX(ft_strcmp):      ; rdi = s1, rsi = s2
-    xor     rcx, rcx    ; reset the counter
 
+OS_FN_PREFIX(ft_strcmp):            ; rdi = s1, rsi = s2
+    xor     rcx, rcx                ; reset the counter
 runloop:
     mov     al, byte [rdi + rcx]
     cmp     al, byte [rsi + rcx]
-    jne     retdiff     ; not equal so break
+    jne     retdiff                 ; not equal so break
     cmp     al, 0
     je      retdiff
     inc     rcx

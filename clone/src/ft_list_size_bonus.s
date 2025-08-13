@@ -6,8 +6,9 @@
 
 %include "os_support.s"
 global OS_FN_PREFIX(ft_list_size)
-OS_FN_PREFIX(ft_list_size):       ; rdi = *list node
-    xor     rcx, rcx    ; reset the counter
+
+OS_FN_PREFIX(ft_list_size): ; rdi = *list node
+    xor     rcx, rcx        ; reset the counter
     mov     r8, rdi
 follow:
     cmp     r8, 0
@@ -15,6 +16,7 @@ follow:
     inc     rcx
     mov     r8, [r8 + 8]
     jmp     follow
+
 end:
     mov     rax, rcx
     ret

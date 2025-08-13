@@ -6,9 +6,9 @@
 
 %include "os_support.s"
 global OS_FN_PREFIX(ft_strcpy)
-OS_FN_PREFIX(ft_strcpy):      ; rdi = dst, rsi = src
-    xor     rcx, rcx    ; reset the counter
 
+OS_FN_PREFIX(ft_strcpy):            ; rdi = dst, rsi = src
+    xor     rcx, rcx                ; reset the counter
 runloop:
     mov     al, byte [rsi + rcx]    ; store byte of src
     mov     byte [rdi + rcx], al    ; write the byte to dest
