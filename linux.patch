@@ -1,0 +1,86 @@
+diff --git a/clone/src/ft_list_push_front_bonus.s b/clone/src/ft_list_push_front_bonus.s
+index 1bd7b39..430cff0 100644
+--- a/clone/src/ft_list_push_front_bonus.s
++++ b/clone/src/ft_list_push_front_bonus.s
+@@ -16,8 +16,8 @@ OS_FN_PREFIX(ft_list_push_front):   ; rdi = **head rsi = *data
+     push    rdi             ; Store **head
+     push    rsi             ; Store *data
+     mov     rdi, 16         ; 16 for the 2 ptr
+-    ; call    OS_FN_PREFIX(malloc) wrt ..plt
+-    call    OS_FN_PREFIX(malloc)
++    call    OS_FN_PREFIX(malloc) wrt ..plt
++    ; call    OS_FN_PREFIX(malloc)
+     pop     rsi
+     pop     rdi
+     cmp     rax, 0          ; Check if malloc has failed
+diff --git a/clone/src/ft_list_remove_if_bonus.s b/clone/src/ft_list_remove_if_bonus.s
+index 114e93a..7eba884 100644
+--- a/clone/src/ft_list_remove_if_bonus.s
++++ b/clone/src/ft_list_remove_if_bonus.s
+@@ -60,8 +60,8 @@ next:
+ freenode:
+     mov     rdi, r13
+     mov     r13, r8         ; node = node->next
+-    ; call    OS_FN_PREFIX(free) wrt ..plt
+-    call    OS_FN_PREFIX(free)
++    call    OS_FN_PREFIX(free) wrt ..plt
++    ; call    OS_FN_PREFIX(free)
+     jmp     loop
+ 
+ inc_loop:
+diff --git a/clone/src/ft_read.s b/clone/src/ft_read.s
+index 1ffe61c..4caa4a3 100644
+--- a/clone/src/ft_read.s
++++ b/clone/src/ft_read.s
+@@ -18,8 +18,8 @@ OS_FN_PREFIX(ft_read):          ; rdi = fd, rsi = buf, rdx = count
+ error_code:
+     neg     rax                 ; Get absolute value of syscall return
+     mov     r8, rax             ; Back-up rax before calling ernno
+-    ; call    ERRNO_FN wrt ..plt
+-    call    ERRNO_FN
++    call    ERRNO_FN wrt ..plt
++    ; call    ERRNO_FN
+     mov     [rax], r8           ; Set the value of errno
+     mov     rax, -1
+     ret
+diff --git a/clone/src/ft_strdup.s b/clone/src/ft_strdup.s
+index eafafa9..20fa0d4 100644
+--- a/clone/src/ft_strdup.s
++++ b/clone/src/ft_strdup.s
+@@ -15,8 +15,8 @@ OS_FN_PREFIX(ft_strdup):    ; rdi = *str duplicate
+     push    rdi
+     inc     rax             ; Add 1 for the '/0'
+     mov     rdi, rax
+-    ; call    OS_FN_PREFIX(malloc) wrt ..plt
+-    call    OS_FN_PREFIX(malloc)
++    call    OS_FN_PREFIX(malloc) wrt ..plt
++    ; call    OS_FN_PREFIX(malloc)
+     pop     rsi             ; Restore the stack and load *str in rsi
+     cmp     rax, 0          ; Check if malloc has failed
+     je      end
+diff --git a/clone/src/ft_write.s b/clone/src/ft_write.s
+index 957f4a0..3f36aa1 100644
+--- a/clone/src/ft_write.s
++++ b/clone/src/ft_write.s
+@@ -9,8 +9,8 @@ extern ERRNO_FN
+ global OS_FN_PREFIX(ft_write)
+ 
+ OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
+-    cmp     rsi, 0
+-    je      end
++    ; cmp     rsi, 0
++    ; je      end
+     mov     rax, WRITE_SYSCALL  ; Prepare for write syscall
+     syscall
+     cmp     rax, 0
+@@ -20,8 +20,8 @@ OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
+ error_code:
+     neg     rax                 ; Get absolute value of syscall return
+     mov     r8, rax             ; Back-up rax before calling ernno
+-    ; call    ERRNO_FN wrt ..plt
+-    call    ERRNO_FN
++    call    ERRNO_FN wrt ..plt
++    ; call    ERRNO_FN
+     mov     [rax], r8           ; Set the value of errno
+ end:
+     mov     rax, -1
