@@ -23,6 +23,6 @@ error_code:
     ; call    ERRNO_FN wrt ..plt
     call    ERRNO_FN
     mov     [rax], r8           ; Set the value of errno
-    mov     rax, -1
 end:
+    mov     rax, -1
     ret
