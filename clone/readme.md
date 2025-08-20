@@ -60,21 +60,20 @@ git diff HEAD > linux2.patch && mv linux2.patch linux.patch
 ```
 
 ### Testers
-#### 42libasm_tester
 ```bash
+make run_test
+```
+[Thanks cacharle, for the awesome tests](https://github.com/cacharle/libasm_test)
+[Thanks vitoriagalli, for the awesome tests](https://github.com/vitoriagalli/42libasm_tester)
+[Thanks Tripouille, for the awesome tests](https://github.com/Tripouille/libasmTester)
+
+```bash
+make -C libasm_test bonus
+make -C libasmTester va
 cd 42libasm_tester/
 bash runtest.sh && bash runtest.sh bonus
 bash runtest.sh leak && bash runtest.sh bonus leak
 ```
-[Thanks vitoriagalli, for the awesome tests](https://github.com/vitoriagalli/42libasm_tester)
-#### libasm_test & libasmTester
-```bash
-make -C libasm_test bonus
-make -C libasmTester va
-```
-[Thanks cacharle, for the awesome tests](https://github.com/cacharle/libasm_test)
-[Thanks Tripouille, for the awesome tests](https://github.com/Tripouille/libasmTester)
-
 ## Ressources
 ### Assembly Calling conventions
 
