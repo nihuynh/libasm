@@ -9,8 +9,6 @@ extern ERRNO_FN
 global OS_FN_PREFIX(ft_write)
 
 OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
-    cmp     rsi, 0
-    je      end
     mov     rax, WRITE_SYSCALL  ; Prepare for write syscall
     syscall
     cmp     rax, 0
@@ -23,6 +21,5 @@ error_code:
     ; call    ERRNO_FN wrt ..plt
     call    ERRNO_FN
     mov     [rax], r8           ; Set the value of errno
-end:
     mov     rax, -1
     ret
