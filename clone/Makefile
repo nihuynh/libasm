@@ -63,9 +63,8 @@ endif
 # --- Misc
 OBJ			:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))
 BONUS_OBJ	:=	$(addprefix $(OBJDIR)/, $(BNS_SRC:.s=.o))
-DEP			:=	$(addprefix $(OBJDIR)/, $(SRC:.c=.d))
+DEP			:=	$(addprefix $(OBJDIR)/, $(TEST_SRC:.c=.d))
 TEST		:=	$(addprefix $(OBJDIR)/, $(TEST_SRC:.c=.out))
-DEP			+=	$(addprefix $(OBJDIR)/, $(test_SRC:.c=.d))
 ifndef VERBOSE
 .SILENT:
 endif
