@@ -17,9 +17,21 @@
 
 ## Assembly
 
+### Install
+```bash
+# Linux:
+sudo apt-get install nasm
+# Mac:
+brew install nasm
+# Install brew if needed
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
 ### Using debugger
 ```shell
 make test && ./obj/main.out
+./obj/test_gbrunet.out
+# Debug
 lldb  ./obj/main.out
 ```
 ### Patch linux 
@@ -42,7 +54,27 @@ git apply linux.patch
 The x64 ABI considers the registers RAX, RCX, RDX, R8, R9, R10, R11, and XMM0-XMM5 volatile. When present, the upper portions of YMM0-YMM15 and ZMM0-ZMM15 are also volatile. On AVX512VL, the ZMM, YMM, and XMM registers 16-31 are also volatile. When AMX support is present, the TMM tile registers are volatile. Consider volatile registers destroyed on function calls unless otherwise safety-provable by analysis such as whole program optimization.
 The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15 nonvolatile. They must be saved and restored by a function that uses them.
 
+## Testers
+### 42libasm_tester
+```bash
+cd 42libasm_tester/
+bash runtest.sh && bash runtest.sh bonus
+bash runtest.sh leak && bash runtest.sh bonus leak
+```
+
+### libasmTester
+```bash
+make -C libasmTester va
+```
+
+### libasm_test
+```bash
+make -C libasm_test bonus
+```
+
 ## Ressources
+### Links
+
 
 Lessons:
 

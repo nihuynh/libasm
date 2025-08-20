@@ -21,7 +21,8 @@ BNS_SRC		:=	ft_atoi_base_bonus.s \
 TEST_SRC	:=	main.c \
 				cu_test_main.c \
 				size_demo.c \
-				cu_test_fix.c
+				cu_test_fix.c \
+				test_gbrunet.c
 VPATH		:=	./src ./test
 OBJDIR		:=	obj
 INCDIR		:=	include

@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/13 01:20:07 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/20 19:22:22 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ void test_ft_strcmp(void)
 
 void test_ft_strcpy(void)
 {
-    char buffy[64];
+    char buffy[512];
     ft_strcpy((char*)&buffy, "Helloworld");
     CU_RUN_START;
     CU_SECTION("basic");
@@ -93,6 +93,12 @@ void test_ft_strcpy(void)
     ft_strcpy((char*)&buffy, "42");
     CU_EXPECT(size_t, ft_strlen((const char*)&buffy), strlen("42"));
     CU_EXPECT(int, strcmp((const char*)&buffy, "42"), 0);
+
+    CU_SECTION("long string");
+    char *random = "         �}+J�Ky�Q%	�����'m��B�b1i����p~,�(��9:gc�eܳ�� �l�����w����Ͽ3�-�^�C���ɧ�-y�롓l�%G�ټ[S�8�";
+    ft_strcpy((char*)&buffy, random);
+    CU_EXPECT(size_t, ft_strlen((const char*)&buffy), (unsigned long)187);
+    CU_EXPECT(int, strcmp((const char*)&buffy, random), 0);
     CU_RUN_END;
 }
 
@@ -106,6 +112,9 @@ void test_ft_strlen(void)
     CU_SECTION("empty string");
     CU_EXPECT(size_t, ft_strlen(""), strlen(""));
     CU_EXPECT(size_t, ft_strlen("\0\0"), strlen("\0\0"));
+    CU_SECTION("long string");
+    char *random = "���-��t?+%�١�����J�=�e���<���¡�#t����l��i�s�Q/d]�V��c���0!�-���F�ɂBDvZ%u#	�����l�̈́�7^�FA�B���'>3m�>�0y��w�5Ñm�������d��%���g�6`����O���ݬ�퐱34�k$";
+    CU_EXPECT(size_t, ft_strlen(random), strlen(random));
     CU_RUN_END;
 }
 
