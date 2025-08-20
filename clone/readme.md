@@ -1,30 +1,44 @@
 # libasm
+- [libasm](#libasm)
+  - [Setup](#setup)
+    - [Install](#install)
+    - [Formatting](#formatting)
+    - [Using debugger](#using-debugger)
+    - [Patch mac to linux](#patch-mac-to-linux)
+    - [Testers](#testers)
+      - [42libasm\_tester](#42libasm_tester)
+      - [libasm\_test \& libasmTester](#libasm_test--libasmtester)
+  - [Ressources](#ressources)
+    - [Assembly Calling conventions](#assembly-calling-conventions)
+    - [Links](#links)
+      - [Lessons:](#lessons)
+      - [Documentations:](#documentations)
+      - [Great readme from other students:](#great-readme-from-other-students)
+      - [More about asm:](#more-about-asm)
+      - [SSE:](#sse)
+      - [GDB on MACarm:](#gdb-on-macarm)
+      - [time cpu op:](#time-cpu-op)
+      - [Unit testing:](#unit-testing)
+      - [Static analysis:](#static-analysis)
 
-## Overview
-
-## TODO
-
-- [ ] Setup gdb debug
-- [ ] Setup vsc debug
-- [x] Rework tests
-- [x] Bonus: atoi base
-- [x] Bonus: list size
-- [x] Bonus: list pushfront
-- [ ] Bonus: list others
-- [ ] Add 42 Headers
-- [ ] Retry project (before 01/09/25)
-- [ ] ...
-
-## Assembly
+## Setup
 
 ### Install
 ```bash
 # Linux:
-sudo apt-get install nasm
+sudo apt update && sudo apt install -y build-essential gdb clang nasm
 # Mac:
 brew install nasm
 # Install brew if needed
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+```
+
+### Formatting
+```shell
+    # Generate basic uncrust config
+    uncrustify --update-config-with-doc -o uncrust.conf
+    # apply
+    make format
 ```
 
 ### Using debugger
@@ -34,7 +48,8 @@ make test && ./obj/main.out
 # Debug
 lldb  ./obj/main.out
 ```
-### Patch linux 
+
+### Patch mac to linux 
 ```bash
 # Generate the patch:
 git diff > linux.patch
@@ -42,7 +57,24 @@ git diff > linux.patch
 git apply linux.patch
 ```
 
-### Calling conventions
+### Testers
+#### 42libasm_tester
+```bash
+cd 42libasm_tester/
+bash runtest.sh && bash runtest.sh bonus
+bash runtest.sh leak && bash runtest.sh bonus leak
+```
+[Thanks vitoriagalli, for the awesome tests](https://github.com/vitoriagalli/42libasm_tester)
+#### libasm_test & libasmTester
+```bash
+make -C libasm_test bonus
+make -C libasmTester va
+```
+[Thanks cacharle, for the awesome tests](https://github.com/cacharle/libasm_test)
+[Thanks Tripouille, for the awesome tests](https://github.com/Tripouille/libasmTester)
+
+## Ressources
+### Assembly Calling conventions
 
 - The first four integer or pointer parameters are passed in the rcx, rdx, r8, and r9 registers.
 - The first four floating-point parameters are passed in the first four SSE registers, xmm0-xmm3.
@@ -54,29 +86,8 @@ git apply linux.patch
 The x64 ABI considers the registers RAX, RCX, RDX, R8, R9, R10, R11, and XMM0-XMM5 volatile. When present, the upper portions of YMM0-YMM15 and ZMM0-ZMM15 are also volatile. On AVX512VL, the ZMM, YMM, and XMM registers 16-31 are also volatile. When AMX support is present, the TMM tile registers are volatile. Consider volatile registers destroyed on function calls unless otherwise safety-provable by analysis such as whole program optimization.
 The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15 nonvolatile. They must be saved and restored by a function that uses them.
 
-## Testers
-### 42libasm_tester
-```bash
-cd 42libasm_tester/
-bash runtest.sh && bash runtest.sh bonus
-bash runtest.sh leak && bash runtest.sh bonus leak
-```
-
-### libasmTester
-```bash
-make -C libasmTester va
-```
-
-### libasm_test
-```bash
-make -C libasm_test bonus
-```
-
-## Ressources
 ### Links
-
-
-Lessons:
+#### Lessons:
 
 - <https://asmtutor.com/>
 - <https://beta.hackndo.com/assembly-basics/>
@@ -84,7 +95,7 @@ Lessons:
 - <https://sonictk.github.io/asm_tutorial/>
 - <https://www.unilim.fr/pages_perso/tristan.vaccon/cours_nasm.pdf>
 
-Documentations:
+#### Documentations:
 - <https://pacman128.github.io/static/pcasm-book-french.pdf>
 - <https://www.bencode.net/blob/nasmcheatsheet.pdf>
 - <https://c9x.me/x86/>
@@ -93,11 +104,11 @@ Documentations:
 - <https://www.nasm.us/xdoc/2.16.03/html/nasmdoc0.html>
 - <https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/x64-architecture#registers>
 
-other students repo:
+#### Great readme from other students:
 - <https://gitlab.com/uotiug42/asm/libasm>
 - <https://github.com/agavrel/LibftASM>
 
-More about asm:
+#### More about asm:
 - <https://blog.rchapman.org/posts/Linux_System_Call_Table_for_x86_64/>
 - <https://g3tsyst3m.github.io/shellcoding/assembly/debugging/x64-Assembly-&-Shellcoding-101/>
 - <https://www.agner.org/optimize/optimizing_assembly.pdf>
@@ -106,33 +117,20 @@ More about asm:
 - <https://gaultier.github.io/blog/x11_x64.html>
 - <https://github.com/below/HelloSilicon>
 
-SSE:
+#### SSE:
 - <https://www.strchr.com/strcmp_and_strlen_using_sse_4.2>
 
-GDB on MACarm:
+#### GDB on MACarm:
 - <https://stackoverflow.com/questions/67310123/how-to-install-gdb-on-mac-m1-apple-silicon>
 
-time cpu op:
+#### time cpu op:
 - <http://ithare.com/infographics-operation-costs-in-cpu-clock-cycles/>
 
-Unit testing:
+#### Unit testing:
 - <https://github.com/Snaipe/Criterion>
 - <https://github.com/PalmeseMattia/Xtal/blob/main/xtal.h>
 - <https://github.com/ollelogdahl/ihct>
 - <https://github.com/silentbicycle/greatest?tab=readme-ov-file>
 
-Static analysis:
+#### Static analysis:
 - <https://splint.org>
-
-## Installation
-
-```shell
-    sudo apt update && sudo apt install -y build-essential gdb clang nasm
-```
-
-## Formatting
-
-```shell
-    # Generate basic uncrust config
-    uncrustify --update-config-with-doc -o uncrust.conf
-```
