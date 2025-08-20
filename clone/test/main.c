@@ -6,7 +6,7 @@
 /*   By: nihuynh <nihuynh@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 14:20:24 by nihuynh           #+#    #+#             */
-/*   Updated: 2025/08/20 19:22:22 by nihuynh          ###   ########.fr       */
+/*   Updated: 2025/08/20 21:48:18 by nihuynh          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -145,7 +145,7 @@ void test_ft_write(void)
     CU_EXPECT(ssize_t, ft_write(1, "", strlen("")), strlen(""));
     CU_SECTION("Negative fd");
     CU_EXPECT(ssize_t, ft_write(1, NULL, 5), (long)-1);
-    CU_EXPECT(int, errno, -3);
+    CU_EXPECT(int, errno, 14);
     CU_RUN_END;
 }
 
@@ -205,6 +205,18 @@ void test_ft_atoi_base(void)
     CU_EXPECT(int, ft_atoi_base(" 644yo", "01234567"), 420);
     CU_RUN_END;
 }
+void clean_list(t_list *node, void (*free_fn)(void*)){
+    while (node)
+    {
+        t_list *current = node;
+        node = node->next;
+        // printf("current: %p, data %p, next: %p\n", current, current->data, current->next);
+        if (free_fn){
+            free_fn(current->data);
+        }
+        free(current);
+    }
+}
 void test_ft_list_push_front(void)
 {
     t_list *head = NULL;
@@ -221,17 +233,7 @@ void test_ft_list_push_front(void)
     CU_SECTION("Error checks");
     ft_list_push_front(&head, NULL);
     CU_EXPECT(int, ft_list_size(head), 3);
-    t_list *node = head;
-    while (node)
-    {
-        /* code */
-        t_list *current = node;
-        node = node->next;
-        printf("current: %p, data %p, next: %p\n", current, current->data, current->next);
-        free(current->data);
-        free(current);
-    }
-
+    clean_list(head, &free);
     CU_RUN_END;
 }
 void test_ft_list_size(void)
@@ -273,6 +275,7 @@ void del_str(char *str_node) {
     free(str_node);
     return;
 }
+
 enum e_dump_type {
     DUMP_PTR,
     DUMP_STR,
@@ -324,6 +327,7 @@ void test_ft_list_sort(void)
     CU_EXPECT(ptr, head->data, &c);
     CU_EXPECT(int, *((int*)head->data), 3);
     dump_tlist(head, DUMP_INT);
+    clean_list(head, NULL);
     CU_RUN_END;
 }
 
@@ -346,6 +350,7 @@ void test_ft_list_sort_sorted_list(void)
     ft_list_sort(&head, compare_int);
     CU_EXPECT(int, *((int*)head->data), 1);
     dump_tlist(head, DUMP_INT);
+    clean_list(head, NULL);
 
     t_list *head_rev = NULL;
     CU_SECTION("Reversed list of 5 int");
@@ -361,6 +366,7 @@ void test_ft_list_sort_sorted_list(void)
     ft_list_sort(&head_rev, compare_int);
     CU_EXPECT(int, *((int*)head_rev->data), 1);
     dump_tlist(head_rev, DUMP_INT);
+    clean_list(head_rev, NULL);
 
     t_list *head_zero = NULL;
     int    list_zero[5] = { 1, 2, 0, 4, 5 };
@@ -377,7 +383,7 @@ void test_ft_list_sort_sorted_list(void)
     ft_list_sort(&head_zero, compare_int);
     CU_EXPECT(int, *((int*)head_zero->data), 0);
     dump_tlist(head_zero, DUMP_INT);
-
+    clean_list(head_zero, NULL);
     CU_RUN_END;
 }
 
@@ -398,6 +404,7 @@ void test_ft_list_sort_str(void)
     ft_list_sort(&head, compare_str);
     dump_tlist(head, DUMP_STR);
     CU_EXPECT(str, (char*)head->data, "Byebye");
+    clean_list(head, &free);
     CU_RUN_END;
 }
 
@@ -434,6 +441,7 @@ void test_ft_list_remove_if(void)
     ft_list_remove_if(&head, &ref, compare_int, del_node);
     CU_EXPECT(int, ft_list_size(head), 0);
     CU_EXPECT(ptr, head, NULL);
+    clean_list(head, NULL);
     CU_RUN_END;
 }
 
@@ -463,6 +471,7 @@ void test_ft_list_remove_if_str(void)
     ft_list_remove_if(&head, ref, strcmp, del_str);
     dump_tlist(head, DUMP_STR);
     CU_EXPECT(int, ft_list_size(head), 2);
+    clean_list(head, &free);
     CU_RUN_END;
 }
 

@@ -72,7 +72,6 @@ OKLOGO		:=	\033[78G\033[32m[Done]\033[0m\n
 PHELP		:=	"\033[36m%-26s\033[0m %s\n"
 # --- Rules ---
 .DEFAULT_GOAL := all
--include $(DEP)
 
 all: $(NAME)
 .PHONY: all
@@ -98,11 +97,22 @@ $(OBJDIR)/%.o: %.s | $(OBJDIR)
 $(OBJDIR)/%.out: %.c | $(OBJDIR)
 	$(CC) $(CFLAGS) -MMD -MP $< -o $@ $(CLIB)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile test_SRC $< $(OKLOGO)"
+-include $(DEP)
 
-test: clean $(NAME) bonus $(TEST) ## Built the tests execs.
+test: $(NAME) bonus $(TEST) ## Built the tests execs.
 	find $(OBJDIR) -name "*.out" -type f
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mTest are ready $(OKLOGO)"
 .PHONY: test
+
+run_test: test ## Run tests files and external testers.
+	make -C libasm_test bonus && make -C libasmTester va
+	./obj/main.out
+	./obj/test_gbrunet.out
+	cd 42libasm_tester/
+	bash runtest.sh && bash runtest.sh bonus
+	bash runtest.sh leak && bash runtest.sh bonus leak
+	@printf "\033[1;34m$(NAME)\033[25G\033[33mDid we do gud ?? $(OKLOGO)"
+.PHONY: run_test
 
 usage: ## Print out on how to use this Makefile.
 	@printf "\n$(NAME)\n  Usage:\n\tmake <target>\n\n  Targets:\n"
