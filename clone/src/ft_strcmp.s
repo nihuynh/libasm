@@ -9,6 +9,9 @@ global OS_FN_PREFIX(ft_strcmp)
 
 OS_FN_PREFIX(ft_strcmp):            ; rdi = s1, rsi = s2
     xor     rcx, rcx                ; reset the counter
+    xor     rax, rax                ; reset rax
+    xor     r8, r8                  ; reset r8
+
 runloop:
     mov     al, byte [rdi + rcx]
     cmp     al, byte [rsi + rcx]
