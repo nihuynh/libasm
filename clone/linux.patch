@@ -26,7 +26,7 @@ index 114e93a..7eba884 100644
 +    call    OS_FN_PREFIX(free) wrt ..plt
 +    ; call    OS_FN_PREFIX(free)
      jmp     loop
-
+ 
  inc_loop:
 diff --git a/clone/src/ft_read.s b/clone/src/ft_read.s
 index 1ffe61c..4caa4a3 100644
@@ -59,10 +59,10 @@ index eafafa9..20fa0d4 100644
      cmp     rax, 0          ; Check if malloc has failed
      je      end
 diff --git a/clone/src/ft_write.s b/clone/src/ft_write.s
-index 9632068..34495cb 100644
+index 37254e4..36f3910 100644
 --- a/clone/src/ft_write.s
 +++ b/clone/src/ft_write.s
-@@ -20,8 +20,8 @@ OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
+@@ -18,8 +18,8 @@ OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
  error_code:
      neg     rax                 ; Get absolute value of syscall return
      mov     r8, rax             ; Back-up rax before calling ernno
@@ -72,4 +72,4 @@ index 9632068..34495cb 100644
 +    ; call    ERRNO_FN
      mov     [rax], r8           ; Set the value of errno
      mov     rax, -1
- end:
+     ret
