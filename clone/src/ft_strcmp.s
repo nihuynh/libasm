@@ -19,6 +19,6 @@ runloop:
     jmp     runloop
 
 retdiff:
-    sub     al, byte [rsi + rcx]    ; sub the char ascii value in s1 & s2
-    movsx   rax, al                 ; mov but keep the sign - or +
+    mov     r8b, byte [rsi + rcx]   ; Zero leading char of s2
+    sub     eax, r8d                ; Avoid overflow by using 32bits sub
     ret
