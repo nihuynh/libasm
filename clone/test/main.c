@@ -113,7 +113,8 @@ void test_ft_strlen(void)
     CU_EXPECT(size_t, ft_strlen(""), strlen(""));
     CU_EXPECT(size_t, ft_strlen("\0\0"), strlen("\0\0"));
     CU_SECTION("long string");
-    char *random = "���-��t?+%�١�����J�=�e���<���¡�#t����l��i�s�Q/d]�V��c���0!�-���F�ɂBDvZ%u#	�����l�̈́�7^�FA�B���'>3m�>�0y��w�5Ñm�������d��%���g�6`����O���ݬ�퐱34�k$";
+    char *random =
+        "���-��t?+%�١�����J�=�e���<���¡�#t����l��i�s�Q/d]�V��c���0!�-���F�ɂBDvZ%u#	�����l�̈́�7^�FA�B���'>3m�>�0y��w�5Ñm�������d��%���g�6`����O���ݬ�퐱34�k$";
     CU_EXPECT(size_t, ft_strlen(random), strlen(random));
     CU_RUN_END;
 }

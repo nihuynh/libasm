@@ -55,6 +55,8 @@ lldb  ./obj/main.out
 git diff > linux.patch
 # Apply the diff:
 git apply linux.patch
+# Update the patch:
+git diff HEAD > linux2.patch && mv linux2.patch linux.patch
 ```
 
 ### Testers
