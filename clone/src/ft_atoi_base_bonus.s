@@ -11,7 +11,6 @@ global OS_FN_PREFIX(ft_atoi_base)
 ; r8 : negation
 ; r9 : base length
 OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
-    push    rbx             ; save value rbx
     cmp     rdi, 0          ; Check that str is not NULL
     je      error
     cmp     rsi, 0          ; Check that base is not NULL
@@ -49,7 +48,6 @@ inc_base:
 ; Check if the base has no duplicate char
     mov     rcx, rsi        ; load *base in rcx
     xor     rax, rax        ; reset rax
-    xor     rbx, rbx        ; reset rbx
 dedup:  ; rcx is a cursor, rax is the seek offset
     mov     bl, byte [rcx + rax]
 seek:   ;  seek the rest of the base
@@ -91,20 +89,20 @@ positive:
     je      end
     jmp     read_sign
 
-convert: ; rcx is the cursor of the str , rbx is the seek offset, r10b hold the current char
-    xor     rbx, rbx
-    mov     r10b, byte[rcx]
+convert: ; rcx is the cursor of the str , r10 is the seek offset, r11b hold the current char
+    xor     r10, r10
+    mov     r11b, byte[rcx]
 seek_char:
-    cmp     byte[rsi + rbx], 0
+    cmp     byte[rsi + r10], 0
     je      end
-    cmp     byte[rsi + rbx], r10b
+    cmp     byte[rsi + r10], r11b
     je      use_idx
-    inc     rbx
+    inc     r10
     jmp     seek_char
 
 use_idx:
     mul     r9              ; mul r9*rax -> rax (r9: base length)
-    add     rax, rbx
+    add     rax, r10
     inc     rcx
     cmp     byte [rcx], 0
     je      end
@@ -116,10 +114,8 @@ end:
     shl     r8, 1           ; bit shift << 1
     sub     r8, 1           ; here r8 is -1 or 1
     mul     r8              ; mul r8*rax -> rax
-    pop     rbx             ; restore rbx
     ret
 
 error:
-    pop     rbx             ; restore rbx
     xor     rax, rax        ; reset rax
     ret

@@ -6,8 +6,6 @@
     - [Using debugger](#using-debugger)
     - [Patch mac to linux](#patch-mac-to-linux)
     - [Testers](#testers)
-      - [42libasm\_tester](#42libasm_tester)
-      - [libasm\_test \& libasmTester](#libasm_test--libasmtester)
   - [Ressources](#ressources)
     - [Assembly Calling conventions](#assembly-calling-conventions)
     - [Links](#links)
@@ -63,10 +61,9 @@ git diff HEAD > linux2.patch && mv linux2.patch linux.patch
 ```bash
 make run_test
 ```
-[Thanks cacharle, for the awesome tests](https://github.com/cacharle/libasm_test)
-[Thanks vitoriagalli, for the awesome tests](https://github.com/vitoriagalli/42libasm_tester)
-[Thanks Tripouille, for the awesome tests](https://github.com/Tripouille/libasmTester)
-
+[Thanks cacharle, for the awesome tests](https://github.com/cacharle/libasm_test)   
+[Thanks vitoriagalli, for the awesome tests](https://github.com/vitoriagalli/42libasm_tester)   
+[Thanks Tripouille, for the awesome tests](https://github.com/Tripouille/libasmTester)   
 ```bash
 make -C libasm_test bonus
 make -C libasmTester va
