@@ -8,6 +8,8 @@
     - [Testers](#testers)
   - [Ressources](#ressources)
     - [Assembly Calling conventions](#assembly-calling-conventions)
+    - [tools](#tools)
+      - [Valgrind](#valgrind)
     - [Links](#links)
       - [Lessons:](#lessons)
       - [Documentations:](#documentations)
@@ -45,6 +47,8 @@ make test && ./obj/main.out
 ./obj/test_gbrunet.out
 # Debug
 lldb  ./obj/main.out
+# debug makefiles
+ make test VERBOSE=1 --debug=b
 ```
 
 ### Patch mac to linux 
@@ -102,6 +106,12 @@ The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and
 | r13            | r13d          | r13w          | r13b        |
 | r14            | r14d          | r14w          | r14b        |
 | r15            | r15d          | r15w          | r15b        |
+
+### tools
+#### Valgrind
+https://www.cheat-sheets.org/project/tldr/command/valgrind/
+valgrind --leak-check=full --show-leak-kinds=all --track-origins=yes ./obj/main.out
+
 
 ### Links
 #### Lessons:

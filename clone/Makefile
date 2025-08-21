@@ -3,26 +3,16 @@
 # Requirements: 64 bits ASM, compile with nasm, Intel syntax
 # Forbidden to use -no-pie
 
-RUNMODE		?=	dev		# Run the tests in release mode if not defined (See $(DEV_CFLAGS))
-VERBOSE		:=	1		# Run the makefile silent if not defined
+# RUNMODE		?=	dev		# Run the tests in release mode if not defined (See $(DEV_CFLAGS))
+# VERBOSE		:=	1		# Run the makefile silent if not defined
 NAME		:=	libasm.a
-SRC 		:=	ft_strlen.s \
-				ft_strcpy.s \
-				ft_strcmp.s \
-				ft_write.s \
-				ft_read.s \
-				ft_strdup.s
+USAGE_TXT	:= 	RUNMODE can be fast or dev & VERBOSE=1 for more logs.
+SRC 		:=	ft_strlen.s ft_strcpy.s ft_strcmp.s ft_write.s \
+				ft_read.s ft_strdup.s
 # Bonus
-BNS_SRC		:=	ft_atoi_base_bonus.s \
-				ft_list_push_front_bonus.s \
-				ft_list_size_bonus.s \
-				ft_list_sort_bonus.s \
-				ft_list_remove_if_bonus.s
-TEST_SRC	:=	main.c \
-				cu_test_main.c \
-				size_demo.c \
-				cu_test_fix.c \
-				test_gbrunet.c
+BNS_SRC		:=	ft_atoi_base_bonus.s ft_list_push_front_bonus.s \
+				ft_list_size_bonus.s ft_list_sort_bonus.s ft_list_remove_if_bonus.s
+TEST_SRC	:=	main.c cu_test_main.c size_demo.c cu_test_fix.c test_gbrunet.c
 VPATH		:=	./src ./test
 OBJDIR		:=	obj
 INCDIR		:=	include
@@ -34,31 +24,29 @@ INC			:=	-I$(INCDIR)
 CLIB		:=	 -L. -lasm
 CFLAGS		:=	-Werror -Wall -Wextra -Wstrict-aliasing -Wunreachable-code
 # --- Configuration ---
-ifneq ($(RUNMODE), dev)
+ifeq ($(strip $(RUNMODE)), dev)
 DEV_CFLAGS	:=	-g3 -O0
 # Activate or comments below:
-# DEV_CFLAGS	+=	-fsanitize=thread
 DEV_CFLAGS	+=	-fsanitize=address -fsanitize-recover=address
 DEV_CFLAGS	+=	-fstack-protector
+# DEV_CFLAGS	+=	-fsanitize=thread
 # DEV_CFLAGS	+=	-fsanitize=undefined
-else
+else ifeq ($(strip $(RUNMODE)), fast)
 # Default runmode
-DEV_CFLAGS	:=	-O3 # -march=native -flto -g0
+DEV_CFLAGS	:=	-g0 -O2 # -march=native -flto
 endif
 CFLAGS		+=	$(DEV_CFLAGS) $(INC)
 # --- Cross platform (Linux x86 or Darwin ARM)
+NFLAGS	:=	-i ./src
 ifeq ($(shell uname -m), arm64)
 # Compiling on mac ARM
 	CFLAGS	+=	-ld_classic --target=x86_64-apple-darwin
-	NFLAGS	:=	-i ./src -f macho64
+	NFLAGS	+= -f macho64
 endif
 # Compiling on Linux x86
 ifeq ($(shell uname -m), x86_64)
-	NFLAGS	:=	-i ./src  -f elf64
+	NFLAGS	+=  -f elf64
 endif
-# ifeq ($(shell uname -m), aarch64)
-# 	NFLAGS	:=	-i ./src -f elf64
-# endif
 
 # --- Misc
 OBJ			:=	$(addprefix $(OBJDIR)/, $(SRC:.s=.o))
@@ -78,12 +66,10 @@ all: $(NAME)
 
 $(NAME): $(OBJ) ## Built the library (default goal).
 	$(AR) rs $@ $(OBJ)
-	$(AR) -t $@
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mDone $@ $(OKLOGO)"
 
 bonus: $(NAME) $(BONUS_OBJ) ## Built the library with bonus.
 	$(AR) rs $(NAME) $(BONUS_OBJ)
-	$(AR) -t $(NAME)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mDone $@ $(OKLOGO)"
 .PHONY: bonus
 
@@ -99,27 +85,28 @@ $(OBJDIR)/%.out: %.c | $(OBJDIR)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile test_SRC $< $(OKLOGO)"
 -include $(DEP)
 
-test: $(NAME) bonus $(TEST) ## Built the tests execs.
+test: fclean $(NAME) bonus $(TEST) ## Clean the directory and built the tests execs.
 	find $(OBJDIR) -name "*.out" -type f
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mTest are ready $(OKLOGO)"
 .PHONY: test
 
-run_test: test ## Run tests files and external testers.
+run_test: test ## Run tests and external testers.
 	make -C libasm_test bonus && make -C libasmTester va
-	./obj/main.out
-	./obj/test_gbrunet.out
 	cd 42libasm_tester/
 	bash runtest.sh && bash runtest.sh bonus
 	bash runtest.sh leak && bash runtest.sh bonus leak
+	../obj/test_gbrunet.out
+	../obj/main.out
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mDid we do gud ?? $(OKLOGO)"
 .PHONY: run_test
 
-usage: ## Print out on how to use this Makefile.
-	@printf "\n$(NAME)\n  Usage:\n\tmake <target>\n\n  Targets:\n"
+usage: ## Print this help. (make help as well)
+	@printf "$(NAME)\n$(USAGE_TXT)\n  Usage:\n\tmake <target>\n\n  Targets:\n"
 	@fgrep -h " ## " $(MAKEFILE_LIST) \
 	| fgrep -v fgrep | awk 'BEGIN {FS = ":.*?## "}; {printf $(PHELP), $$1, $$2}'
 .PHONY: usage
-
+help: usage
+.PHONY: help
 format: ## Format the sources
 	git status
 	find . \( -name "*.cpp" -o -name "*.c" -o -name "*.h" \) -exec uncrustify -c uncrust.conf --no-backup {} +
@@ -143,3 +130,5 @@ fclean: clean ## Delete the library, object files & test_SRC binarys.
 
 re: fclean all ## Rebuild the project.
 .PHONY: re
+
+print-%  : ; @echo $* = $($*) ## Print any makefile variable
