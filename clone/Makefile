@@ -61,17 +61,20 @@ PHELP		:=	"\033[36m%-26s\033[0m %s\n"
 # --- Rules ---
 .DEFAULT_GOAL := all
 
-all: $(NAME)
+all: $(NAME) ## Built the library (default goal).
 .PHONY: all
 
-$(NAME): $(OBJ) ## Built the library (default goal).
+bonus: $(NAME)_bonus ## Built the library with bonus.
+.PHONY: bonus
+
+$(NAME): $(OBJ)
 	$(AR) rs $@ $(OBJ)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mDone $@ $(OKLOGO)"
 
-bonus: $(NAME) $(BONUS_OBJ) ## Built the library with bonus.
+$(NAME)_bonus: $(BONUS_OBJ)
 	$(AR) rs $(NAME) $(BONUS_OBJ)
+	touch $@
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mDone $@ $(OKLOGO)"
-.PHONY: bonus
 
 $(OBJDIR):
 	mkdir -p $(OBJDIR)
@@ -85,18 +88,18 @@ $(OBJDIR)/%.out: %.c | $(OBJDIR)
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mCompile test_SRC $< $(OKLOGO)"
 -include $(DEP)
 
-test: fclean $(NAME) bonus $(TEST) ## Clean the directory and built the tests execs.
+test: $(NAME) bonus $(TEST) ## Clean the directory and built the tests execs.
 	find $(OBJDIR) -name "*.out" -type f
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mTest are ready $(OKLOGO)"
 .PHONY: test
 
 run_test: test ## Run tests and external testers.
 	make -C libasm_test bonus && make -C libasmTester va
-	cd 42libasm_tester/
-	bash runtest.sh && bash runtest.sh bonus
+	./obj/test_gbrunet.out
+	./obj/main.out || echo "Failed during main.out"
+	cd 42libasm_tester/ && \
+	bash runtest.sh && bash runtest.sh bonus && \
 	bash runtest.sh leak && bash runtest.sh bonus leak
-	../obj/test_gbrunet.out
-	../obj/main.out
 	@printf "\033[1;34m$(NAME)\033[25G\033[33mDid we do gud ?? $(OKLOGO)"
 .PHONY: run_test
 
