@@ -59,21 +59,10 @@ index eafafa9..20fa0d4 100644
      cmp     rax, 0          ; Check if malloc has failed
      je      end
 diff --git a/clone/src/ft_write.s b/clone/src/ft_write.s
-index 957f4a0..3f36aa1 100644
+index 37254e4..36f3910 100644
 --- a/clone/src/ft_write.s
 +++ b/clone/src/ft_write.s
-@@ -9,8 +9,8 @@ extern ERRNO_FN
- global OS_FN_PREFIX(ft_write)
- 
- OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
--    cmp     rsi, 0
--    je      end
-+    ; cmp     rsi, 0
-+    ; je      end
-     mov     rax, WRITE_SYSCALL  ; Prepare for write syscall
-     syscall
-     cmp     rax, 0
-@@ -20,8 +20,8 @@ OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
+@@ -18,8 +18,8 @@ OS_FN_PREFIX(ft_write):         ; rdi = fd, rsi = buf, rdx = count
  error_code:
      neg     rax                 ; Get absolute value of syscall return
      mov     r8, rax             ; Back-up rax before calling ernno
@@ -82,5 +71,5 @@ index 957f4a0..3f36aa1 100644
 +    call    ERRNO_FN wrt ..plt
 +    ; call    ERRNO_FN
      mov     [rax], r8           ; Set the value of errno
- end:
      mov     rax, -1
+     ret
