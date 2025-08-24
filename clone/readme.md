@@ -5,6 +5,7 @@
     - [Formatting](#formatting)
     - [Using debugger](#using-debugger)
     - [Patch mac to linux](#patch-mac-to-linux)
+    - [Errors](#errors)
     - [Testers](#testers)
   - [Ressources](#ressources)
     - [Assembly Calling conventions](#assembly-calling-conventions)
@@ -61,6 +62,12 @@ git apply linux.patch
 git diff HEAD > linux2.patch && mv linux2.patch linux.patch
 ```
 
+### Errors
+- `main.out(17860,0x2044d8240) malloc: nano zone abandoned due to inability to reserve vm space.`
+```shell
+MallocNanoZone=0 ./obj/main.out
+```
+-`SEGV (libsystem_platform.dylib:x86_64+0x6e39) in _platform_memset$VARIANT$Rosetta+0xce`
 ### Testers
 ```bash
 make run_test
@@ -89,23 +96,23 @@ The x64 ABI considers the registers RAX, RCX, RDX, R8, R9, R10, R11, and XMM0-XM
 The x64 ABI considers registers RBX, RBP, RDI, RSI, RSP, R12, R13, R14, R15, and XMM6-XMM15 nonvolatile. They must be saved and restored by a function that uses them.
 
 | 64-bit register | Lower 32 bits | Lower 16 bits | Lower 8 bits |
-|----------------|---------------|---------------|-------------|
-| rax            | eax           | ax            | al          |
-| rbx            | ebx           | bx            | bl          |
-| rcx            | ecx           | cx            | cl          |
-| rdx            | edx           | dx            | dl          |
-| rsi            | esi           | si            | sil         |
-| rdi            | edi           | di            | dil         |
-| rbp            | ebp           | bp            | bpl         |
-| rsp            | esp           | sp            | spl         |
-| r8             | r8d           | r8w           | r8b         |
-| r9             | r9d           | r9w           | r9b         |
-| r10            | r10d          | r10w          | r10b        |
-| r11            | r11d          | r11w          | r11b        |
-| r12            | r12d          | r12w          | r12b        |
-| r13            | r13d          | r13w          | r13b        |
-| r14            | r14d          | r14w          | r14b        |
-| r15            | r15d          | r15w          | r15b        |
+| --------------- | ------------- | ------------- | ------------ |
+| rax             | eax           | ax            | al           |
+| rbx             | ebx           | bx            | bl           |
+| rcx             | ecx           | cx            | cl           |
+| rdx             | edx           | dx            | dl           |
+| rsi             | esi           | si            | sil          |
+| rdi             | edi           | di            | dil          |
+| rbp             | ebp           | bp            | bpl          |
+| rsp             | esp           | sp            | spl          |
+| r8              | r8d           | r8w           | r8b          |
+| r9              | r9d           | r9w           | r9b          |
+| r10             | r10d          | r10w          | r10b         |
+| r11             | r11d          | r11w          | r11b         |
+| r12             | r12d          | r12w          | r12b         |
+| r13             | r13d          | r13w          | r13b         |
+| r14             | r14d          | r14w          | r14b         |
+| r15             | r15d          | r15w          | r15b         |
 
 ### tools
 #### Valgrind

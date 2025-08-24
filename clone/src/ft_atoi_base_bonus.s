@@ -11,9 +11,9 @@ global OS_FN_PREFIX(ft_atoi_base)
 ; r8d : negation
 ; r9 : base length
 OS_FN_PREFIX(ft_atoi_base): ; rdi = *str, rsi = *base
-    cmp     rdi, 0          ; Check that str is not NULL
+    cmp     rdi, 0          ; Check that *str is not NULL
     je      error
-    cmp     rsi, 0          ; Check that base is not NULL
+    cmp     rsi, 0          ; Check that *base is not NULL
     je      error
     cmp     byte [rdi], 0   ; Check that str is not empty
     je      error
@@ -63,7 +63,7 @@ seek:   ;  seek the rest of the base
     jne     dedup
 ; prepare reg for skip space & read sign
     mov     rcx,rdi         ; load *str in rcx
-    xor     r8d, r8d          ; reset r8d
+    xor     r8d, r8d        ; reset r8d
 skip_space:
     cmp     byte [rcx], 0
     je      error
@@ -82,7 +82,7 @@ read_sign: ; check if the char is '+' or '-'
     je      positive
     cmp     byte [rcx], '-'
     jne     convert
-    inc     r8d              ; Case char is '-'
+    inc     r8d             ; Case char is '-'
 positive:
     inc     rcx
     cmp     byte [rcx], 0
@@ -110,10 +110,10 @@ use_idx:
 
 end:
     inc     r8d
-    and     r8d, 1           ; mask r8d
-    shl     r8d, 1           ; bit shift << 1
-    sub     r8d, 1           ; here r8d is -1 or 1
-    mul     r8d              ; mul r8d*rax -> rax
+    and     r8d, 1          ; mask r8d
+    shl     r8d, 1          ; bit shift << 1
+    sub     r8d, 1          ; here r8d is -1 or 1
+    mul     r8d             ; mul r8d*rax -> rax
     ret
 
 error:
