@@ -7,7 +7,6 @@
 %include "os_support.s"
 global OS_FN_PREFIX(ft_list_sort)
 
-; r12 : head
 ; r13 : runner x
 ; r14 : runner y
 ; r15 : cmp fn
@@ -16,13 +15,11 @@ OS_FN_PREFIX(ft_list_sort): ; rdi = **head, rsi = fnptr
     je      error
     push    rdi             ; Saving register values to the stack
     push    rsi
-    push    r12
     push    r13
     push    r14
     push    r15
-    mov     r12, [rdi]      ; Save head *list node to r12
     mov     r15, rsi        ; Save fnptr to r15
-    mov     r13, r12        ; Init r13 to first node
+    mov     r13, [rdi]      ; Save head *list node to r13
 x_loop: ; change r13
     cmp     r13, 0
     je      end
@@ -43,7 +40,7 @@ swap_val:
 inc_loop:
     mov     r14, [r14 + 8]
     cmp     r14, 0
-    jne     y_loop          ; Iterate & comparing with r13
+    jne     y_loop          ; Iterate & compare to r13
     mov     r13, [r13 + 8]
     cmp     r13, 0
     jne     x_loop          ; Increment r13->next
@@ -52,7 +49,6 @@ end:
     pop     r15          ; Restore register values
     pop     r14
     pop     r13
-    pop     r12
     pop     rsi
     pop     rdi
 error:

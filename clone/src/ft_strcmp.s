@@ -23,5 +23,5 @@ runloop:
 
 retdiff:
     mov     r8b, byte [rsi + rcx]   ; Zero leading char of s2
-    sub     eax, r8d                ; Avoid overflow by using 32bits sub
+    sub     eax, r8d
     ret
